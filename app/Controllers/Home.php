@@ -6,6 +6,8 @@ class Home extends BaseController
 {
     public function index(): string
     {
-        return view('welcome_message');
+        return view('templates/header', ['titulo' => 'Inicio'])
+            . view('home')
+            . view('templates/footer');
     }
 }

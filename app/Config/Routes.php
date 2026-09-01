@@ -48,10 +48,10 @@ $routes->get('establecimientos/ver/(:num)', 'Establecimientos::ver/$1');
 $routes->get('paciente', 'Paciente::index');
 
 // el formulario para registrar un nuevo paciente 
-$routes->get('paciente/crear', 'Paciente::crear');
+$routes->get('paciente/nuevo', 'Paciente::nuevo');
 
 // recibe los datos del formulario 
-$routes->post('paciente/guardar', 'Paciente::guardar');
+$routes->post('paciente/insertar', 'Paciente::insertar');
 
 
 //-----------------------------------------------------------------------

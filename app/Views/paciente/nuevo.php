@@ -19,7 +19,10 @@
                     </div>
                     
                     <div class="card-body">
-                            <form action="/irab/public/paciente/guardar" method="POST"></form>
+                        <form action="<?= base_url('paciente/insertar') ?>" method="POST">
+                            <!-- Genera un campo oculto con una clave única de seguridad, esto porque maxi agrego eso en seguridad y me tiraba error-->
+                             <?= csrf_field() ?>
+
                             <div class="mb-3">
                                 <label for="dni" class="form-label">DNI</label>
                                 <input type="text" class="form-control" id="dni" name="dni" required>

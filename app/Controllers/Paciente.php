@@ -17,17 +17,17 @@ class Paciente extends BaseController
         // Usamos la propiedad protegida para buscar los datos
         $datos['pacientes'] = $this->pacienteModel->findAll();
         
-        return view('paciente/index', $datos);
+        return view('paciente/listadopaciente', $datos);
     }
 
     //para crear nuevo paciente
-    public function crear()
+    public function nuevo()
     {
         return view('paciente/nuevo');
     }
 
     //para guardar lo del formulario 
-    public function guardar()
+    public function insertar()
     {
         // por el getPost lo tomo del formulario y lo mando al array de datos
         $datos = [

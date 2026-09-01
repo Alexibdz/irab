@@ -46,12 +46,17 @@ $routes->get('establecimientos/ver/(:num)', 'Establecimientos::ver/$1');
 //----------------------------- PACIENTE (por Lara)---------------------------
 // lista de pacientes
 $routes->get('paciente', 'Paciente::index');
-
 // el formulario para registrar un nuevo paciente 
 $routes->get('paciente/nuevo', 'Paciente::nuevo');
-
 // recibe los datos del formulario 
 $routes->post('paciente/insertar', 'Paciente::insertar');
+// Carga el formulario de edición buscando por ID
+$routes->get('paciente/editar/(:num)', 'Paciente::editar/$1');
+// Recibe los datos modificados para actualizar la base de datos
+$routes->post('paciente/actualizar', 'Paciente::actualizar');
+$routes->get('paciente/borrar/(:num)', 'Paciente::borrar/$1');
+$routes->get('paciente/eliminados', 'Paciente::eliminados');
+$routes->get('paciente/recuperar/(:num)', 'Paciente::recuperar/$1');
 
 
 //-----------------------------------------------------------------------

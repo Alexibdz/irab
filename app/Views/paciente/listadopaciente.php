@@ -16,6 +16,7 @@
         <a href="<?= base_url('paciente/nuevo') ?>" class="btn btn-primary mb-3">
             + Nuevo Paciente
         </a>
+        <a href="<?= base_url('paciente/eliminados') ?>" class="btn btn-danger mb-3">Ver Pacientes Eliminados</a>
 
         <div class="card shadow-sm">
             <div class="card-body">
@@ -27,6 +28,7 @@
                             <th>Fecha de Nacimiento</th>
                             <th>ID Tutor</th>
                             <th>ID Establecimiento</th>
+                            <th>Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -38,6 +40,11 @@
                                 <td><?= $paciente['fecha_nacimiento'] ?></td>
                                 <td><?= $paciente['id_tutor'] ?></td>
                                 <td><?= $paciente['id_establecimiento_habitual'] ?></td>
+                                <td>
+                                    <a href="<?= base_url('paciente/editar/'.$paciente['id']) ?>" class="btn btn-warning btn-sm">Editar</a>
+                                    <a href="<?= base_url('paciente/borrar/'.$paciente['id']) ?>" class="btn btn-danger btn-sm" onclick="return confirm('¿Seguro que deseas borrar este paciente?');">Borrar</a>
+                                </td>
+                            </tr>
                             </tr>
                         <?php endforeach; ?>
                     </tbody>

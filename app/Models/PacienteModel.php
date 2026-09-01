@@ -2,7 +2,7 @@
 namespace App\Models;
 use CodeIgniter\Model;
 
-class PacienteModel extends Model{
+class PacienteModel extends Model {
     protected $table = 'pacientes';
     
     protected $primaryKey = 'id';
@@ -12,7 +12,15 @@ class PacienteModel extends Model{
         'nombre', 
         'fecha_nacimiento',
         'id_tutor', 
-        'id_establecimiento_habitual'
+        'id_establecimiento_habitual',
+        'fecha_borrado'
     ];
 
+    // para usar elborrado lógico
+    protected $useTimestamps   = true;
+    protected $useSoftDeletes  = true;
+
+    protected $createdField    = 'fecha_registro';
+    protected $updatedField    = 'fecha_edicion';
+    protected $deletedField    = 'fecha_borrado';
 }

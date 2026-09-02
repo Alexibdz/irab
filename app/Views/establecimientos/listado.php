@@ -19,7 +19,10 @@
                     <td><?= esc($establecimiento['cuartel']) ?></td>
                     <td><?= esc($establecimiento['tipo']) ?></td>
                     <td>
-                        <!--<a class="" href="<?php echo base_url('establecimientos/borrar/' . $establecimiento["id"]); ?>">Eliminar</a>-->
+                        <a href="<?= base_url('establecimientos/eliminar/' . $establecimiento['id']); ?>"
+                        onclick="return confirm('¿Deseas eliminar este establecimiento?');">
+                            Eliminar
+                        </a>
                         <a href="<?= base_url('establecimientos/editar/' . $establecimiento['id']) ?>">Editar</a>
                         <a href="<?= base_url('establecimientos/ver/' . $establecimiento['id']) ?>">Ver</a>
                     </td>

@@ -21,7 +21,10 @@
                     <td><?= esc($usuario['rol_nombre']) ?></td>
                     <td><?= esc($usuario['establecimiento_nombre']) ?></td>
                     <td>
-                        <!--<a class="" href="<?php echo base_url('usuarios/borrar/' . $usuario["id"]); ?>">Eliminar</a>-->
+                        <a href="<?= base_url('usuarios/eliminar/' . $usuario['id']); ?>"
+                        onclick="return confirm('¿Deseas eliminar este usuario?');">
+                            Eliminar
+                        </a>
                         <a href="<?php echo base_url('usuarios/editar/' . $usuario["id"]); ?>">Editar</a>
                         <a href="<?php echo base_url('usuarios/ver/' . $usuario["id"]); ?>">Ver</a>
                     </td>

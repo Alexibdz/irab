@@ -129,10 +129,10 @@ class Usuarios extends BaseController
         echo view('footer');
     }
 
-    /*public function borrar($id)
+    public function eliminar($id)
     {
         $this->usuarios->delete($id);
 
         return redirect()->to(base_url('usuarios'));
-    }*/
+    }
 }

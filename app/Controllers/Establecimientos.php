@@ -94,10 +94,10 @@ class Establecimientos extends BaseController
         return redirect()->to(base_url('establecimientos'));
     }
 
-    /*public function borrar($id)
+    public function eliminar($id)
     {
         $this->establecimiento->delete($id);
 
         return redirect()->to(base_url('establecimientos'));
-    }*/
+    }
 }

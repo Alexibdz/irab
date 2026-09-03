@@ -1,25 +1,42 @@
 <?php
 namespace App\Controllers;
+
 use App\Models\PacienteModel;
+use App\Models\TutorModel; 
 
 class Paciente extends BaseController
 {
     protected $pacienteModel;
+    protected $tutorModel; //agrego lo de tutor que no estaba 
 
     public function __construct()
     {
         $this->pacienteModel = new PacienteModel();
+        $this->tutorModel = new TutorModel(); 
     }
 
     public function index()
     {
-        $datos['pacientes'] = $this->pacienteModel->findAll();
-        return view('paciente/listadopaciente', $datos);
+        $datos = [
+            'pacientes' => $this->pacienteModel->findAll(),
+            'titulo'    => 'Listado de Pacientes'
+        ];
+        
+        echo view('templates/header', $datos);
+        echo view('paciente/listadopaciente', $datos);
+        echo view('templates/footer');
     }
 
     public function nuevo()
     {
-        return view('paciente/nuevo');
+        $datos = [
+            'titulo'  => 'Registrar Paciente',
+            'tutores' => $this->tutorModel->findAll() //  lista de tutores a la vista
+        ];
+
+        echo view('templates/header', $datos);
+        echo view('paciente/nuevo', $datos);
+        echo view('templates/footer');
     }
 
     public function insertar()
@@ -38,10 +55,15 @@ class Paciente extends BaseController
 
     public function editar($id)
     {
-        // el unico con su id, por eso el first
-        $datos['paciente'] = $this->pacienteModel->where('id', $id)->first();
+        $datos = [
+            'paciente' => $this->pacienteModel->where('id', $id)->first(),
+            'tutores'  => $this->tutorModel->findAll(), 
+            'titulo'   => 'Editar Paciente'
+        ];
         
-        return view('paciente/editar', $datos);
+        echo view('templates/header', $datos);
+        echo view('paciente/editar', $datos);
+        echo view('templates/footer');
     }
 
     public function actualizar()
@@ -58,26 +80,32 @@ class Paciente extends BaseController
         
         return redirect()->to(base_url('paciente'));
     }
+
     public function borrar($id)
     {
-        // borrado lógico
         $this->pacienteModel->delete($id);
         
-        // la vista de aviso en lugar de redirigir
-        return view('paciente/avisoborrado');
+        $datos = ['titulo' => 'Paciente Eliminado'];
+        
+        echo view('templates/header', $datos);
+        echo view('paciente/avisoborrado');
+        echo view('templates/footer');
     }
 
     public function eliminados()
     {
-        // onlyDeleted() trae solo los registros que tienen fecha de borrado
-        $datos['pacientes'] = $this->pacienteModel->onlyDeleted()->findAll();
+        $datos = [
+            'pacientes' => $this->pacienteModel->onlyDeleted()->findAll(),
+            'titulo'    => 'Pacientes Eliminados'
+        ];
         
-        return view('paciente/eliminados', $datos);
+        echo view('templates/header', $datos);
+        echo view('paciente/eliminados', $datos);
+        echo view('templates/footer');
     }
 
     public function recuperar($id)
     {
-        // Restauramos el paciente limpiando la fecha de borrado
         $this->pacienteModel->update($id, ['fecha_borrado' => null]);
         
         return redirect()->to(base_url('paciente'));

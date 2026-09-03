@@ -21,7 +21,8 @@
                 <li class="nav-item"><a class="nav-link" href="<?= base_url('usuarios') ?>">Usuarios</a></li>
                 <li class="nav-item"><a class="nav-link" href="<?= base_url('roles') ?>">Roles</a></li>
                 <li class="nav-item"><a class="nav-link" href="<?= base_url('establecimientos') ?>">Establecimientos</a></li>
-                <li class="nav-item"><a class="nav-link" href="<?= base_url('pacientes') ?>">Pacientes</a></li>
+                <li class="nav-item"><a class="nav-link" href="<?= base_url('paciente') ?>">Pacientes</a></li>
+                <li class="nav-item"><a class="nav-link" href="<?= base_url('tutor') ?>">Tutores</a></li>
             </ul>
         </div>
     </div>

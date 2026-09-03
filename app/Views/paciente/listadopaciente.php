@@ -26,8 +26,8 @@
                             <th>DNI</th>
                             <th>Nombre Completo</th>
                             <th>Fecha de Nacimiento</th>
-                            <th>ID Tutor</th>
-                            <th>ID Establecimiento</th>
+                            <th>Tutor</th>
+                            <th>Establecimiento</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
@@ -38,7 +38,17 @@
                                 <td><?= $paciente['dni'] ?></td>
                                 <td><?= $paciente['nombre'] ?></td>
                                 <td><?= $paciente['fecha_nacimiento'] ?></td>
-                                <td><?= $paciente['id_tutor'] ?></td>
+                                <td>
+                                    <?php
+                                        foreach($tutores as $tutor){
+                                            if($tutor['id'] == $paciente['id_tutor']){
+                                                echo $tutor['nombre'];
+                                                break; //lo cortamos para q no siga iterando
+                                            }
+                                        } 
+                                    
+                                    ?>
+                                </td>
                                 <td><?= $paciente['id_establecimiento_habitual'] ?></td>
                                 <td>
                                     <a href="<?= base_url('paciente/editar/'.$paciente['id']) ?>" class="btn btn-warning btn-sm">Editar</a>

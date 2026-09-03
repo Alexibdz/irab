@@ -19,6 +19,7 @@ class Paciente extends BaseController
     {
         $datos = [
             'pacientes' => $this->pacienteModel->findAll(),
+            'tutores' => $this->tutorModel->findAll(),
             'titulo'    => 'Listado de Pacientes'
         ];
         

@@ -38,17 +38,15 @@
                                 <input type="date" class="form-control" id="fecha_nacimiento" name="fecha_nacimiento" required>
                             </div>
 
-                            <!-- 
-                             
-                                Este campo es un 'input' numérico temporalmente. 
-                                Cuando los módulos de Tutores estén listos, lo cambip por un 
-                                <select class="form-select"> que muestre los nombres, eso lo hace otra persona
-                            -->
                             <div class="mb-3">
-                                <label for="id_tutor" class="form-label">ID del Tutor Responsable</label>
-                                <input type="number" class="form-control" id="id_tutor" name="id_tutor" required>
+                                <label class="form-label">Tutor / Responsable</label>
+                                <select class="form-select" name="id_tutor" required>
+                                    <option value="" disabled selected>Seleccione un tutor</option>
+                                    <?php foreach ($tutores as $tutor): ?>
+                                    <option value="<?= $tutor['id'] ?>"><?= $tutor['nombre'] ?> (DNI: <?= $tutor['dni'] ?>)</option>
+                                    <?php endforeach; ?>
+                                </select>
                             </div>
-
                             <!-- 
                                 
                                 Al igual que el tutor, este campo numérico se reemplazará más adelante 

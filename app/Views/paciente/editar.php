@@ -42,8 +42,15 @@
                             </div>
 
                             <div class="mb-3">
-                                <label for="id_tutor" class="form-label">ID del Tutor Responsable</label>
-                                <input type="number" class="form-control" id="id_tutor" name="id_tutor" value="<?= $paciente['id_tutor'] ?>" required>
+                                <label class="form-label">Tutor / Responsable</label>
+                                <select class="form-select" name="id_tutor" required>
+                                    <option value="" disabled>Seleccione un tutor</option>
+                                    <?php foreach ($tutores as $tutor): ?>
+                                        <option value="<?= $tutor['id'] ?>" <?= ($tutor['id'] == $paciente['id_tutor']) ? 'selected' : '' ?>>
+                                            <?= $tutor['nombre'] ?> (DNI: <?= $tutor['dni'] ?>)
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
                             </div>
 
                             <div class="mb-3">

@@ -60,3 +60,16 @@ $routes->get('paciente/recuperar/(:num)', 'Paciente::recuperar/$1');
 
 
 //-----------------------------------------------------------------------
+
+//--------------------------Tutor (Lara) ----------------------------
+$routes->get('tutor', 'Tutor::index');
+$routes->get('tutor/nuevo', 'Tutor::nuevo');
+$routes->post('tutor/insertar', 'Tutor::insertar');
+$routes->get('tutor/editar/(:num)', 'Tutor::editar/$1');
+$routes->post('tutor/actualizar/(:num)', 'Tutor::actualizar/$1');
+$routes->get('tutor/borrar/(:num)', 'Tutor::borrar/$1');
+$routes->get('tutor/eliminados', 'Tutor::eliminados');
+$routes->get('tutor/recuperar/(:num)', 'Tutor::recuperar/$1');
+
+
+//-----------------------------------------------------

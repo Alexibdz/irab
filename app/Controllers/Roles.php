@@ -90,10 +90,10 @@ class Roles extends BaseController
         echo view('footer');
     }
 
-    /*public function borrar($id)
+    public function eliminar($id)
     {
         $this->rol->delete($id);
 
         return redirect()->to(base_url('roles'));
-    }*/
+    }
 }

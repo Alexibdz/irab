@@ -17,7 +17,10 @@
                     <td><?= esc($rol['id']) ?></td>
                     <td><?= esc($rol['nombre']) ?></td>
                     <td>
-                        <!--<a href="<?php echo base_url('roles/borrar/' . $rol["id"]); ?>"> Eliminar </a> -->
+                        <a href="<?= base_url('roles/eliminar/' . $rol['id']); ?>"
+                        onclick="return confirm('¿Deseas eliminar este rol?');">
+                            Eliminar
+                        </a>
                         <a href="<?php echo base_url('roles/editar/' . $rol["id"]); ?>"> Editar </a>
                         <a href="<?php echo base_url('roles/ver/' . $rol["id"]); ?>"> Ver </a>
                     </td>

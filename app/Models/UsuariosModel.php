@@ -8,18 +8,19 @@ class UsuariosModel extends Model
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
     protected $returnType       = 'array';
-    protected $useSoftDeletes   = false;
+    protected $useSoftDeletes   = true;
 
-    protected $allowedFields = ['nombre','username','password','id_rol','id_establecimiento_asignado'];
+
+    protected $allowedFields = ['nombre','username','password','id_rol','id_establecimiento_asignado', 'fecha_registro','fecha_edicion','fecha_borrado'];
     protected bool $allowEmptyInserts = false;
     protected bool $updateOnlyChanged = true;
 
     // Dates
-    protected $useTimestamps = false;
+    protected $useTimestamps = true;
     protected $dateFormat    = 'datetime';
-    protected $createdField  = 'created_at';
-    protected $updatedField  = 'updated_at';
-    protected $deletedField  = 'deleted_at';
+    protected $createdField  = 'fecha_registro';
+    protected $updatedField  = 'fecha_edicion';
+    protected $deletedField   = 'fecha_borrado';
 
     // Validation
     protected $validationRules      = [];

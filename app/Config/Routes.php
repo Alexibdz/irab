@@ -23,7 +23,7 @@ $routes->post('roles/insertar', 'Roles::insertar');
 $routes->get('roles/editar/(:num)', 'Roles::editar/$1');
 $routes->post('roles/actualizar', 'Roles::actualizar');
 $routes->get('roles/ver/(:num)', 'Roles::ver/$1');
-//$routes->get('roles/eliminar/(:num)', 'Roles::eliminar/$1');
+$routes->get('roles/eliminar/(:num)', 'Roles::eliminar/$1');
 
 $routes->get ('usuarios' , 'Usuarios::index');
 $routes->get ('usuarios/nuevo' , 'Usuarios::nuevo');
@@ -31,7 +31,7 @@ $routes->post ('usuarios/insertar' , 'Usuarios::insertar');
 $routes->get('usuarios/editar/(:num)', 'Usuarios::editar/$1');
 $routes->post('usuarios/actualizar', 'Usuarios::actualizar');
 $routes->get('usuarios/ver/(:num)', 'Usuarios::ver/$1');
-//$routes->get('usuarios/eliminar/(:num)', 'Roles::eliminar/$1');
+$routes->get('usuarios/eliminar/(:num)', 'Usuarios::eliminar/$1');
 
 $routes->get('establecimientos', 'Establecimientos::index');
 $routes->get('establecimientos/nuevo', 'Establecimientos::nuevo');
@@ -39,7 +39,7 @@ $routes->post('establecimientos/insertar', 'Establecimientos::insertar');
 $routes->get('establecimientos/editar/(:num)', 'Establecimientos::editar/$1');
 $routes->post('establecimientos/actualizar', 'Establecimientos::actualizar');
 $routes->get('establecimientos/ver/(:num)', 'Establecimientos::ver/$1');
-//$routes->get('establecimientos/borrar/(:num)', 'Establecimientos::borrar/$1');
+$routes->get('establecimientos/eliminar/(:num)', 'Establecimientos::eliminar/$1');
 
 });
 

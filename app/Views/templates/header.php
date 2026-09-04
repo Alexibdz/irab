@@ -23,6 +23,7 @@
                 <li class="nav-item"><a class="nav-link" href="<?= base_url('establecimientos') ?>">Establecimientos</a></li>
                 <li class="nav-item"><a class="nav-link" href="<?= base_url('paciente') ?>">Pacientes</a></li>
                 <li class="nav-item"><a class="nav-link" href="<?= base_url('tutor') ?>">Tutores</a></li>
+                <li class="nav-item"><a class="nav-link" href="<?= base_url('logout') ?>">Cerrar sesión</a></li>
             </ul>
         </div>
     </div>

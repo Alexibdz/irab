@@ -79,5 +79,27 @@ $routes->get('tutor/recuperar/(:num)', 'Tutor::recuperar/$1');
 
 //-----------------------------------------------------
 
+$routes->get('factores', 'Factores::index');
+$routes->get('factores/nuevo', 'Factores::nuevo');
+$routes->post('factores/insertar', 'Factores::insertar');
+$routes->get('factores/editar/(:num)', 'Factores::editar/$1');
+$routes->post('factores/actualizar', 'Factores::actualizar');
+$routes->get('factores/ver/(:num)', 'Factores::ver/$1');
+$routes->get('factores/eliminar/(:num)', 'Factores::eliminar/$1');
+$routes->get('factores/eliminados', 'Factores::eliminados');
+$routes->get('factores/recuperar/(:num)', 'Factores::recuperar/$1');
+
+$routes->get('sintomas', 'Sintomas::index');
+$routes->get('sintomas/nuevo', 'Sintomas::nuevo');
+$routes->post('sintomas/insertar', 'Sintomas::insertar');
+$routes->get('sintomas/editar/(:num)', 'Sintomas::editar/$1');
+$routes->post('sintomas/actualizar', 'Sintomas::actualizar');
+$routes->get('sintomas/ver/(:num)', 'Sintomas::ver/$1');
+$routes->get('sintomas/eliminar/(:num)', 'Sintomas::eliminar/$1');
+$routes->get('sintomas/eliminados', 'Sintomas::eliminados');
+$routes->get('sintomas/recuperar/(:num)', 'Sintomas::recuperar/$1');
+
+//-----------------------------------------------------
+
 });
 

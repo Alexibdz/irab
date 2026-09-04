@@ -41,8 +41,6 @@ $routes->post('establecimientos/actualizar', 'Establecimientos::actualizar');
 $routes->get('establecimientos/ver/(:num)', 'Establecimientos::ver/$1');
 $routes->get('establecimientos/eliminar/(:num)', 'Establecimientos::eliminar/$1');
 
-});
-
 //----------------------------- PACIENTE (por Lara)---------------------------
 // lista de pacientes
 $routes->get('paciente', 'Paciente::index');
@@ -73,3 +71,6 @@ $routes->get('tutor/recuperar/(:num)', 'Tutor::recuperar/$1');
 
 
 //-----------------------------------------------------
+
+});
+

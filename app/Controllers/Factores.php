@@ -3,14 +3,17 @@
 namespace App\Controllers;
 
 use App\Models\FactoresModel;
+use App\Models\ValoresFactoresModel;
 
 class Factores extends BaseController
 {
     protected $factor;
+    protected $valor;
 
     public function __construct()
     {
         $this->factor = new FactoresModel();
+        $this->valor = new ValoresFactoresModel();
     }
 
     public function index()
@@ -57,6 +60,7 @@ class Factores extends BaseController
 
         $datos = [
             "factor" => $factor,
+            "valores" => $this->valor->where('id_factor', $id)->findAll(),
             "titulo" => "Editar Factor"
         ];
 
@@ -86,6 +90,7 @@ class Factores extends BaseController
 
         $datos = [
             "factor" => $factor,
+            "valores" => $this->valor->where('id_factor', $id)->findAll(),
             "titulo" => "Ver Factor"
         ];
 

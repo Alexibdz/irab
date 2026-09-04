@@ -16,8 +16,37 @@
                         <dd class="col-sm-8"><?= esc($sintoma['tipo_formulario']) ?></dd>
                     </dl>
 
+                    <hr>
+
+                    <h3 class="h5">Valores y Puntos</h3>
+                    <?php if (empty($valores)): ?>
+                        <p class="text-muted">Todavía no tiene valores cargados.</p>
+                    <?php else: ?>
+                        <table class="table table-sm table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Valor Mínimo</th>
+                                    <th>Valor Máximo</th>
+                                    <th>Valor Texto</th>
+                                    <th>Puntos</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($valores as $valor): ?>
+                                    <tr>
+                                        <td><?= esc($valor['valor_min'] ?? '-') ?></td>
+                                        <td><?= esc($valor['valor_max'] ?? '-') ?></td>
+                                        <td><?= esc($valor['valor_texto'] ?? '-') ?></td>
+                                        <td><?= esc($valor['puntos']) ?></td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    <?php endif; ?>
+
                     <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
                         <a href="<?= base_url('sintomas') ?>" class="btn btn-secondary">Volver</a>
+                        <a href="<?= base_url('sintomas/valores/'.$sintoma['id']) ?>" class="btn btn-primary">Gestionar Valores</a>
                         <a href="<?= base_url('sintomas/editar/'.$sintoma['id']) ?>" class="btn btn-warning">Editar</a>
                     </div>
                 </div>

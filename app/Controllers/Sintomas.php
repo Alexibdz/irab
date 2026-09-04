@@ -3,14 +3,17 @@
 namespace App\Controllers;
 
 use App\Models\SintomasModel;
+use App\Models\ValoresSintomasModel;
 
 class Sintomas extends BaseController
 {
     protected $sintoma;
+    protected $valor;
 
     public function __construct()
     {
         $this->sintoma = new SintomasModel();
+        $this->valor = new ValoresSintomasModel();
     }
 
     public function index()
@@ -56,6 +59,7 @@ class Sintomas extends BaseController
 
         $datos = [
             "sintoma" => $sintoma,
+            "valores" => $this->valor->where('id_sintoma', $id)->findAll(),
             "titulo" => "Editar Sintoma"
         ];
 
@@ -84,6 +88,7 @@ class Sintomas extends BaseController
 
         $datos = [
             "sintoma" => $sintoma,
+            "valores" => $this->valor->where('id_sintoma', $id)->findAll(),
             "titulo" => "Ver Sintoma"
         ];
 

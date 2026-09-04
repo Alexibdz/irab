@@ -41,6 +41,30 @@
                         </div>
 
                     </form>
+
+                    <hr>
+
+                    <h3 class="h5">Valores</h3>
+                    <?php if (empty($valores)): ?>
+                        <p class="text-muted">Todavía no tiene valores cargados.</p>
+                    <?php else: ?>
+                        <table class="table table-sm table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Valor</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($valores as $valor): ?>
+                                    <tr>
+                                        <td><?= esc($valor['valor']) ?></td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    <?php endif; ?>
+                    <a href="<?= base_url('factores/valores/'.$factor['id']) ?>" class="btn btn-primary btn-sm">Gestionar Valores</a>
+
                 </div>
             </div>
 

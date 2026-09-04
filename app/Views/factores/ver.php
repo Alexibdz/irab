@@ -19,8 +19,31 @@
                         <dd class="col-sm-8"><?= esc($factor['tipo_formulario']) ?></dd>
                     </dl>
 
+                    <hr>
+
+                    <h3 class="h5">Valores</h3>
+                    <?php if (empty($valores)): ?>
+                        <p class="text-muted">Todavía no tiene valores cargados.</p>
+                    <?php else: ?>
+                        <table class="table table-sm table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Valor</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($valores as $valor): ?>
+                                    <tr>
+                                        <td><?= esc($valor['valor']) ?></td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    <?php endif; ?>
+
                     <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
                         <a href="<?= base_url('factores') ?>" class="btn btn-secondary">Volver</a>
+                        <a href="<?= base_url('factores/valores/'.$factor['id']) ?>" class="btn btn-primary">Gestionar Valores</a>
                         <a href="<?= base_url('factores/editar/'.$factor['id']) ?>" class="btn btn-warning">Editar</a>
                     </div>
                 </div>

@@ -23,6 +23,7 @@
                             <td><?= esc($factor['tipo_formulario']) ?></td>
                             <td>
                                 <a href="<?= base_url('factores/ver/'.$factor['id']) ?>" class="btn btn-info btn-sm">Ver</a>
+                                <a href="<?= base_url('factores/valores/'.$factor['id']) ?>" class="btn btn-primary btn-sm">Valores</a>
                                 <a href="<?= base_url('factores/editar/'.$factor['id']) ?>" class="btn btn-warning btn-sm">Editar</a>
                                 <a href="<?= base_url('factores/eliminar/'.$factor['id']) ?>" class="btn btn-danger btn-sm" onclick="return confirm('¿Seguro que deseas borrar este factor?');">Eliminar</a>
                             </td>

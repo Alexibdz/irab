@@ -6,8 +6,8 @@ class Panel extends BaseController
 {
     public function index()
     {
-        echo view('header');
+        echo view('templates/header');
         echo view('panel/inicio');
-        echo view('footer');
+        echo view('templates/footer');
     }
 }

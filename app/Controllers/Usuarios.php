@@ -33,9 +33,9 @@ class Usuarios extends BaseController
             "titulo" => "Usuarios"
         ];
 
-        echo view('header');
+        echo view('templates/header');
         echo view('usuarios/listado', $datos);
-        echo view('footer');
+        echo view('templates/footer');
     }
 
     public function nuevo()
@@ -49,9 +49,9 @@ class Usuarios extends BaseController
             "titulo" => "Nuevo Usuario"
         ];
 
-        echo view('header');
+        echo view('templates/header');
         echo view('usuarios/nuevo', $datos);
-        echo view('footer');
+        echo view('templates/footer');
     }
 
     public function insertar()
@@ -82,9 +82,9 @@ class Usuarios extends BaseController
             "titulo" => "Editar Usuario"
         ];
 
-        echo view('header');
+        echo view('templates/header');
         echo view('usuarios/editar', $datos);
-        echo view('footer');
+        echo view('templates/footer');
     }
 
     public function actualizar()
@@ -124,9 +124,9 @@ class Usuarios extends BaseController
             "titulo" => "Ver Usuario"
         ];
 
-        echo view('header');
+        echo view('templates/header');
         echo view('usuarios/ver', $datos);
-        echo view('footer');
+        echo view('templates/footer');
     }
 
     public function eliminar($id)

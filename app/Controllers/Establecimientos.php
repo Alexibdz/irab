@@ -22,9 +22,9 @@ class Establecimientos extends BaseController
             "titulo" => "Establecimientos"
         ];
 
-        echo view('header');
+        echo view('templates/header');
         echo view('establecimientos/listado', $datos);
-        echo view('footer');
+        echo view('templates/footer');
     }
 
     public function nuevo()
@@ -33,9 +33,9 @@ class Establecimientos extends BaseController
             "titulo" => "Nuevo Establecimiento"
         ];
 
-        echo view('header');
+        echo view('templates/header');
         echo view('establecimientos/nuevo', $datos);
-        echo view('footer');
+        echo view('templates/footer');
     }
 
     public function insertar()
@@ -60,9 +60,9 @@ class Establecimientos extends BaseController
             "titulo" => "Ver Establecimiento"
         ];
 
-        echo view('header');
+        echo view('templates/header');
         echo view('establecimientos/ver', $datos);
-        echo view('footer');
+        echo view('templates/footer');
     }
 
     public function editar($id)
@@ -74,9 +74,9 @@ class Establecimientos extends BaseController
             "titulo" => "Editar Establecimiento"
         ];
 
-        echo view('header');
+        echo view('templates/header');
         echo view('establecimientos/editar', $datos);
-        echo view('footer');
+        echo view('templates/footer');
     }
 
     public function actualizar()

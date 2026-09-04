@@ -22,9 +22,9 @@ class Roles extends BaseController
             "titulo" => "Roles"
         ];
 
-        echo view('header');
+        echo view('templates/header');
         echo view('roles/listado', $datos);
-        echo view('footer');
+        echo view('templates/footer');
     }
 
     public function nuevo()
@@ -33,9 +33,9 @@ class Roles extends BaseController
             "titulo" => "Nuevo Rol"
         ];
 
-        echo view('header');
+        echo view('templates/header');
         echo view('roles/nuevo', $datos);
-        echo view('footer');
+        echo view('templates/footer');
     }
 
     public function insertar()
@@ -58,9 +58,9 @@ class Roles extends BaseController
             "titulo" => "Editar Rol"
         ];
 
-        echo view('header');
+        echo view('templates/header');
         echo view('roles/editar', $datos);
-        echo view('footer');
+        echo view('templates/footer');
     }
 
     public function actualizar()
@@ -85,9 +85,9 @@ class Roles extends BaseController
             "titulo" => "Ver Rol"
         ];
 
-        echo view('header');
+        echo view('templates/header');
         echo view('roles/ver', $datos);
-        echo view('footer');
+        echo view('templates/footer');
     }
 
     public function eliminar($id)

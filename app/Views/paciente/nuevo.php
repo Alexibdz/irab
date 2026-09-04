@@ -47,19 +47,21 @@
                                     <?php endforeach; ?>
                                 </select>
                             </div>
-                            <!-- 
-                                
-                                Al igual que el tutor, este campo numérico se reemplazará más adelante 
-                                por un menú desplegable conectado a la tabla de Establecimientos.
-                            -->
+
                             <div class="mb-3">
-                                <label for="id_establecimiento_habitual" class="form-label">ID del Establecimiento Habitual</label>
-                                <input type="number" class="form-control" id="id_establecimiento_habitual" name="id_establecimiento_habitual" required>
+                                <label class="form-label">Establecimiento Habitual</label>
+                                <select class="form-select" name="id_establecimiento_habitual" required>
+                                    <option value="" disabled selected>Seleccione un establecimiento</option>
+                                    <?php foreach ($establecimientos as $establecimiento): ?>
+                                    <option value="<?= $establecimiento['id'] ?>"><?= $establecimiento['nombre'] ?></option>
+                                    <?php endforeach; ?>
+                                </select>
                             </div>
 
                             <!-- Botones de acción -->
                             <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
-                            <a href="<?= base_url('paciente') ?>" class="btn btn-secondary">Cancelar</a>                                <button type="submit" class="btn btn-primary">Guardar Paciente</button>
+                            <a href="<?= base_url('paciente') ?>" class="btn btn-secondary">Cancelar</a>                                
+                            <button type="submit" class="btn btn-primary">Guardar Paciente</button>
                             </div>
                             
                         </form>

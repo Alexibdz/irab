@@ -3,16 +3,19 @@ namespace App\Controllers;
 
 use App\Models\PacienteModel;
 use App\Models\TutorModel; 
+use App\Models\EstablecimientosModel;
 
 class Paciente extends BaseController
 {
     protected $pacienteModel;
-    protected $tutorModel; //agrego lo de tutor que no estaba 
+    protected $tutorModel;  
+    protected $establecimientosModel;
 
     public function __construct()
     {
         $this->pacienteModel = new PacienteModel();
         $this->tutorModel = new TutorModel(); 
+        $this->establecimientosModel = new EstablecimientosModel();
     }
 
     public function index()
@@ -20,6 +23,7 @@ class Paciente extends BaseController
         $datos = [
             'pacientes' => $this->pacienteModel->findAll(),
             'tutores' => $this->tutorModel->findAll(),
+            'establecimientos' =>$this ->establecimientosModel ->findAll(),
             'titulo'    => 'Listado de Pacientes'
         ];
         
@@ -32,7 +36,8 @@ class Paciente extends BaseController
     {
         $datos = [
             'titulo'  => 'Registrar Paciente',
-            'tutores' => $this->tutorModel->findAll() //  lista de tutores a la vista
+            'tutores' => $this->tutorModel->findAll(), //  lista de tutores a la vista
+            'establecimientos' =>$this ->establecimientosModel ->findAll()
         ];
 
         echo view('templates/header', $datos);
@@ -59,6 +64,7 @@ class Paciente extends BaseController
         $datos = [
             'paciente' => $this->pacienteModel->where('id', $id)->first(),
             'tutores'  => $this->tutorModel->findAll(), 
+            'establecimientos' =>$this ->establecimientosModel ->findAll(),
             'titulo'   => 'Editar Paciente'
         ];
         

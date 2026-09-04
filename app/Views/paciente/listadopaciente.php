@@ -49,7 +49,16 @@
                                     
                                     ?>
                                 </td>
-                                <td><?= $paciente['id_establecimiento_habitual'] ?></td>
+                                <td>
+                                    <?php  
+                                        foreach($establecimientos as $establecimiento) {
+                                            if($establecimiento['id'] == $paciente['id_establecimiento_habitual']) {
+                                                echo $establecimiento['nombre'];
+                                                break;
+                                            }
+                                        }
+                                    ?>
+</td>
                                 <td>
                                     <a href="<?= base_url('paciente/editar/'.$paciente['id']) ?>" class="btn btn-warning btn-sm">Editar</a>
                                     <a href="<?= base_url('paciente/borrar/'.$paciente['id']) ?>" class="btn btn-danger btn-sm" onclick="return confirm('¿Seguro que deseas borrar este paciente?');">Borrar</a>

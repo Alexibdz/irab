@@ -54,8 +54,15 @@
                             </div>
 
                             <div class="mb-3">
-                                <label for="id_establecimiento_habitual" class="form-label">ID del Establecimiento Habitual</label>
-                                <input type="number" class="form-control" id="id_establecimiento_habitual" name="id_establecimiento_habitual" value="<?= $paciente['id_establecimiento_habitual'] ?>" required>
+                                <label class="form-label">Establecimiento Habitual</label>
+                                <select class="form-select" name="id_establecimiento_habitual" required>
+                                    <option value="" disabled>Seleccione un establecimiento...</option>
+                                    <?php foreach ($establecimientos as $establecimiento): ?>
+                                        <option value="<?= $establecimiento['id'] ?>" <?= ($establecimiento['id'] == $paciente['id_establecimiento_habitual']) ? 'selected' : '' ?>>
+                                            <?= $establecimiento['nombre'] ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
                             </div>
 
                             <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">

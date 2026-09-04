@@ -1,15 +1,4 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Listado de Pacientes</title>
-    <!-- esto hay q unificarlo despues -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body class="bg-light">
-    
-    <div class="container mt-5">
+<div class="container mt-5">
         <h2 class="mb-4">Listado de Pacientes Registrados</h2>
         
         <!-- para agregar a agregar otro paciente -->
@@ -58,7 +47,7 @@
                                             }
                                         }
                                     ?>
-</td>
+                                </td>
                                 <td>
                                     <a href="<?= base_url('paciente/editar/'.$paciente['id']) ?>" class="btn btn-warning btn-sm">Editar</a>
                                     <a href="<?= base_url('paciente/borrar/'.$paciente['id']) ?>" class="btn btn-danger btn-sm" onclick="return confirm('¿Seguro que deseas borrar este paciente?');">Borrar</a>
@@ -70,7 +59,4 @@
                 </table>
             </div>
         </div>
-    </div>
-
-</body>
-</html>
+</div>

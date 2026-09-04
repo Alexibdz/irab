@@ -96,4 +96,21 @@ class Roles extends BaseController
 
         return redirect()->to(base_url('roles'));
     }
+    public function eliminados()
+    {
+        $datos = [
+            'roles' => $this->rol->onlyDeleted()->findAll(),
+            'titulo' => 'Roles Eliminados'
+        ];
+
+        echo view('templates/header', $datos);
+        echo view('roles/eliminados', $datos);
+        echo view('templates/footer');
+    }
+
+    public function recuperar($id)
+    {
+        $this->rol->update($id, ['fecha_borrado' => null]);
+        return redirect()->to(base_url('roles'));
+    }
 }

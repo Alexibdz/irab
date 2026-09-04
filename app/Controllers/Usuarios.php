@@ -135,4 +135,23 @@ class Usuarios extends BaseController
 
         return redirect()->to(base_url('usuarios'));
     }
+
+    public function eliminados()
+    {
+        $datos = [
+            'usuarios' => $this->usuarios->onlyDeleted()->findAll(),
+            'titulo' => 'Usuarios Eliminados'
+        ];
+
+        echo view('templates/header', $datos);
+        echo view('usuarios/eliminados', $datos);
+        echo view('templates/footer');
+    }
+
+    public function recuperar($id)
+    {
+        $this->usuarios->update($id, ['fecha_borrado' => null]);
+        return redirect()->to(base_url('usuarios'));
+    }
+    
 }

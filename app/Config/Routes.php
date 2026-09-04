@@ -24,6 +24,8 @@ $routes->get('roles/editar/(:num)', 'Roles::editar/$1');
 $routes->post('roles/actualizar', 'Roles::actualizar');
 $routes->get('roles/ver/(:num)', 'Roles::ver/$1');
 $routes->get('roles/eliminar/(:num)', 'Roles::eliminar/$1');
+$routes->get('roles/eliminados', 'Roles::eliminados');
+$routes->get('roles/recuperar/(:num)', 'Roles::recuperar/$1');
 
 $routes->get ('usuarios' , 'Usuarios::index');
 $routes->get ('usuarios/nuevo' , 'Usuarios::nuevo');
@@ -32,6 +34,9 @@ $routes->get('usuarios/editar/(:num)', 'Usuarios::editar/$1');
 $routes->post('usuarios/actualizar', 'Usuarios::actualizar');
 $routes->get('usuarios/ver/(:num)', 'Usuarios::ver/$1');
 $routes->get('usuarios/eliminar/(:num)', 'Usuarios::eliminar/$1');
+$routes->get('usuarios/eliminados', 'Usuarios::eliminados');
+$routes->get('usuarios/recuperar/(:num)', 'Usuarios::recuperar/$1');
+
 
 $routes->get('establecimientos', 'Establecimientos::index');
 $routes->get('establecimientos/nuevo', 'Establecimientos::nuevo');
@@ -40,6 +45,8 @@ $routes->get('establecimientos/editar/(:num)', 'Establecimientos::editar/$1');
 $routes->post('establecimientos/actualizar', 'Establecimientos::actualizar');
 $routes->get('establecimientos/ver/(:num)', 'Establecimientos::ver/$1');
 $routes->get('establecimientos/eliminar/(:num)', 'Establecimientos::eliminar/$1');
+$routes->get('establecimientos/eliminados', 'Establecimientos::eliminados');
+$routes->get('establecimientos/recuperar/(:num)', 'Establecimientos::recuperar/$1');
 
 //----------------------------- PACIENTE (por Lara)---------------------------
 // lista de pacientes

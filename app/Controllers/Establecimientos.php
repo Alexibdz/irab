@@ -100,4 +100,21 @@ class Establecimientos extends BaseController
 
         return redirect()->to(base_url('establecimientos'));
     }
+    public function eliminados()
+    {
+        $datos = [
+            'establecimientos' => $this->establecimiento->onlyDeleted()->findAll(),
+            'titulo' => 'Establecimientos Eliminados'
+        ];
+
+        echo view('templates/header', $datos);
+        echo view('establecimientos/eliminados', $datos);
+        echo view('templates/footer');
+    }
+
+    public function recuperar($id)
+    {
+        $this->establecimiento->update($id, ['fecha_borrado' => null]);
+        return redirect()->to(base_url('establecimientos'));
+    }
 }

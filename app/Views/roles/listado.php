@@ -2,11 +2,11 @@
     <div>
         <h2><?= esc($titulo) ?></h2>
         <a href="<?php echo base_url('roles/nuevo'); ?>">Nuevo Rol</a>
+        <a href="<?php echo base_url('roles/eliminados'); ?>">Ver Papelera</a>
     </div>
     <table>
         <thead>
             <tr>
-                <th>ID</th>
                 <th>Nombre</th>
                 <th>Acciones</th>
             </tr>
@@ -14,7 +14,6 @@
         <tbody>
             <?php foreach ($roles as $rol): ?>
                 <tr>
-                    <td><?= esc($rol['id']) ?></td>
                     <td><?= esc($rol['nombre']) ?></td>
                     <td>
                         <a href="<?= base_url('roles/eliminar/' . $rol['id']); ?>"

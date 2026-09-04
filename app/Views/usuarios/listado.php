@@ -2,6 +2,7 @@
     <div>
         <h2><?= esc($titulo) ?></h2>
         <a href="<?php echo base_url('usuarios/nuevo'); ?>">Nuevo Usuario</a>
+        <a href="<?php echo base_url('usuarios/eliminados'); ?>">Ver Papelera</a>
     </div>
     <table>
         <thead>

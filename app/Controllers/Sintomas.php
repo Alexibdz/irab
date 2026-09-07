@@ -50,7 +50,7 @@ class Sintomas extends BaseController
 
         $this->sintoma->save($datos);
 
-        return redirect()->to(base_url('sintomas'));
+        return redirect()->to(base_url('sintomas'))->with('exito', 'Sintoma creado correctamente.');
     }
 
     public function editar($id)
@@ -79,7 +79,7 @@ class Sintomas extends BaseController
 
         $this->sintoma->update($id, $datos);
 
-        return redirect()->to(base_url('sintomas'));
+        return redirect()->to(base_url('sintomas'))->with('exito', 'Sintoma actualizado correctamente.');
     }
 
     public function ver($id)
@@ -101,7 +101,7 @@ class Sintomas extends BaseController
     {
         $this->sintoma->delete($id);
 
-        return redirect()->to(base_url('sintomas'));
+        return redirect()->to(base_url('sintomas'))->with('exito', 'Sintoma eliminado correctamente.');
     }
 
     public function eliminados()
@@ -119,6 +119,6 @@ class Sintomas extends BaseController
     public function recuperar($id)
     {
         $this->sintoma->update($id, ['fecha_borrado' => null]);
-        return redirect()->to(base_url('sintomas'));
+        return redirect()->to(base_url('sintomas'))->with('exito', 'Sintoma recuperado correctamente.');
     }
 }

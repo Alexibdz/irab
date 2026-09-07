@@ -1,7 +1,7 @@
 <div>
     <h2>Roles Eliminados (Inactivos)</h2>
     <a href="<?php echo base_url('roles'); ?>">Volver a Roles Activos</a>
-    <table>
+    <table class="table table-striped table-hover tabla-datos">
         <thead>
             <tr>
                 <th>Nombre</th>

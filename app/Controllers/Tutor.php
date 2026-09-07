@@ -29,7 +29,7 @@ class Tutor extends BaseController {
             'nombre'   => $this->request->getPost('nombre'),
             'telefono' => $this->request->getPost('telefono')
         ]);
-        return redirect()->to(base_url('tutor'));
+        return redirect()->to(base_url('tutor'))->with('exito', 'Tutor creado correctamente.');
     }
 
     public function editar($id) {
@@ -48,7 +48,7 @@ class Tutor extends BaseController {
             'nombre'   => $this->request->getPost('nombre'),
             'telefono' => $this->request->getPost('telefono')
         ]);
-        return redirect()->to(base_url('tutor'));
+        return redirect()->to(base_url('tutor'))->with('exito', 'Tutor actualizado correctamente.');
     }
 
     public function borrar($id) {
@@ -71,6 +71,6 @@ class Tutor extends BaseController {
 
     public function recuperar($id) {
         $this->tutorModel->update($id, ['fecha_borrado' => null]);
-        return redirect()->to(base_url('tutor'));
+        return redirect()->to(base_url('tutor'))->with('exito', 'Tutor recuperado correctamente.');
     }
 }

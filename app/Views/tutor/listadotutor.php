@@ -5,7 +5,7 @@
         <a href="<?= base_url('tutor/eliminados') ?>" class="btn btn-danger">Ver Papelera</a>
     </div>
 </div>
-<table class="table table-bordered bg-white shadow-sm">
+<table class="table table-bordered bg-white shadow-sm tabla-datos">
     <thead class="table-dark">
         <tr>
             <th>DNI</th>

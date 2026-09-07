@@ -66,7 +66,7 @@ class Usuarios extends BaseController
 
         $this->usuarios->save($datos);
 
-        return redirect()->to(base_url('usuarios'));
+        return redirect()->to(base_url('usuarios'))->with('exito', 'Usuario creado correctamente.');
     }
 
     public function editar($id)
@@ -106,7 +106,7 @@ class Usuarios extends BaseController
 
         $this->usuarios->update($id, $datos);
 
-        return redirect()->to(base_url('usuarios'));
+        return redirect()->to(base_url('usuarios'))->with('exito', 'Usuario actualizado correctamente.');
     }
 
     public function ver($id)
@@ -133,7 +133,7 @@ class Usuarios extends BaseController
     {
         $this->usuarios->delete($id);
 
-        return redirect()->to(base_url('usuarios'));
+        return redirect()->to(base_url('usuarios'))->with('exito', 'Usuario eliminado correctamente.');
     }
 
     public function eliminados()
@@ -151,7 +151,7 @@ class Usuarios extends BaseController
     public function recuperar($id)
     {
         $this->usuarios->update($id, ['fecha_borrado' => null]);
-        return redirect()->to(base_url('usuarios'));
+        return redirect()->to(base_url('usuarios'))->with('exito', 'Usuario recuperado correctamente.');
     }
     
 }

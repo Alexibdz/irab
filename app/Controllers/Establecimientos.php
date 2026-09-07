@@ -48,7 +48,7 @@ class Establecimientos extends BaseController
 
         $this->establecimiento->save($datos);
 
-        return redirect()->to(base_url('establecimientos'));
+        return redirect()->to(base_url('establecimientos'))->with('exito', 'Establecimiento creado correctamente.');
     }
 
     public function ver($id)
@@ -91,14 +91,14 @@ class Establecimientos extends BaseController
 
         $this->establecimiento->update($id, $datos);
 
-        return redirect()->to(base_url('establecimientos'));
+        return redirect()->to(base_url('establecimientos'))->with('exito', 'Establecimiento actualizado correctamente.');
     }
 
     public function eliminar($id)
     {
         $this->establecimiento->delete($id);
 
-        return redirect()->to(base_url('establecimientos'));
+        return redirect()->to(base_url('establecimientos'))->with('exito', 'Establecimiento eliminado correctamente.');
     }
     public function eliminados()
     {
@@ -115,6 +115,6 @@ class Establecimientos extends BaseController
     public function recuperar($id)
     {
         $this->establecimiento->update($id, ['fecha_borrado' => null]);
-        return redirect()->to(base_url('establecimientos'));
+        return redirect()->to(base_url('establecimientos'))->with('exito', 'Establecimiento recuperado correctamente.');
     }
 }

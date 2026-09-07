@@ -16,7 +16,8 @@
                             <th>Nombre Completo</th>
                             <th>Fecha de Nacimiento</th>
                             <th>Tutor</th>
-                            <th>Establecimiento</th>
+                            <th>Establecimiento Habitual</th>
+                            <th>Área Programática</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
@@ -48,6 +49,18 @@
                                         }
                                     ?>
                                 </td>
+                                
+                                <td>
+                                    <?php  
+                                        foreach($establecimientos as $establecimiento) {
+                                            if($establecimiento['id'] == $paciente['id_area_programatica']) {
+                                                echo $establecimiento['nombre'];
+                                                break;
+                                            }
+                                        }
+                                    ?>
+                                </td>
+
                                 <td>
                                     <a href="<?= base_url('paciente/editar/'.$paciente['id']) ?>" class="btn btn-warning btn-sm">Editar</a>
                                     <a href="<?= base_url('paciente/borrar/'.$paciente['id']) ?>" class="btn btn-danger btn-sm" onclick="return confirm('¿Seguro que deseas borrar este paciente?');">Borrar</a>

@@ -11,7 +11,8 @@ class PacienteModel extends Model {
         'dni', 
         'nombre', 
         'fecha_nacimiento',
-        'id_tutor', 
+        'id_tutor',
+        'id_area_programatica',
         'id_establecimiento_habitual',
         'fecha_borrado'
     ];

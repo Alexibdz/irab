@@ -38,6 +38,16 @@
                         </div>
 
                         <div class="mb-3">
+                            <label class="form-label">Área Programática (Zona/Cuartel)</label>
+                            <select class="form-select" name="id_area_programatica" required>
+                                <option value="" disabled selected>Seleccione un área programática</option>
+                                <?php foreach ($establecimientos as $establecimiento): ?>
+                                    <option value="<?= $establecimiento['id'] ?>"><?= $establecimiento['nombre'] ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
                             <label class="form-label">Establecimiento Habitual</label>
                             <select class="form-select" name="id_establecimiento_habitual" required>
                                 <option value="" disabled selected>Seleccione un establecimiento</option>

@@ -7,7 +7,15 @@
         </div>
         <div>
             <label for="cuartel">Cuartel</label>
-            <input type="text" name="cuartel" id="cuartel">
+            <select name="cuartel" id="cuartel" required>
+                <option value="">Seleccione un cuartel</option>
+                <option value="Primer Cuartel">Primer Cuartel</option>
+                <option value="Segundo Cuartel">Segundo Cuartel</option>
+                <option value="Tercer Cuartel">Tercer Cuartel</option>
+                <option value="Cuarto Cuartel">Cuarto Cuartel</option>
+                <option value="Quinto Cuartel">Quinto Cuartel</option>
+                <option value="Zona Abadía y Barrio Arenal">Zona Abadía y Barrio Arenal</option>
+            </select>
         </div>
         <div>
             <label for="tipo">Tipo</label>

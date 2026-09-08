@@ -46,7 +46,7 @@ class Roles extends BaseController
 
         $this->rol->save($datos);
 
-        return redirect()->to(base_url('roles'));
+        return redirect()->to(base_url('roles'))->with('exito', 'Rol creado correctamente.');
     }
 
     public function editar($id)
@@ -73,7 +73,7 @@ class Roles extends BaseController
 
         $this->rol->update($id, $datos);
 
-        return redirect()->to(base_url('roles'));
+        return redirect()->to(base_url('roles'))->with('exito', 'Rol actualizado correctamente.');
     }
 
     public function ver($id)
@@ -94,7 +94,7 @@ class Roles extends BaseController
     {
         $this->rol->delete($id);
 
-        return redirect()->to(base_url('roles'));
+        return redirect()->to(base_url('roles'))->with('exito', 'Rol eliminado correctamente.');
     }
     public function eliminados()
     {
@@ -111,6 +111,6 @@ class Roles extends BaseController
     public function recuperar($id)
     {
         $this->rol->update($id, ['fecha_borrado' => null]);
-        return redirect()->to(base_url('roles'));
+        return redirect()->to(base_url('roles'))->with('exito', 'Rol recuperado correctamente.');
     }
 }

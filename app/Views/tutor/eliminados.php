@@ -1,7 +1,7 @@
 <h2 class="mb-4 text-danger">Tutores Inactivos (Papelera)</h2>
 <a href="<?= base_url('tutor') ?>" class="btn btn-secondary mb-3">Volver a Tutores Activos</a>
 
-<table class="table table-bordered bg-white shadow-sm">
+<table class="table table-bordered bg-white shadow-sm tabla-datos">
     <thead class="table-dark">
         <tr>
             <th>DNI</th>

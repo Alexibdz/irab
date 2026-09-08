@@ -55,7 +55,7 @@ class ValoresSintomas extends BaseController
 
         $this->valor->save($datos);
 
-        return redirect()->to(base_url('sintomas/valores/'.$idSintoma));
+        return redirect()->to(base_url('sintomas/valores/'.$idSintoma))->with('exito', 'Valor creado correctamente.');
     }
 
     public function editar($id)
@@ -87,7 +87,7 @@ class ValoresSintomas extends BaseController
 
         $this->valor->update($id, $datos);
 
-        return redirect()->to(base_url('sintomas/valores/'.$idSintoma));
+        return redirect()->to(base_url('sintomas/valores/'.$idSintoma))->with('exito', 'Valor actualizado correctamente.');
     }
 
     public function eliminar($id)
@@ -97,6 +97,6 @@ class ValoresSintomas extends BaseController
 
         $this->valor->delete($id);
 
-        return redirect()->to(base_url('sintomas/valores/'.$idSintoma));
+        return redirect()->to(base_url('sintomas/valores/'.$idSintoma))->with('exito', 'Valor eliminado correctamente.');
     }
 }

@@ -51,7 +51,7 @@ class Factores extends BaseController
 
         $this->factor->save($datos);
 
-        return redirect()->to(base_url('factores'));
+        return redirect()->to(base_url('factores'))->with('exito', 'Factor creado correctamente.');
     }
 
     public function editar($id)
@@ -81,7 +81,7 @@ class Factores extends BaseController
 
         $this->factor->update($id, $datos);
 
-        return redirect()->to(base_url('factores'));
+        return redirect()->to(base_url('factores'))->with('exito', 'Factor actualizado correctamente.');
     }
 
     public function ver($id)
@@ -103,7 +103,7 @@ class Factores extends BaseController
     {
         $this->factor->delete($id);
 
-        return redirect()->to(base_url('factores'));
+        return redirect()->to(base_url('factores'))->with('exito', 'Factor eliminado correctamente.');
     }
 
     public function eliminados()
@@ -121,6 +121,6 @@ class Factores extends BaseController
     public function recuperar($id)
     {
         $this->factor->update($id, ['fecha_borrado' => null]);
-        return redirect()->to(base_url('factores'));
+        return redirect()->to(base_url('factores'))->with('exito', 'Factor recuperado correctamente.');
     }
 }

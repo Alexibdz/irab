@@ -4,7 +4,7 @@
         <a href="<?php echo base_url('usuarios/nuevo'); ?>">Nuevo Usuario</a>
         <a href="<?php echo base_url('usuarios/eliminados'); ?>">Ver Papelera</a>
     </div>
-    <table>
+    <table class="table table-striped table-hover tabla-datos">
         <thead>
             <tr>
                 <th>Nombre</th>

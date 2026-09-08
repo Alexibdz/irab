@@ -8,7 +8,7 @@
 
         <div class="card shadow-sm">
             <div class="card-body">
-                <table class="table table-striped table-hover">
+                <table class="table table-striped table-hover tabla-datos">
                     <thead>
                         <tr>
                             <th>DNI</th>

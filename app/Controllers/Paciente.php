@@ -59,7 +59,7 @@ class Paciente extends BaseController
         ];
 
         $this->pacienteModel->insert($datos);
-        return redirect()->to(base_url('paciente'));
+        return redirect()->to(base_url('paciente'))->with('exito', 'Paciente creado correctamente.');
     }
 
     public function editar($id)
@@ -91,7 +91,7 @@ class Paciente extends BaseController
             'id_establecimiento_habitual' => $this->request->getPost('id_establecimiento_habitual')
         ]);
         
-        return redirect()->to(base_url('paciente'));
+        return redirect()->to(base_url('paciente'))->with('exito', 'Paciente actualizado correctamente.');
     }
 
     public function borrar($id)
@@ -121,6 +121,6 @@ class Paciente extends BaseController
     {
         $this->pacienteModel->update($id, ['fecha_borrado' => null]);
         
-        return redirect()->to(base_url('paciente'));
+        return redirect()->to(base_url('paciente'))->with('exito', 'Paciente recuperado correctamente.');
     }
 }

@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Iniciar sesión - IRAB</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link href="<?= base_url('assets/css/app.css') ?>" rel="stylesheet">
 </head>
 <body class="bg-body-secondary">
@@ -41,9 +42,15 @@
 
                     <div class="mb-4">
                         <label for="password" class="form-label">Contraseña</label>
-                        <input type="password" class="form-control" id="password" name="password"
-                               autocomplete="current-password" required>
+
+                        <div class="input-group">
+                            <input type="password" class="form-control" id="password" name="password" autocomplete="current-password" required>
+                            <button type="button" class="btn btn-outline-secondary" id="mostrarPassword">
+                                <i class="bi bi-eye"></i>
+                            </button>
+                        </div>
                     </div>
+                    
 
                     <div class="d-grid">
                         <button type="submit" class="btn btn-primary">Entrar</button>
@@ -55,6 +62,6 @@
 
     </div>
 </main>
-
+<script src="<?= base_url('assets/js/password.js') ?>"></script>
 </body>
 </html>

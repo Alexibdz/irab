@@ -52,6 +52,8 @@ class Paciente extends BaseController
             'nombre'                      => $this->request->getPost('nombre'),
             'fecha_nacimiento'            => $this->request->getPost('fecha_nacimiento'),
             'id_tutor'                    => $this->request->getPost('id_tutor'),
+            'domicilio'                   => $this->request->getPost('domicilio'),
+            'barrio'                      => $this->request->getPost('barrio'),
             'id_area_programatica'        => $this->request->getPost('id_area_programatica'),
             'id_establecimiento_habitual' => $this->request->getPost('id_establecimiento_habitual')
         ];
@@ -83,6 +85,8 @@ class Paciente extends BaseController
             'nombre'                      => $this->request->getPost('nombre'),
             'fecha_nacimiento'            => $this->request->getPost('fecha_nacimiento'),
             'id_tutor'                    => $this->request->getPost('id_tutor'),
+            'domicilio'                    => $this->request->getPost('domicilio'),
+            'barrio'                      => $this->request->getPost('barrio'),
             'id_area_programatica'        => $this->request->getPost('id_area_programatica'),
             'id_establecimiento_habitual' => $this->request->getPost('id_establecimiento_habitual')
         ]);

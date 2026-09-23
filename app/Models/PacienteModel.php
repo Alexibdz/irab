@@ -11,6 +11,8 @@ class PacienteModel extends BaseModel
         'nombre',
         'fecha_nacimiento',
         'id_tutor',
+        'domicilio',
+        'barrio',
         'id_area_programatica',
         'id_establecimiento_habitual',
         'fecha_borrado'

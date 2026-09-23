@@ -38,6 +38,26 @@
                         </div>
 
                         <div class="mb-3">
+                            <label class="form-label">Teléfono del Tutor</label>
+                            <select class="form-select">
+                                <option value="" disabled selected>Seleccione para ver el teléfono:</option>
+                                <?php foreach ($tutores as $tutor): ?>
+                                    <option value="<?= $tutor['id'] ?>"><?= $tutor['nombre'] ?> (Teléfono: <?= $tutor['telefono'] ?: 'No registrado' ?>)</option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Domicilio</label>
+                            <input type="text" class="form-control" name="domicilio" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Barrio</label>
+                            <input type="text" class="form-control" name="barrio" required>
+                        </div>
+
+                        <div class="mb-3">
                             <label class="form-label">Área Programática (Zona/Cuartel)</label>
                             <select class="form-select" name="id_area_programatica" required>
                                 <option value="" disabled selected>Seleccione un área programática</option>

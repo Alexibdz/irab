@@ -1,7 +1,6 @@
 <div class="container mt-5">
         <h2 class="mb-4">Listado de Pacientes Registrados</h2>
         
-        <!-- para agregar a agregar otro paciente -->
         <a href="<?= base_url('paciente/nuevo') ?>" class="btn btn-primary mb-3">
             + Nuevo Paciente
         </a>
@@ -15,7 +14,10 @@
                             <th>DNI</th>
                             <th>Nombre Completo</th>
                             <th>Fecha de Nacimiento</th>
-                            <th>Tutor</th>
+                            <th>Tutor / Responsable</th>
+                            <th>Teléfono</th>
+                            <th>Domicilio</th>
+                            <th>Barrio</th>
                             <th>Establecimiento Habitual</th>
                             <th>Área Programática</th>
                             <th>Acciones</th>
@@ -29,16 +31,29 @@
                                 <td><?= $paciente['nombre'] ?></td>
                                 <td><?= $paciente['fecha_nacimiento'] ?></td>
                                 <td>
-                                    <?php
-                                        foreach($tutores as $tutor){
-                                            if($tutor['id'] == $paciente['id_tutor']){
+                                    <?php  
+                                        foreach($tutores as $tutor) {
+                                            if($tutor['id'] == $paciente['id_tutor']) {
                                                 echo $tutor['nombre'];
-                                                break; //lo cortamos para q no siga iterando
+                                                break;
                                             }
-                                        } 
-                                    
+                                        }
                                     ?>
                                 </td>
+                                <td>
+                                    <?php
+                                        $telefono_tutor = 'No registrado';
+                                        foreach($tutores as $tutor) {
+                                            if($tutor['id'] == $paciente['id_tutor']) {
+                                                $telefono_tutor = !empty($tutor['telefono']) ? $tutor['telefono'] : 'No registrado';
+                                                break;
+                                            }
+                                        } 
+                                        echo esc($telefono_tutor);
+                                    ?>
+                                </td>
+                                <td><?= $paciente['domicilio'] ?></td>
+                                <td><?= $paciente['barrio'] ?></td>
                                 <td>
                                     <?php  
                                         foreach($establecimientos as $establecimiento) {

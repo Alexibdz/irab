@@ -17,7 +17,6 @@
 
                         <div class="mb-3">
                             <label for="dni" class="form-label">DNI</label>
-                            <!--el value va a ser lo que coincida para editar -->
                             <input type="text" class="form-control" id="dni" name="dni" value="<?= $paciente['dni'] ?>" required>
                         </div>
 
@@ -41,6 +40,29 @@
                                     </option>
                                 <?php endforeach; ?>
                             </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Teléfono del Tutor</label>
+                            <!-- Sin atributo name para que no interfiera con el guardado -->
+                            <select class="form-select">
+                                <option value="" disabled>Seleccione para ver el teléfono</option>
+                                <?php foreach ($tutores as $tutor): ?>
+                                    <option value="<?= $tutor['id'] ?>" <?= ($tutor['id'] == $paciente['id_tutor']) ? 'selected' : '' ?>>
+                                        <?= $tutor['nombre'] ?> (Teléfono: <?= $tutor['telefono'] ?: 'No registrado' ?>)
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Domicilio</label>
+                            <input type="text" class="form-control" name="domicilio" value="<?= $paciente['domicilio'] ?>" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Barrio</label>
+                            <input type="text" class="form-control" name="barrio" value="<?= $paciente['barrio'] ?>" required>
                         </div>
 
                         <div class="mb-3">

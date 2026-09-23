@@ -24,6 +24,7 @@
                 <li class="nav-item"><a class="nav-link" href="<?= base_url('establecimientos') ?>">Establecimientos</a></li>
                 <li class="nav-item"><a class="nav-link" href="<?= base_url('paciente') ?>">Pacientes</a></li>
                 <li class="nav-item"><a class="nav-link" href="<?= base_url('tutor') ?>">Tutores</a></li>
+                <li class="nav-item"><a class="nav-link" href="<?= base_url('visitas') ?>">Visitas</a></li>
                 <li class="nav-item"><a class="nav-link" href="<?= base_url('factores') ?>">Factores</a></li>
                 <li class="nav-item"><a class="nav-link" href="<?= base_url('sintomas') ?>">Sintomas</a></li>
                 <li class="nav-item"><a class="nav-link" href="<?= base_url('logout') ?>">Cerrar sesión</a></li>

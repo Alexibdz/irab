@@ -1,176 +1,93 @@
-<div class="container-fluid mt-5">
+<?php
+// Mapas id => nombre, para no recorrer los arrays dentro de cada fila.
+$nombrePaciente        = array_column($pacientes, 'nombre', 'id');
+$nombreUsuario         = array_column($usuarios, 'nombre', 'id');
+$nombreEstablecimiento = array_column($establecimientos, 'nombre', 'id');
+?>
+<div class="container-fluid px-4">
 
-    <h2 class="mb-4">Listado de Visitas</h2>
-
-    <!-- Botones -->
-    <div class="mb-3">
-
-        <a href="<?= base_url('visitas/crear') ?>"
-           class="btn btn-primary">
-            + Nueva Visita
-        </a>
-
-        <a href="<?= base_url('visitas/eliminados') ?>"
-           class="btn btn-danger">
-            Ver Visitas Eliminadas
-        </a>
-
-    </div>
-
-
-    <!-- Tabla -->
-    <div class="card shadow-sm">
-        <div class="card-body">
-
-            <table id="tablaVisitas"
-                   class="table table-striped table-hover table-bordered">
-
-                <thead>
-                    <tr>
-                        <th>Paciente</th>
-                        <th>Usuario</th>
-                        <th>Establecimiento</th>
-                        <th>Fecha de ingreso</th>
-                        <th>Estado</th>
-                        <th>Diagnóstico</th>
-                        <th>Estado de Derivación</th>
-                        <th>Turno protegido</th>
-                        <th>Medicación al Egreso</th>
-                        <th>Fecha de alta</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-
-                <tbody>
-
-                    <?php foreach ($visitas as $visita): ?>
-                        <tr>
-
-                            <td>
-                                <?php foreach ($pacientes as $paciente) {
-                                    if($visita['id_paciente'] == $paciente['id']) {
-                                        echo $paciente['nombre'];
-                                        break;
-                                    }
-
-                                } ?>
-                                
-                            </td>
-
-                            <td>
-                                <?php foreach ($usuarios as $usuario) {
-                                    if($visita['id_usuario'] == $usuario['id']) {
-                                        echo $usuario['nombre'];
-                                        break;
-                                    }
-                                }?>
-                                
-                            </td>
-
-                            <td>
-                                <?php foreach ($establecimientos as $establecimiento) {
-                                    if($visita['id_establecimiento'] == $establecimiento['id']) {
-                                        echo $establecimiento['nombre'];
-                                        break;
-                                    }
-                                }?>
-                                
-                            </td>
-
-                    
-
-                            <td>
-                                <?= esc($visita['fecha_ingreso']) ?>
-                            </td>
-
-                            <td>
-                                <?php $cerrada = !empty($visita['fecha_alta']) && $visita['fecha_alta'] !== '0000-00-00'; ?>
-                                <?php if ($cerrada): ?>
-                                    <span class="badge bg-secondary">Cerrada</span>
-                                <?php else: ?>
-                                    <span class="badge bg-success">Abierta</span>
-                                <?php endif; ?>
-                            </td>
-
-                            <td>
-                                <?= esc($visita['diagnostico'] ?? '-') ?>
-                            </td>
-
-                            <td>
-                                <?= esc($visita['estado_derivacion'] ?? '-') ?>
-                            </td>
-
-                            <td>
-                                <?= esc($visita['turno_protegido_fecha'] ?? '-') ?>
-                            </td>
-
-                            <td>
-                                <?= esc($visita['medicacion_egreso'] ?? '-') ?>
-                            </td>
-
-                            <td>
-                                <?= esc($visita['fecha_alta'] ?? '-') ?>
-                            </td>
-
-                            <td class="text-center">
-                            
-                                <a href="<?= base_url('visitas/ver/' . $visita['id']) ?>" 
-                                class="btn btn-info btn-sm text-white" 
-                                title="Ver detalle">
-                                    <i class="bi bi-eye"></i>
-                                </a>
-
-                                <a href="<?= base_url('visitas/editar/' . $visita['id']) ?>" 
-                                class="btn btn-warning btn-sm text-dark" 
-                                title="Editar visita">
-                                    <i class="bi bi-pencil-square"></i>
-                                </a>
-
-                                <a href="<?= base_url('visitas/borrar/' . $visita['id']) ?>" 
-                                class="btn btn-danger btn-sm" 
-                                title="Borrar visita" 
-                                onclick="return confirm('¿Seguro que deseas eliminar esta visita?');">
-                                    <i class="bi bi-trash"></i>
-                                </a>
-
-
-                            </td>
-
-                        </tr>
-
-                    <?php endforeach; ?>
-
-                </tbody>
-
-            </table>
-
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="h3 mb-1"><i class="bi bi-journal-medical"></i> Visitas abiertas</h2>
+            <p class="text-muted mb-0 small">Visitas en curso, todavía sin fecha de alta.</p>
+        </div>
+        <div class="d-flex gap-2">
+            <a href="<?= base_url('visitas/historial') ?>" class="btn btn-outline-secondary">
+                <i class="bi bi-clock-history"></i> Historial
+                <span class="badge bg-secondary ms-1"><?= $cerradas ?></span>
+            </a>
+            <a href="<?= base_url('visitas/eliminados') ?>" class="btn btn-outline-danger">
+                <i class="bi bi-trash"></i> Eliminadas
+            </a>
         </div>
     </div>
 
+    <?php if (empty($visitas)): ?>
+
+        <div class="alert alert-info">
+            <i class="bi bi-info-circle"></i>
+            No hay visitas abiertas.
+            <a href="<?= base_url('visitas/crear') ?>" class="alert-link">Registrar una nueva visita</a>
+            o revisar el <a href="<?= base_url('visitas/historial') ?>" class="alert-link">historial</a>.
+        </div>
+
+    <?php else: ?>
+
+        <div class="card shadow-sm">
+            <div class="card-body">
+
+                <!-- .tabla-datos: el footer le engancha DataTables -->
+                <table class="table table-striped table-hover table-bordered align-middle tabla-datos">
+
+                    <thead>
+                        <tr>
+                            <th>Paciente</th>
+                            <th>Establecimiento</th>
+                            <th>Fecha de ingreso</th>
+                            <th>Diagnóstico</th>
+                            <th>Usuario</th>
+                            <th class="text-center">Acciones</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <?php foreach ($visitas as $visita): ?>
+                            <tr>
+                                <td><?= esc($nombrePaciente[$visita['id_paciente']] ?? '-') ?></td>
+                                <td><?= esc($nombreEstablecimiento[$visita['id_establecimiento']] ?? '-') ?></td>
+                                <td><?= esc($visita['fecha_ingreso']) ?></td>
+                                <td><?= esc($visita['diagnostico'] ?? '-') ?></td>
+                                <td><?= esc($nombreUsuario[$visita['id_usuario']] ?? '-') ?></td>
+
+                                <td class="text-center text-nowrap">
+                                    <a href="<?= base_url('visitas/ver/' . $visita['id']) ?>"
+                                       class="btn btn-info btn-sm text-white"
+                                       title="Ver detalle">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+
+                                    <a href="<?= base_url('visitas/editar/' . $visita['id']) ?>"
+                                       class="btn btn-warning btn-sm text-dark"
+                                       title="Editar visita">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </a>
+
+                                    <a href="<?= base_url('visitas/borrar/' . $visita['id']) ?>"
+                                       class="btn btn-danger btn-sm"
+                                       title="Borrar visita"
+                                       onclick="return confirm('¿Seguro que deseas eliminar esta visita?');">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+
+                </table>
+
+            </div>
+        </div>
+
+    <?php endif; ?>
+
 </div>
-
-
-<script>
-$(document).ready(function () {
-
-    $('#tablaVisitas').DataTable({
-
-        language: {
-            lengthMenu: "Mostrar _MENU_ registros",
-            zeroRecords: "Ningún dato disponible en esta tabla",
-            info: "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
-            infoEmpty: "Mostrando registros del 0 al 0 de un total de 0 registros",
-            infoFiltered: "(filtrado de un total de _MAX_ registros)",
-            search: "Buscar:",
-            paginate: {
-                first: "Primero",
-                last: "Último",
-                next: "Siguiente",
-                previous: "Anterior"
-            }
-        }
-
-    });
-
-});
-</script>

@@ -3,3 +3,22 @@
 #verde-degradado {
         background: linear-gradient(315deg, #224f00 0.000%, #658c1a 20.000%, #9dbd5f 40.000%, #c8e0aa 60.000%, #e5f2d9 80.000%, #f4f3d6 100.000%) !important;
     }
+
+/* Boton de accion principal, usa el verde oscuro del degradado del nav */
+.btn-irab {
+    background-color: #224f00;
+    border-color: #224f00;
+    color: #fff;
+}
+.btn-irab:hover,
+.btn-irab:focus {
+    background-color: #1a3d00;
+    border-color: #1a3d00;
+    color: #fff;
+}
+
+/* Item del nav correspondiente a la seccion actual */
+#verde-degradado .nav-link.active {
+    font-weight: 600;
+    color: #1a3d00 !important;
+}

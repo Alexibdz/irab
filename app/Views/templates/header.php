@@ -1,3 +1,8 @@
+<?php
+// Primer segmento de la URL, para marcar el item activo del nav.
+$seg    = explode('/', trim(uri_string(), '/'))[0] ?? '';
+$activo = fn(array $rutas) => in_array($seg, $rutas, true) ? ' active' : '';
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -13,23 +18,116 @@
 
 <nav class="navbar navbar-expand-lg" id="verde-degradado">
     <div class="container">
-        <a class="navbar-brand" href="<?= base_url('/') ?>">IRAB - Enfermería</a>
+
+        <a class="navbar-brand fw-bold" href="<?= base_url('panel') ?>">
+            <i class="bi bi-lungs"></i> IRAB
+        </a>
+
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
             <span class="navbar-toggler-icon"></span>
         </button>
+
         <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item"><a class="nav-link" href="<?= base_url('/') ?>">Inicio</a></li>
-                <li class="nav-item"><a class="nav-link" href="<?= base_url('usuarios') ?>">Usuarios</a></li>
-                <li class="nav-item"><a class="nav-link" href="<?= base_url('roles') ?>">Roles</a></li>
-                <li class="nav-item"><a class="nav-link" href="<?= base_url('establecimientos') ?>">Establecimientos</a></li>
-                <li class="nav-item"><a class="nav-link" href="<?= base_url('paciente') ?>">Pacientes</a></li>
-                <li class="nav-item"><a class="nav-link" href="<?= base_url('tutor') ?>">Tutores</a></li>
-                <li class="nav-item"><a class="nav-link" href="<?= base_url('visitas') ?>">Visitas</a></li>
-                <li class="nav-item"><a class="nav-link" href="<?= base_url('factores') ?>">Factores</a></li>
-                <li class="nav-item"><a class="nav-link" href="<?= base_url('sintomas') ?>">Sintomas</a></li>
-                <li class="nav-item"><a class="nav-link" href="<?= base_url('logout') ?>">Cerrar sesión</a></li>
+
+            <!-- Navegación principal: lo que se usa en el día a día -->
+            <ul class="navbar-nav me-auto gap-2">
+                <li class="nav-item">
+                    <a class="btn btn-irab btn-sm px-3" href="<?= base_url('visitas/crear') ?>">
+                        <i class="bi bi-plus-lg"></i> Nueva visita
+                    </a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle<?= $activo(['visitas', 'paciente', 'tutor', 'control']) ?>"
+                       href="#" role="button" data-bs-toggle="dropdown">
+                        <i class="bi bi-clipboard2-pulse"></i> Atención
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a class="dropdown-item" href="<?= base_url('visitas') ?>">
+                                <i class="bi bi-journal-medical"></i> Visitas
+                            </a>
+                        </li>
+                        <li>
+
+                        <li>
+                            <a class="dropdown-item" href="<?= base_url('paciente') ?>">
+                                <i class="bi bi-person-badge"></i> Pacientes
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="<?= base_url('tutor') ?>">
+                                <i class="bi bi-people"></i> Tutores
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle<?= $activo(['factores', 'sintomas', 'valores-factores', 'valores-sintomas']) ?>"
+                       href="#" role="button" data-bs-toggle="dropdown">
+                        <i class="bi bi-activity"></i> Evaluación
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a class="dropdown-item" href="<?= base_url('factores') ?>">
+                                <i class="bi bi-exclamation-triangle"></i> Factores de riesgo
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="<?= base_url('sintomas') ?>">
+                                <i class="bi bi-thermometer-half"></i> Síntomas
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
             </ul>
+
+            <!-- Acción principal + administración + sesión -->
+            <ul class="navbar-nav align-items-lg-center gap-2">
+                <?php if (session('logueado')): ?>
+                    <li class="nav-item d-none d-lg-block">
+                        <span class="navbar-text small">
+                            <i class="bi bi-person-circle"></i> <?= esc(session('nombre')) ?>
+                        </span>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle<?= $activo(['usuarios', 'roles', 'establecimientos']) ?>"
+                            href="#" role="button" data-bs-toggle="dropdown"
+                            title="Administración" aria-label="Administración">
+                            <i class="bi bi-gear-fill fs-5"></i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-lg-end">
+                            <li><h6 class="dropdown-header">Administración</h6></li>
+                            <li>
+                                <a class="dropdown-item" href="<?= base_url('usuarios') ?>">
+                                    <i class="bi bi-person-gear"></i> Usuarios
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="<?= base_url('roles') ?>">
+                                    <i class="bi bi-shield-lock"></i> Roles
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="<?= base_url('establecimientos') ?>">
+                                    <i class="bi bi-hospital"></i> Establecimientos
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="<?= base_url('logout') ?>"
+                           title="Cerrar sesión" aria-label="Cerrar sesión"
+                           onclick="return confirm('¿Cerrar la sesión?');">
+                            <i class="bi bi-box-arrow-right fs-5"></i>
+                            <span class="d-lg-none">Cerrar sesión</span>
+                        </a>
+                    </li>
+                <?php endif; ?>
+
+            </ul>
+
         </div>
     </div>
 </nav>

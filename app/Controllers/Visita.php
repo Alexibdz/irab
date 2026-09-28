@@ -38,10 +38,16 @@ class Visita extends BaseController
         $this->valoresSintomasModel = new ValoresSintomasModel();
     }
 
+    /**
+     * Visitas ABIERTAS: las que todavia no tienen fecha de alta.
+     * Las cerradas se ven en historial().
+     */
     public function index()
     {
         $datos = [
-            'visitas' => $this->visitaModel->findAll(),
+            'titulo' => 'Visitas abiertas',
+            'visitas' => $this->visitaModel->where('fecha_alta IS NULL')->findAll(),
+            'cerradas' => $this->visitaModel->where('fecha_alta IS NOT NULL')->countAllResults(),
             'pacientes' => $this->pacienteModel->findAll(),
             'usuarios' => $this->usuarioModel->findAll(),
             'establecimientos' => $this->establecimientoModel->findAll()
@@ -49,6 +55,27 @@ class Visita extends BaseController
 
         echo view('templates/header', $datos);
         echo view('visitas/index', $datos);
+        echo view('templates/footer');
+    }
+
+    /**
+     * Historial: visitas ya CERRADAS, con sus datos de egreso.
+     */
+    public function historial()
+    {
+        $datos = [
+            'titulo' => 'Historial de visitas',
+            'visitas' => $this->visitaModel->where('fecha_alta IS NOT NULL')
+                                           ->orderBy('fecha_alta', 'DESC')
+                                           ->findAll(),
+            'abiertas' => $this->visitaModel->where('fecha_alta IS NULL')->countAllResults(),
+            'pacientes' => $this->pacienteModel->findAll(),
+            'usuarios' => $this->usuarioModel->findAll(),
+            'establecimientos' => $this->establecimientoModel->findAll()
+        ];
+
+        echo view('templates/header', $datos);
+        echo view('visitas/historial', $datos);
         echo view('templates/footer');
     }
 
@@ -237,7 +264,9 @@ class Visita extends BaseController
 
         $this->visitaModel->update($id, $datos);
 
-        return redirect()->to(base_url('visitas'))->with('exito', 'Visita actualizada correctamente.');
+        // Volvemos al detalle y no al listado, porque si la visita esta cerrada
+        // el listado de abiertas no la muestra y parece que no se guardo nada.
+        return redirect()->to(base_url('visitas/ver/' . $id))->with('exito', 'Visita actualizada correctamente.');
     }
 
 

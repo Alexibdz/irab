@@ -117,6 +117,7 @@ $routes->get('valores-sintomas/eliminar/(:num)', 'ValoresSintomas::eliminar/$1')
 
 //--------------------------visitas(Gaby) ----------------------------
 $routes->get('visitas', 'Visita::index');
+$routes->get('visitas/historial', 'Visita::historial');
 $routes->get('visitas/crear', 'Visita::crear');
 $routes->post('visitas/insertar', 'Visita::insertar');
 $routes->get('visitas/editar/(:num)', 'Visita::editar/$1');

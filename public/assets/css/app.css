@@ -1,1 +1,5 @@
 /* Overrides y estilos propios de IRAB por encima de Bootstrap */
+/* Colores degradado verde */
+#verde-degradado {
+        background: linear-gradient(315deg, #224f00 0.000%, #658c1a 20.000%, #9dbd5f 40.000%, #c8e0aa 60.000%, #e5f2d9 80.000%, #f4f3d6 100.000%) !important;
+    }

@@ -24,5 +24,8 @@
         });
     });
 </script>
+//scripts de js
+<script src="<?= base_url('assets/js/visitas.js') ?>"></script>
+<script src="<?= base_url('assets/js/controles.js') ?>"></script>
 </body>
 </html>

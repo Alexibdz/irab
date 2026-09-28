@@ -103,17 +103,26 @@
                             </td>
 
                             <td class="text-center">
-
-                                <a href="<?= base_url('visitas/editar/' . $visita['id']) ?>"
-                                   class="btn btn-warning btn-sm">
-                                    Editar
+                            
+                                <a href="<?= base_url('visitas/ver/' . $visita['id']) ?>" 
+                                class="btn btn-info btn-sm text-white" 
+                                title="Ver detalle">
+                                    <i class="bi bi-eye"></i>
                                 </a>
 
-                                <a href="<?= base_url('visitas/borrar/' . $visita['id']) ?>"
-                                   class="btn btn-danger btn-sm"
-                                   onclick="return confirm('¿Seguro que deseas eliminar esta visita?');">
-                                    Borrar
+                                <a href="<?= base_url('visitas/editar/' . $visita['id']) ?>" 
+                                class="btn btn-warning btn-sm text-dark" 
+                                title="Editar visita">
+                                    <i class="bi bi-pencil-square"></i>
                                 </a>
+
+                                <a href="<?= base_url('visitas/borrar/' . $visita['id']) ?>" 
+                                class="btn btn-danger btn-sm" 
+                                title="Borrar visita" 
+                                onclick="return confirm('¿Seguro que deseas eliminar esta visita?');">
+                                    <i class="bi bi-trash"></i>
+                                </a>
+
 
                             </td>
 

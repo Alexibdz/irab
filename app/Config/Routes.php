@@ -126,6 +126,11 @@ $routes->get('visitas/borrar/(:num)', 'Visita::borrar/$1');
 $routes->get('visitas/eliminados', 'Visita::eliminados');
 $routes->get('visitas/recuperar/(:num)', 'Visita::recuperar/$1');
 
+// Nuevas rutas agregadas para el módulo de Controles periódicos
+$routes->get('control/crear/(:num)', 'Control::crear/$1');
+$routes->post('control/guardar', 'Control::guardar');
+
+
 
 });
 

@@ -31,6 +31,7 @@
                         <th>Usuario</th>
                         <th>Establecimiento</th>
                         <th>Fecha de ingreso</th>
+                        <th>Estado</th>
                         <th>Diagnóstico</th>
                         <th>Estado de Derivación</th>
                         <th>Turno protegido</th>
@@ -83,23 +84,32 @@
                             </td>
 
                             <td>
-                                <?= esc($visita['diagnostico']) ?>
+                                <?php $cerrada = !empty($visita['fecha_alta']) && $visita['fecha_alta'] !== '0000-00-00'; ?>
+                                <?php if ($cerrada): ?>
+                                    <span class="badge bg-secondary">Cerrada</span>
+                                <?php else: ?>
+                                    <span class="badge bg-success">Abierta</span>
+                                <?php endif; ?>
                             </td>
 
                             <td>
-                                <?= esc($visita['estado_derivacion']) ?>
+                                <?= esc($visita['diagnostico'] ?? '-') ?>
                             </td>
 
                             <td>
-                                <?= esc($visita['turno_protegido_fecha'] ?? '') ?>
+                                <?= esc($visita['estado_derivacion'] ?? '-') ?>
                             </td>
 
                             <td>
-                                <?= esc($visita['medicacion_egreso'] ?? '') ?>
+                                <?= esc($visita['turno_protegido_fecha'] ?? '-') ?>
                             </td>
 
                             <td>
-                                <?= esc($visita['fecha_alta'] ?? '') ?>
+                                <?= esc($visita['medicacion_egreso'] ?? '-') ?>
+                            </td>
+
+                            <td>
+                                <?= esc($visita['fecha_alta'] ?? '-') ?>
                             </td>
 
                             <td class="text-center">

@@ -72,19 +72,20 @@ class Visita extends BaseController
         // el ID del paciente
         $id_paciente = $this->request->getPost('id_paciente');
 
-        // Preparamos los datos de la visita principal
+        // La visita nace ABIERTA: los datos de egreso quedan en NULL y se
+        // completan despues desde "Cerrar visita" en la pantalla de detalle.
         $datos = [
             'id_paciente'              => $id_paciente,
             'id_usuario'               => $this->request->getPost('id_usuario'),
             'id_establecimiento'       => $this->request->getPost('id_establecimiento'),
             'fecha_ingreso'            => $this->request->getPost('fecha_ingreso'),
             'diagnostico'              => $this->request->getPost('diagnostico'),
-            'estado_derivacion'        => $this->request->getPost('estado_derivacion'),
-            'id_turno_protegido_lugar' => $this->request->getPost('id_turno_protegido_lugar'),
-            'turno_protegido_fecha'    => $this->request->getPost('turno_protegido_fecha'),
-            'medicacion_egreso'        => $this->request->getPost('medicacion_egreso'),
-            'fecha_alta'               => $this->request->getPost('fecha_alta'),
-            'observaciones_finales'    => $this->request->getPost('observaciones_finales')
+            'estado_derivacion'        => null,
+            'id_turno_protegido_lugar' => null,
+            'turno_protegido_fecha'    => null,
+            'medicacion_egreso'        => null,
+            'fecha_alta'               => null,
+            'observaciones_finales'    => null
         ];
 
         // Guardamos la visita principal
@@ -224,23 +225,19 @@ class Visita extends BaseController
     {
         $id = $this->request->getPost('id');
     
+        // Solo los datos de ingreso. Los de egreso se manejan desde
+        // "Cerrar visita", en la pantalla de detalle.
         $datos = [
-            'id_paciente'              => $this->request->getPost('id_paciente'),
-            'id_usuario'               => $this->request->getPost('id_usuario'),
-            'id_establecimiento'       => $this->request->getPost('id_establecimiento'),
-            'fecha_ingreso'            => $this->request->getPost('fecha_ingreso'),
-            'diagnostico'              => $this->request->getPost('diagnostico'),
-            'estado_derivacion'        => $this->request->getPost('estado_derivacion'),
-            'id_turno_protegido_lugar' => $this->request->getPost('id_turno_protegido_lugar'),
-            'turno_protegido_fecha'    => $this->request->getPost('turno_protegido_fecha'),
-            'medicacion_egreso'        => $this->request->getPost('medicacion_egreso'),
-            'fecha_alta'               => $this->request->getPost('fecha_alta'),
-            'observaciones_finales'    => $this->request->getPost('observaciones_finales')
+            'id_paciente'        => $this->request->getPost('id_paciente'),
+            'id_usuario'         => $this->request->getPost('id_usuario'),
+            'id_establecimiento' => $this->request->getPost('id_establecimiento'),
+            'fecha_ingreso'      => $this->request->getPost('fecha_ingreso'),
+            'diagnostico'        => $this->request->getPost('diagnostico')
         ];
-    
+
         $this->visitaModel->update($id, $datos);
-    
-        return redirect()->to(base_url('visitas'));
+
+        return redirect()->to(base_url('visitas'))->with('exito', 'Visita actualizada correctamente.');
     }
 
 
@@ -272,6 +269,73 @@ class Visita extends BaseController
         return redirect()->to(base_url('visitas/eliminados'));
     }
 
+    /**
+     * Devuelve null cuando el campo del formulario vino vacio.
+     * Sin esto, un <input type="date"> sin completar manda "" y MySQL lo
+     * guarda como 0000-00-00 en vez de NULL, y un <select> sin elegir
+     * manda "" que en una columna ENUM se guarda como cadena vacia.
+     */
+    private function nullSiVacio($valor)
+    {
+        return ($valor === null || trim((string) $valor) === '') ? null : $valor;
+    }
+
+    /**
+     * Cierra la visita: guarda los datos de egreso.
+     * Una visita se considera CERRADA cuando tiene fecha_alta.
+     */
+    public function cerrar()
+    {
+        $id_visita = $this->request->getPost('id_visita');
+
+        $visita = $this->visitaModel->find($id_visita);
+        if (!$visita) {
+            return redirect()->to(base_url('visitas'))->with('error', 'La visita no existe.');
+        }
+
+        $fecha_alta = $this->nullSiVacio($this->request->getPost('fecha_alta'));
+
+        if ($fecha_alta === null) {
+            return redirect()->to(base_url('visitas/ver/' . $id_visita))
+                ->with('error', 'Para cerrar la visita hace falta la fecha de alta.');
+        }
+
+        $this->visitaModel->update($id_visita, [
+            'estado_derivacion'        => $this->nullSiVacio($this->request->getPost('estado_derivacion')),
+            'id_turno_protegido_lugar' => $this->nullSiVacio($this->request->getPost('id_turno_protegido_lugar')),
+            'turno_protegido_fecha'    => $this->nullSiVacio($this->request->getPost('turno_protegido_fecha')),
+            'medicacion_egreso'        => $this->nullSiVacio($this->request->getPost('medicacion_egreso')),
+            'fecha_alta'               => $fecha_alta,
+            'observaciones_finales'    => $this->nullSiVacio($this->request->getPost('observaciones_finales'))
+        ]);
+
+        return redirect()->to(base_url('visitas/ver/' . $id_visita))
+            ->with('exito', 'Visita cerrada correctamente.');
+    }
+
+    /**
+     * Reabre una visita: limpia los datos de egreso y vuelve a quedar abierta.
+     */
+    public function reabrir($id_visita)
+    {
+        $visita = $this->visitaModel->find($id_visita);
+        if (!$visita) {
+            return redirect()->to(base_url('visitas'))->with('error', 'La visita no existe.');
+        }
+
+        $this->visitaModel->update($id_visita, [
+            'estado_derivacion'        => null,
+            'id_turno_protegido_lugar' => null,
+            'turno_protegido_fecha'    => null,
+            'medicacion_egreso'        => null,
+            'fecha_alta'               => null,
+            'observaciones_finales'    => null
+        ]);
+
+        return redirect()->to(base_url('visitas/ver/' . $id_visita))
+            ->with('exito', 'Visita reabierta.');
+    }
+
     public function ver($id_visita)
     {
         $visita = $this->visitaModel->find($id_visita);
@@ -289,7 +353,8 @@ class Visita extends BaseController
             'visita' => $visita,
             'controles' => $controles,
             'factoresRegistrados' => $factoresRegistrados,
-            'todosLosFactores' => $todosLosFactores
+            'todosLosFactores' => $todosLosFactores,
+            'establecimientos' => $this->establecimientoModel->findAll()
         ];
 
         echo view('templates/header', $datos);

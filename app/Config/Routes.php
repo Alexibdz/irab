@@ -122,6 +122,8 @@ $routes->post('visitas/insertar', 'Visita::insertar');
 $routes->get('visitas/editar/(:num)', 'Visita::editar/$1');
 $routes->post('visitas/actualizar', 'Visita::actualizar');
 $routes->get('visitas/ver/(:num)', 'Visita::ver/$1');
+$routes->post('visitas/cerrar', 'Visita::cerrar');
+$routes->get('visitas/reabrir/(:num)', 'Visita::reabrir/$1');
 $routes->get('visitas/borrar/(:num)', 'Visita::borrar/$1');
 $routes->get('visitas/eliminados', 'Visita::eliminados');
 $routes->get('visitas/recuperar/(:num)', 'Visita::recuperar/$1');

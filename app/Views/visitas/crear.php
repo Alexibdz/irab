@@ -85,56 +85,6 @@
                                     <option value="Otros">Otros</option>
                                 </select>
                             </div>
-
-                            <hr class="my-3">
-
-                            <!-- ESTADO DE DERIVACIÓN -->
-                            <div class="col-md-4 mb-3">
-                                <label for="estado_derivacion" class="form-label">Estado Derivación</label>
-                                <select class="form-select" id="estado_derivacion" name="estado_derivacion" required>
-                                    <option value="" disabled selected>Seleccione...</option>
-                                    <option value="Internación">Internación</option>
-                                    <option value="Derivación">Derivación</option>
-                                    <option value="Domicilio">Domicilio</option>
-                                </select>
-                            </div>
-
-                            <!-- TURNO PROTEGIDO LUGAR -->
-                            <div class="col-md-4 mb-3">
-                                <label class="form-label">Lugar Turno Prot.</label>
-                                <select class="form-select" name="id_turno_protegido_lugar">
-                                    <option value="">Opcional...</option>
-                                    <?php foreach ($establecimientos as $establecimiento): ?>
-                                        <option value="<?= $establecimiento['id'] ?>"><?= esc($establecimiento['nombre']) ?></option>
-                                    <?php endforeach; ?>
-                                </select>
-                            </div>
-
-                            <!-- FECHA DEL TURNO PROTEGIDO -->
-                            <div class="col-md-4 mb-3">
-                                <label for="turno_protegido_fecha" class="form-label">Fecha Turno Prot.</label>
-                                <input type="date" class="form-control" id="turno_protegido_fecha" name="turno_protegido_fecha">
-                            </div>
-
-                            <hr class="my-3">
-
-                            <!-- MEDICACIÓN EGRESO -->
-                            <div class="col-md-6 mb-3">
-                                <label for="medicacion_egreso" class="form-label">Medicación al egreso</label>
-                                <input type="text" class="form-control" id="medicacion_egreso" name="medicacion_egreso">
-                            </div>
-
-                            <!-- FECHA DE ALTA -->
-                            <div class="col-md-6 mb-3">
-                                <label for="fecha_alta" class="form-label">Fecha de alta</label>
-                                <input type="date" class="form-control" id="fecha_alta" name="fecha_alta">
-                            </div>
-
-                            <!-- OBSERVACIONES FINALES -->
-                            <div class="col-md-12 mb-3">
-                                <label for="observaciones_finales" class="form-label">Observaciones generales de la visita</label>
-                                <textarea class="form-control" id="observaciones_finales" name="observaciones_finales" rows="3"></textarea>
-                            </div>
                         </div>
 
                     </div>

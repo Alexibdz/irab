@@ -30,7 +30,7 @@ $activo = fn(array $rutas) => in_array($seg, $rutas, true) ? ' active' : '';
         <div class="collapse navbar-collapse" id="navbarNav">
 
             <!-- Navegación principal: lo que se usa en el día a día -->
-            <ul class="navbar-nav me-auto gap-2">
+            <ul class="navbar-nav me-auto gap-2 align-items-lg-center">
                 <li class="nav-item">
                     <a class="btn btn-irab btn-sm px-3" href="<?= base_url('visitas/crear') ?>">
                         <i class="bi bi-plus-lg"></i> Nueva visita
@@ -47,8 +47,6 @@ $activo = fn(array $rutas) => in_array($seg, $rutas, true) ? ' active' : '';
                                 <i class="bi bi-journal-medical"></i> Visitas
                             </a>
                         </li>
-                        <li>
-
                         <li>
                             <a class="dropdown-item" href="<?= base_url('paciente') ?>">
                                 <i class="bi bi-person-badge"></i> Pacientes
@@ -93,8 +91,8 @@ $activo = fn(array $rutas) => in_array($seg, $rutas, true) ? ' active' : '';
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle<?= $activo(['usuarios', 'roles', 'establecimientos']) ?>"
-                            href="#" role="button" data-bs-toggle="dropdown"
-                            title="Administración" aria-label="Administración">
+                           href="#" role="button" data-bs-toggle="dropdown"
+                           title="Administración" aria-label="Administración">
                             <i class="bi bi-gear-fill fs-5"></i>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-lg-end">

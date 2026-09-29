@@ -105,11 +105,6 @@ $activo = fn(array $rutas) => in_array($seg, $rutas, true) ? ' active' : '';
                                 </a>
                             </li>
                             <li>
-                                <a class="dropdown-item" href="<?= base_url('roles') ?>">
-                                    <i class="bi bi-shield-lock"></i> Roles
-                                </a>
-                            </li>
-                            <li>
                                 <a class="dropdown-item" href="<?= base_url('establecimientos') ?>">
                                     <i class="bi bi-hospital"></i> Establecimientos
                                 </a>

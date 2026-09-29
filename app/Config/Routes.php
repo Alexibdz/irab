@@ -17,16 +17,6 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
 
 $routes->get('panel', 'Panel::index');
 
-$routes->get('roles', 'Roles::index');
-$routes->get('roles/nuevo', 'Roles::nuevo');
-$routes->post('roles/insertar', 'Roles::insertar');
-$routes->get('roles/editar/(:num)', 'Roles::editar/$1');
-$routes->post('roles/actualizar', 'Roles::actualizar');
-$routes->get('roles/ver/(:num)', 'Roles::ver/$1');
-$routes->get('roles/eliminar/(:num)', 'Roles::eliminar/$1');
-$routes->get('roles/eliminados', 'Roles::eliminados');
-$routes->get('roles/recuperar/(:num)', 'Roles::recuperar/$1');
-
 $routes->get ('usuarios' , 'Usuarios::index');
 $routes->get ('usuarios/nuevo' , 'Usuarios::nuevo');
 $routes->post ('usuarios/insertar' , 'Usuarios::insertar');

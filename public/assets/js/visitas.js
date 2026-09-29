@@ -58,6 +58,14 @@ function filtrarFactoresPorEdad() {
 
 //  detector de eventos
 document.addEventListener("DOMContentLoaded", function() {
+    // se autocompleta la fecha y hora ---
+    let inputFecha = document.getElementById('fecha_ingreso');
+    if (inputFecha && !inputFecha.value) {
+        let ahora = new Date();
+        ahora.setMinutes(ahora.getMinutes() - ahora.getTimezoneOffset());
+        inputFecha.value = ahora.toISOString().slice(0, 16);
+    }
+    // ------------------------------------------------
     filtrarFactoresPorEdad();
     let selectPaciente = document.getElementById('select_paciente');
     if (selectPaciente) {

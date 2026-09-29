@@ -76,14 +76,17 @@
 
                             <!-- DIAGNÓSTICO -->
                             <div class="col-md-6 mb-3">
-                                <label for="diagnostico" class="form-label">Diagnóstico Inicial</label>
-                                <select class="form-select" id="diagnostico" name="diagnostico" required>
-                                    <option value="" disabled selected>Seleccione...</option>
-                                    <option value="SBO">SBO</option>
-                                    <option value="BQL">BQL</option>
-                                    <option value="NMN">NMN</option>
-                                    <option value="Otros">Otros</option>
-                                </select>
+                                <label for="diagnostico" class="form-label text-success fw-bold">Diagnóstico Inicial</label>
+                                
+                                <!-- el input text normal, enlazado a la lista  -->
+                                <input type="text" class="form-control border-success" id="diagnostico" name="diagnostico" list="lista_diagnosticos" placeholder="Seleccione o escriba..." required>
+                                
+                                <!-- las opciones (no se ve en pantalla hasta que haces clic en el input) -->
+                                <datalist id="lista_diagnosticos">
+                                    <option value="SBO">
+                                    <option value="BQL">
+                                    <option value="NMN">
+                                </datalist>
                             </div>
                         </div>
 

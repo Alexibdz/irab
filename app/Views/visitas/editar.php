@@ -72,14 +72,17 @@
 
                             <!-- DIAGNÓSTICO -->
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">Diagnóstico</label>
-                                <select class="form-select" name="diagnostico" required>
-                                    <option value="" disabled>Seleccione un diagnóstico</option>
-                                    <option value="SBO" <?= $visita['diagnostico'] == 'SBO' ? 'selected' : '' ?>>SBO</option>
-                                    <option value="BQL" <?= $visita['diagnostico'] == 'BQL' ? 'selected' : '' ?>>BQL</option>
-                                    <option value="NMN" <?= $visita['diagnostico'] == 'NMN' ? 'selected' : '' ?>>NMN</option>
-                                    <option value="Otros" <?= $visita['diagnostico'] == 'Otros' ? 'selected' : '' ?>>Otros</option>
-                                </select>
+                                <label for="diagnostico" class="form-label">Diagnóstico</label>
+                                
+                                <!-- El input muestra el valor guardado y se conecta a la datalist -->
+                                <input type="text" class="form-control" id="diagnostico" name="diagnostico" list="lista_diagnosticos" value="<?= esc($visita['diagnostico']) ?>" required>
+                                
+                                <!-- lista de opciones predefinidas -->
+                                <datalist id="lista_diagnosticos">
+                                    <option value="SBO">
+                                    <option value="BQL">
+                                    <option value="NMN">
+                                </datalist>
                             </div>
                         </div>
                     </div>

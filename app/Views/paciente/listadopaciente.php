@@ -1,9 +1,6 @@
 <div class="container mt-5">
         <h2 class="mb-4">Listado de Pacientes Registrados</h2>
         
-        <a href="<?= base_url('paciente/nuevo') ?>" class="btn btn-primary mb-3">
-            + Nuevo Paciente
-        </a>
         <a href="<?= base_url('paciente/eliminados') ?>" class="btn btn-danger mb-3">Ver Pacientes Eliminados</a>
 
         <div class="card shadow-sm">
@@ -24,7 +21,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- recorro los datos -->
+                        <!-- Filas -->
                         <?php foreach ($pacientes as $paciente): ?>
                             <tr>
                                 <td><?= $paciente['dni'] ?></td>

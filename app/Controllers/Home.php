@@ -4,10 +4,9 @@ namespace App\Controllers;
 
 class Home extends BaseController
 {
-    public function index(): string
+    // La raiz y el panel son la misma pantalla
+    public function index()
     {
-        return view('templates/header', ['titulo' => 'Inicio'])
-            . view('home')
-            . view('templates/footer');
+        return redirect()->to(base_url('panel'));
     }
 }

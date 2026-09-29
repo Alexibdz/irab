@@ -1,5 +1,5 @@
 <?php
-// Mapas id => nombre, para no recorrer los arrays dentro de cada fila.
+// Mapas id => nombre
 $nombrePaciente        = array_column($pacientes, 'nombre', 'id');
 $nombreUsuario         = array_column($usuarios, 'nombre', 'id');
 $nombreEstablecimiento = array_column($establecimientos, 'nombre', 'id');
@@ -36,7 +36,7 @@ $nombreEstablecimiento = array_column($establecimientos, 'nombre', 'id');
         <div class="card shadow-sm">
             <div class="card-body">
 
-                <!-- .tabla-datos: el footer le engancha DataTables -->
+                <!-- DataTables desde el footer -->
                 <table class="table table-striped table-hover table-bordered align-middle tabla-datos">
 
                     <thead>

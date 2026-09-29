@@ -1,6 +1,12 @@
 <?php
-// Una visita esta CERRADA cuando tiene fecha de alta.
+// Cerrada = tiene fecha de alta
 $cerrada = !empty($visita['fecha_alta']) && $visita['fecha_alta'] !== '0000-00-00';
+
+// Mapa id => nombre de establecimientos
+$nombreEstablecimiento = array_column($establecimientos, 'nombre', 'id');
+
+// Edad a la fecha de ingreso, que es la que define la escala
+$edad = edad_texto($paciente['fecha_nacimiento'] ?? null, $visita['fecha_ingreso']);
 ?>
 <div class="container mt-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
@@ -27,18 +33,89 @@ $cerrada = !empty($visita['fecha_alta']) && $visita['fecha_alta'] !== '0000-00-0
         </div>
     </div>
 
-    <!-- Información General -->
+    <!-- Paciente y tutor -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+            <h3 class="h5 mb-0"><i class="bi bi-person-badge"></i> Paciente y tutor</h3>
+            <?php if ($paciente): ?>
+                <a href="<?= base_url('paciente/editar/' . $paciente['id']) ?>" class="btn btn-sm btn-light">
+                    <i class="bi bi-pencil-square"></i> Editar paciente
+                </a>
+            <?php endif; ?>
+        </div>
+        <div class="card-body">
+            <?php if (!$paciente): ?>
+
+                <div class="alert alert-warning mb-0">
+                    <i class="bi bi-exclamation-triangle"></i>
+                    El paciente de esta visita fue eliminado.
+                </div>
+
+            <?php else: ?>
+
+                <div class="row">
+                    <div class="col-md-6 border-end">
+                        <div class="fw-bold fs-5 mb-2"><?= esc($paciente['nombre']) ?></div>
+                        <p class="mb-1"><strong>DNI:</strong> <?= esc($paciente['dni'] ?: 's/d') ?></p>
+                        <p class="mb-1">
+                            <strong>Nacimiento:</strong> <?= esc($paciente['fecha_nacimiento']) ?>
+                            <span class="text-muted">(<?= esc($edad) ?> al ingreso)</span>
+                        </p>
+                        <p class="mb-1"><strong>Domicilio:</strong> <?= esc($paciente['domicilio'] ?: '-') ?></p>
+                        <p class="mb-1"><strong>Barrio:</strong> <?= esc($paciente['barrio'] ?: '-') ?></p>
+                        <p class="mb-1">
+                            <strong>Establecimiento habitual:</strong>
+                            <?= esc($nombreEstablecimiento[$paciente['id_establecimiento_habitual']] ?? '-') ?>
+                        </p>
+                        <p class="mb-0">
+                            <strong>Área programática:</strong>
+                            <?= esc($nombreEstablecimiento[$paciente['id_area_programatica']] ?? '-') ?>
+                        </p>
+                    </div>
+
+                    <div class="col-md-6 mt-3 mt-md-0 ps-md-4">
+                        <h4 class="h6 text-muted text-uppercase mb-2">Tutor responsable</h4>
+                        <?php if ($tutor): ?>
+                            <div class="fw-bold fs-5 mb-2"><?= esc($tutor['nombre']) ?></div>
+                            <p class="mb-1"><strong>DNI:</strong> <?= esc($tutor['dni'] ?: 's/d') ?></p>
+                            <p class="mb-0">
+                                <strong>Teléfono:</strong>
+                                <?php if (!empty($tutor['telefono'])): ?>
+                                    <a href="tel:<?= esc($tutor['telefono']) ?>"><?= esc($tutor['telefono']) ?></a>
+                                <?php else: ?>
+                                    <span class="text-muted">sin registrar</span>
+                                <?php endif; ?>
+                            </p>
+                        <?php else: ?>
+                            <p class="text-muted mb-0">Sin tutor registrado.</p>
+                        <?php endif; ?>
+                    </div>
+                </div>
+
+            <?php endif; ?>
+        </div>
+    </div>
+
+    <!-- Informacion general -->
     <div class="card shadow-sm mb-4">
         <div class="card-header bg-success text-white">
             <h3 class="h5 mb-0">Información de Ingreso y Diagnóstico</h3>
         </div>
         <div class="card-body">
-            <p><strong>Fecha de Ingreso:</strong> <?= esc($visita['fecha_ingreso']) ?></p>
-            <p class="mb-0"><strong>Diagnóstico:</strong> <?= esc($visita['diagnostico'] ?? '-') ?></p>
+            <div class="row">
+                <div class="col-md-6">
+                    <p><strong>Fecha de Ingreso:</strong> <?= esc($visita['fecha_ingreso']) ?></p>
+                    <p class="mb-0"><strong>Diagnóstico:</strong> <?= esc($visita['diagnostico'] ?? '-') ?></p>
+                </div>
+                <div class="col-md-6">
+                    <p><strong>Establecimiento:</strong> <?= esc($nombreEstablecimiento[$visita['id_establecimiento']] ?? '-') ?></p>
+                    <p class="mb-0"><strong>Atendió:</strong> <?= esc($usuario['nombre'] ?? '-') ?></p>
+                </div>
+            </div>
         </div>
     </div>
 
-    <!-- Datos de Egreso: solo si la visita fue cerrada -->
+    <!-- Datos de egreso -->
     <?php if ($cerrada): ?>
         <div class="card shadow-sm mb-4">
             <div class="card-header bg-secondary text-white">
@@ -60,11 +137,11 @@ $cerrada = !empty($visita['fecha_alta']) && $visita['fecha_alta'] !== '0000-00-0
         </div>
     <?php endif; ?>
 
-    <!-- Historial de Controles Iterativos -->
+    <!-- Historial de controles -->
     <div class="card shadow-sm mb-4">
         <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
             <h3 class="h5 mb-0">Historial de Controles (Evolución)</h3>
-            <!-- Botón que pasa el ID de la visita actual para crear un nuevo control -->
+            <!-- Nuevo control -->
             <a href="<?= base_url('control/crear/' . $visita['id']) ?>" class="btn btn-light btn-sm">+ Nuevo Control</a>
         </div>
         <div class="card-body">
@@ -98,9 +175,7 @@ $cerrada = !empty($visita['fecha_alta']) && $visita['fecha_alta'] !== '0000-00-0
     </div>
 </div>
 
-<!-- ============================================================ -->
-<!-- MODAL: cerrar visita (datos de egreso)                        -->
-<!-- ============================================================ -->
+<!-- Modal: cerrar visita (datos de egreso) -->
 <?php if (!$cerrada): ?>
 <div class="modal fade" id="modalCerrarVisita" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg">

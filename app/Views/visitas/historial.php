@@ -1,5 +1,5 @@
 <?php
-// Mapas id => nombre, para no recorrer los arrays dentro de cada fila.
+// Mapas id => nombre
 $nombrePaciente        = array_column($pacientes, 'nombre', 'id');
 $nombreUsuario         = array_column($usuarios, 'nombre', 'id');
 $nombreEstablecimiento = array_column($establecimientos, 'nombre', 'id');
@@ -35,7 +35,7 @@ $nombreEstablecimiento = array_column($establecimientos, 'nombre', 'id');
         <div class="card shadow-sm">
             <div class="card-body">
 
-                <!-- .tabla-datos: el footer le engancha DataTables -->
+                <!-- DataTables desde el footer -->
                 <table class="table table-striped table-hover table-bordered align-middle tabla-datos">
 
                     <thead>
@@ -57,7 +57,7 @@ $nombreEstablecimiento = array_column($establecimientos, 'nombre', 'id');
                     <tbody>
                         <?php foreach ($visitas as $visita): ?>
                             <?php
-                            // Duracion de la visita, en dias enteros.
+                            // Duracion en dias
                             $dias = '-';
                             if (!empty($visita['fecha_ingreso'])) {
                                 $ingreso = new DateTime($visita['fecha_ingreso']);

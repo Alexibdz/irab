@@ -1,6 +1,4 @@
-// La fecha de nacimiento sale de la ficha del paciente, que en el paso 2 ya
-// viene fija desde el servidor. Se deja el <select> como alternativa por si
-// alguna pantalla todavia deja elegir al paciente a mano.
+// Fecha de nacimiento: ficha del paso 2, o el select como alternativa
 function obtenerFechaNacimiento() {
     let fichaPaciente = document.getElementById('paciente_fijo');
     if (fichaPaciente) {
@@ -23,7 +21,7 @@ function filtrarFactoresPorEdad() {
     }
 
     if (fechaNacimiento) {
-        // Calcular la edad exacta en meses
+        // Edad en meses
         let fechaNac = new Date(fechaNacimiento);
         let hoy = new Date();
         let mesesEdad = (hoy.getFullYear() - fechaNac.getFullYear()) * 12 + (hoy.getMonth() - fechaNac.getMonth());
@@ -32,24 +30,24 @@ function filtrarFactoresPorEdad() {
             mesesEdad--;
         }
 
-        // Ocultar y deshabilitar todos los factores y síntomas por defecto
+        // Oculta todo por defecto
         $('.div-factor').hide();
         $('.div-factor input, .div-factor select').prop('disabled', true);
 
         $('.sintoma-tal, .sintoma-wdf').hide();
         $('.sintoma-tal select, .sintoma-wdf select').prop('disabled', true);
 
-        //Activar los campos según la edad (Soportando 'Ambos' por compatibilidad)
+        // Activa segun la edad
         if (mesesEdad < 24) {
-            // Es menor de 2 años: Mostrar factores TAL y Ambos
+            // Menor de 2 anios: TAL
             $('.tipo-TAL, .tipo-Ambos').show();
             $('.tipo-TAL input, .tipo-TAL select, .tipo-Ambos input, .tipo-Ambos select').prop('disabled', false);
 
-            // Mostrar síntomas TAL
+            // Sintomas TAL
             $('.sintoma-tal').show();
             $('.sintoma-tal select').prop('disabled', false);
 
-            // Filtrar Frecuencia Respiratoria por límite de 6 meses
+            // FR segun corte de 6 meses
             if (mesesEdad <= 6) {
                 $('#div_fr_mayor').hide();
                 $('#div_fr_mayor select').prop('disabled', true);
@@ -59,18 +57,18 @@ function filtrarFactoresPorEdad() {
             }
 
         } else {
-            // Es mayor o igual a 2 años: Mostrar factores WDF y Ambos
+            // 2 anios o mas: WDF
             $('.tipo-WDF, .tipo-Ambos').show();
             $('.tipo-WDF input, .tipo-WDF select, .tipo-Ambos input, .tipo-Ambos select').prop('disabled', false);
 
-            // Mostrar síntomas WDF
+            // Sintomas WDF
             $('.sintoma-wdf').show();
             $('.sintoma-wdf select').prop('disabled', false);
         }
     }
 }
 
-// Al elegir un usuario, se selecciona automaticamente su establecimiento asignado.
+// Autocompleta el establecimiento segun el usuario elegido
 function cargarEstablecimientoPorUsuario() {
     const usuarioSelect = document.getElementById('id_usuario');
     const establecimientoSelect = document.getElementById('id_establecimiento');
@@ -98,17 +96,16 @@ function cargarEstablecimientoPorUsuario() {
     }
 }
 
-//  detector de eventos
+// Eventos
 document.addEventListener("DOMContentLoaded", function() {
-    // se autocompleta la fecha y hora ---
+    // Autocompleta fecha y hora
     let inputFecha = document.getElementById('fecha_ingreso');
     if (inputFecha && !inputFecha.value) {
         let ahora = new Date();
         ahora.setMinutes(ahora.getMinutes() - ahora.getTimezoneOffset());
         inputFecha.value = ahora.toISOString().slice(0, 16);
     }
-    // ------------------------------------------------
-    // Solo corre en las pantallas que tienen el bloque de factores.
+    // Solo con bloque de factores
     if (document.getElementById('seccion_control_inicial')) {
         filtrarFactoresPorEdad();
     }

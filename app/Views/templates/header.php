@@ -1,5 +1,5 @@
 <?php
-// Primer segmento de la URL, para marcar el item activo del nav.
+// Segmento activo del nav
 $seg    = explode('/', trim(uri_string(), '/'))[0] ?? '';
 $activo = fn(array $rutas) => in_array($seg, $rutas, true) ? ' active' : '';
 ?>
@@ -29,13 +29,8 @@ $activo = fn(array $rutas) => in_array($seg, $rutas, true) ? ' active' : '';
 
         <div class="collapse navbar-collapse" id="navbarNav">
 
-            <!-- Navegación principal: lo que se usa en el día a día -->
+            <!-- Navegacion principal -->
             <ul class="navbar-nav me-auto gap-2 align-items-lg-center">
-                <li class="nav-item">
-                    <a class="btn btn-irab btn-sm px-3" href="<?= base_url('visitas/crear') ?>">
-                        <i class="bi bi-plus-lg"></i> Nueva visita
-                    </a>
-                </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle<?= $activo(['visitas', 'paciente', 'tutor', 'control']) ?>"
                        href="#" role="button" data-bs-toggle="dropdown">
@@ -81,8 +76,16 @@ $activo = fn(array $rutas) => in_array($seg, $rutas, true) ? ' active' : '';
 
             </ul>
 
-            <!-- Acción principal + administración + sesión -->
+            <!-- Reloj, administracion y sesion -->
             <ul class="navbar-nav align-items-lg-center gap-2">
+                <li class="nav-item">
+                    <span class="navbar-text small" id="reloj" aria-live="off">
+                        <i class="bi bi-clock"></i>
+                        <span id="reloj_hora" class="fw-semibold"></span>
+                        <span id="reloj_fecha" class="d-none d-xl-inline text-muted"></span>
+                    </span>
+                </li>
+
                 <?php if (session('logueado')): ?>
                     <li class="nav-item d-none d-lg-block">
                         <span class="navbar-text small">

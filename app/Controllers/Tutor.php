@@ -16,21 +16,7 @@ class Tutor extends BaseController {
         echo view('templates/footer');
     }
 
-    public function nuevo() {
-        $datos = ['titulo' => 'Registrar Tutor'];
-        echo view('templates/header', $datos);
-        echo view('tutor/nuevo');
-        echo view('templates/footer');
-    }
 
-    public function insertar() {
-        $this->tutorModel->save([
-            'dni'      => $this->request->getPost('dni'),
-            'nombre'   => $this->request->getPost('nombre'),
-            'telefono' => $this->request->getPost('telefono')
-        ]);
-        return redirect()->to(base_url('tutor'))->with('exito', 'Tutor creado correctamente.');
-    }
 
     public function editar($id) {
         $datos = [

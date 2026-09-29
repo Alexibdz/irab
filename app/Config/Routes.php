@@ -5,13 +5,12 @@ use CodeIgniter\Router\RouteCollection;
 /** @var RouteCollection $routes */
 $routes->get('/', 'Home::index');
 
-// Login (sin filtro, tiene que ser accesible sin sesión)
+// Login
 $routes->get('/login', 'Auth::index');
 $routes->post('/validarLogin', 'Auth::validarLogin');
 $routes->get('logout', 'Auth::logout');
 
-// Rutas protegidas por autenticación.
-// Descomentar el grupo al finalizar el desarrollo o para probar el login.
+// Rutas protegidas por autenticacion
 
 $routes->group('', ['filter' => 'auth'], function ($routes) {
 
@@ -38,28 +37,18 @@ $routes->get('establecimientos/eliminar/(:num)', 'Establecimientos::eliminar/$1'
 $routes->get('establecimientos/eliminados', 'Establecimientos::eliminados');
 $routes->get('establecimientos/recuperar/(:num)', 'Establecimientos::recuperar/$1');
 
-//----------------------------- PACIENTE (por Lara)---------------------------
-// lista de pacientes
+// Pacientes
 $routes->get('paciente', 'Paciente::index');
-// el formulario para registrar un nuevo paciente 
-$routes->get('paciente/nuevo', 'Paciente::nuevo');
-// recibe los datos del formulario 
-$routes->post('paciente/insertar', 'Paciente::insertar');
-// Carga el formulario de edición buscando por ID
 $routes->get('paciente/editar/(:num)', 'Paciente::editar/$1');
-// Recibe los datos modificados para actualizar la base de datos
 $routes->post('paciente/actualizar', 'Paciente::actualizar');
 $routes->get('paciente/borrar/(:num)', 'Paciente::borrar/$1');
 $routes->get('paciente/eliminados', 'Paciente::eliminados');
 $routes->get('paciente/recuperar/(:num)', 'Paciente::recuperar/$1');
 
 
-//-----------------------------------------------------------------------
 
-//--------------------------Tutor (Lara) ----------------------------
+// Tutores
 $routes->get('tutor', 'Tutor::index');
-$routes->get('tutor/nuevo', 'Tutor::nuevo');
-$routes->post('tutor/insertar', 'Tutor::insertar');
 $routes->get('tutor/editar/(:num)', 'Tutor::editar/$1');
 $routes->post('tutor/actualizar/(:num)', 'Tutor::actualizar/$1');
 $routes->get('tutor/borrar/(:num)', 'Tutor::borrar/$1');
@@ -67,7 +56,6 @@ $routes->get('tutor/eliminados', 'Tutor::eliminados');
 $routes->get('tutor/recuperar/(:num)', 'Tutor::recuperar/$1');
 
 
-//-----------------------------------------------------
 
 $routes->get('factores', 'Factores::index');
 $routes->get('factores/nuevo', 'Factores::nuevo');
@@ -103,12 +91,11 @@ $routes->get('valores-sintomas/editar/(:num)', 'ValoresSintomas::editar/$1');
 $routes->post('valores-sintomas/actualizar', 'ValoresSintomas::actualizar');
 $routes->get('valores-sintomas/eliminar/(:num)', 'ValoresSintomas::eliminar/$1');
 
-//-----------------------------------------------------
 
 //--------------------------visitas(Gaby) ----------------------------
 $routes->get('visitas', 'Visita::index');
 $routes->get('visitas/historial', 'Visita::historial');
-// Alta de visita en dos pasos: sin id busca/crea el paciente, con id va al form.
+// Alta de visita en dos pasos
 $routes->get('visitas/crear', 'Visita::crear');
 $routes->get('visitas/crear/(:num)', 'Visita::crear/$1');
 $routes->get('visitas/buscar-tutor', 'Visita::buscarTutor');
@@ -123,7 +110,7 @@ $routes->get('visitas/borrar/(:num)', 'Visita::borrar/$1');
 $routes->get('visitas/eliminados', 'Visita::eliminados');
 $routes->get('visitas/recuperar/(:num)', 'Visita::recuperar/$1');
 
-// Nuevas rutas agregadas para el módulo de Controles periódicos
+// Controles
 $routes->get('control/crear/(:num)', 'Control::crear/$1');
 $routes->post('control/guardar', 'Control::guardar');
 

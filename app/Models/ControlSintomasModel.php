@@ -12,5 +12,5 @@ class ControlSintomasModel extends BaseModel
         'valor_registrado',
         'fecha_borrado' 
     ];
-        // no colocamos $primaryKey = 'id' ya que esta tabla no tiene una columna 'id' simple.
+        // Sin $primaryKey: la tabla no tiene columna 'id'
 }

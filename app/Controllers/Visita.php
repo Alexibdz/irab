@@ -41,10 +41,7 @@ class Visita extends BaseController
         $this->valoresSintomasModel = new ValoresSintomasModel();
     }
 
-    /**
-     * Visitas ABIERTAS: las que todavia no tienen fecha de alta.
-     * Las cerradas se ven en historial().
-     */
+    // Listado de visitas abiertas
     public function index()
     {
         $datos = [
@@ -61,9 +58,7 @@ class Visita extends BaseController
         echo view('templates/footer');
     }
 
-    /**
-     * Historial: visitas ya CERRADAS, con sus datos de egreso.
-     */
+    // Listado de visitas cerradas
     public function historial()
     {
         $datos = [
@@ -82,9 +77,7 @@ class Visita extends BaseController
         echo view('templates/footer');
     }
 
-    /**
-     * Alta de visita en dos pasos.
-     */
+    // Alta de visita: paso 1 sin id, paso 2 con id
     public function crear($id_paciente = null)
     {
         if ($id_paciente !== null) {
@@ -105,10 +98,7 @@ class Visita extends BaseController
         echo view('templates/footer');
     }
 
-    /**
-     * PASO 2: formulario clinico. El paciente llega resuelto desde el paso 1,
-     * asi que su edad se conoce aca y no hace falta elegirlo de un select.
-     */
+    // Paso 2: formulario clinico
     private function formulario($id_paciente)
     {
         $paciente = $this->pacienteModel->find($id_paciente);
@@ -132,19 +122,12 @@ class Visita extends BaseController
         echo view('templates/footer');
     }
 
-    /**
-     * Busca pacientes por su propio nombre o DNI.
-     *
-     * A proposito NO busca por los datos del tutor: un tutor puede tener varios
-     * chicos a cargo, asi que buscar por tutor devuelve a todos los hermanos y
-     * no ayuda a identificar al paciente que se esta atendiendo.
-     * El tutor se muestra igual en cada resultado, para poder distinguirlos.
-     */
+    // Busqueda de pacientes por nombre o DNI propio
     private function buscarPacientes(string $q): array
     {
         $digitos = preg_replace('/\D/', '', $q);
 
-        // builder() saltea el soft delete del modelo, por eso va el where a mano.
+        // Soft delete a mano: builder() no lo aplica
         $builder = $this->pacienteModel->builder()
             ->select('pacientes.*, tutores.nombre AS tutor_nombre, tutores.telefono AS tutor_telefono')
             ->join('tutores', 'tutores.id = pacientes.id_tutor', 'left')
@@ -153,7 +136,7 @@ class Visita extends BaseController
                 ->like('pacientes.nombre', $q)
                 ->orLike('pacientes.dni', $q);
 
-        // El DNI puede estar cargado con puntos y el usuario escribirlo sin ellos.
+        // DNI sin puntos
         if ($digitos !== '') {
             $builder->orWhere("REPLACE(REPLACE(pacientes.dni, '.', ''), ' ', '') LIKE", '%' . $digitos . '%');
         }
@@ -168,7 +151,7 @@ class Visita extends BaseController
             return [];
         }
 
-        // Cantidad de visitas previas de cada paciente, en una sola consulta.
+        // Visitas previas por paciente
         $conteos = $this->visitaModel->builder()
             ->select('id_paciente, COUNT(*) AS total')
             ->where('fecha_borrado IS NULL')
@@ -186,13 +169,7 @@ class Visita extends BaseController
         return $pacientes;
     }
 
-    /**
-     * Busca tutores por nombre, DNI o telefono. Lo consume el buscador de tutor
-     * del paso 1, que reemplaza al viejo select.
-     *
-     * Va por GET a proposito: el filtro CSRF solo verifica POST/PUT/DELETE/PATCH,
-     * asi que esta consulta no rota el token del formulario que esta abierto.
-     */
+    // Busqueda de tutores (JSON): por GET, no rota el token CSRF
     public function buscarTutor()
     {
         $q = trim((string) $this->request->getGet('q'));
@@ -224,14 +201,7 @@ class Visita extends BaseController
         return $this->response->setJSON($tutores);
     }
 
-    /**
-     * PASO 1 -> PASO 2: da de alta al paciente (y al tutor si hace falta)
-     * y manda al formulario clinico.
-     *
-     * Tutor y paciente van en una transaccion: si falla el paciente no queda
-     * un tutor suelto. Si en cambio se abandona el paso 2, el paciente ya
-     * creado queda igual, que es un estado valido: existe y no tuvo visitas.
-     */
+    // Alta de paciente y tutor, en transaccion
     public function pacienteNuevo()
     {
         $id_tutor = $this->request->getPost('id_tutor');
@@ -239,13 +209,13 @@ class Visita extends BaseController
         $telefono = trim((string) $this->request->getPost('tutor_telefono'));
         $nombre   = trim((string) $this->request->getPost('tutor_nombre'));
 
-        // Eligio "tutor ya registrado" pero no llego a elegir ninguno.
+        // Tutor registrado sin elegir
         if ($this->request->getPost('modo_tutor') === 'existente' && empty($id_tutor)) {
             return redirect()->back()->withInput()
                 ->with('error', 'Buscá y elegí un tutor de la lista, o cargá uno nuevo.');
         }
 
-        // Tutor nuevo: lo buscamos antes por DNI o telefono para no duplicarlo.
+        // Tutor nuevo: deduplica por DNI o telefono
         if (empty($id_tutor)) {
             if ($dni === '' || $nombre === '') {
                 return redirect()->back()->withInput()
@@ -295,11 +265,10 @@ class Visita extends BaseController
 
     public function insertar()
     {
-        // el ID del paciente
+        // Id del paciente
         $id_paciente = $this->request->getPost('id_paciente');
 
-        // La visita nace ABIERTA: los datos de egreso quedan en NULL y se
-        // completan despues desde "Cerrar visita" en la pantalla de detalle.
+        // Nace abierta: egreso en NULL
         $datos = [
             'id_paciente'              => $id_paciente,
             'id_usuario'               => $this->request->getPost('id_usuario'),
@@ -314,10 +283,10 @@ class Visita extends BaseController
             'observaciones_finales'    => null
         ];
 
-        // Guardamos la visita principal
+        // Visita
         $id_visita_nueva = $this->visitaModel->insert($datos);
 
-        //  Asociamos los factores de riesgo y protección
+        // Factores de riesgo y proteccion
         $factores_seleccionados = $this->request->getPost('factores');
         if ($id_visita_nueva && !empty($factores_seleccionados)) {
             foreach ($factores_seleccionados as $id_factor => $valor_registrado) {
@@ -330,12 +299,12 @@ class Visita extends BaseController
             }
         }
 
-        // CONTROL CLÍNICO 
+        // Control clinico
         $sintomas_enviados = $this->request->getPost('sintomas');
         
         if ($id_visita_nueva && !empty($sintomas_enviados)) {
             
-            // Calcula edad y determina escala (TAL o WDF)
+            // Edad y escala
             $paciente = $this->pacienteModel->find($id_paciente);
             $form = 'TAL'; // por defecto
             
@@ -346,10 +315,10 @@ class Visita extends BaseController
                 $form = ($meses < 24) ? 'TAL' : 'WDF';
             }
 
-            // Iniciar transacción manual para proteger los datos
+            // Transaccion
             $this->controlModel->transStart();
 
-            // Insertar el control base o primer control de la visita para obtener su ID
+            // Control inicial
             $idControl = $this->controlModel->insert([
                 'id_visita'     => $id_visita_nueva,
                 'fecha_hora'    => date('Y-m-d H:i:s'),
@@ -359,11 +328,11 @@ class Visita extends BaseController
 
             $score_total = 0;
 
-            //Recorre los síntomas enviados y calcula puntos
+            // Puntos por sintoma
             foreach ($sintomas_enviados as $idSintoma => $valor) {
                 $puntos = 0;
                 
-                // Busca el puntaje en la base de datos
+                // Puntaje en la db
                 $builder = $this->valoresSintomasModel->where('id_sintoma', $idSintoma);
                 if (is_numeric($valor)) {
                     $fila = $builder->where('valor_min IS NOT NULL')
@@ -380,7 +349,7 @@ class Visita extends BaseController
 
                 $score_total += $puntos;
 
-                // Guarda cada síntoma asociado al control
+                // Sintoma del control
                 $this->controlSintomasModel->insert([
                     'id_control'       => $idControl,
                     'id_sintoma'       => (int) $idSintoma,
@@ -388,21 +357,21 @@ class Visita extends BaseController
                 ]);
             }
 
-            //  Calcula la gravedad según los cortes de la escala correspondiente
+            // Gravedad segun la escala
             $gravedad = 'Grave';
             if ($form === 'TAL') {
                 if ($score_total <= 5) $gravedad = 'Leve';
                 elseif ($score_total <= 8) $gravedad = 'Moderada';
             } else {
-                // Cortes para WDF
+                // Cortes WDF
                 if ($score_total <= 3) $gravedad = 'Leve';
                 elseif ($score_total <= 7) $gravedad = 'Moderada';
             }
-            // Calcula la gravedad según los cortes de la escala correspondiente
+            // Gravedad segun la escala
             $gravedad = null; // Para la escala TAL (menores de 2 años) no se guarda gravedad
 
             if ($form === 'WDF') {
-                // Cortes exclusivos para WDF (2 a 5 años)
+                // Cortes WDF (2 a 5 anios)
                 $gravedad = 'Grave'; // Valor por defecto si supera los 7 puntos
                 
                 if ($score_total <= 3) {
@@ -412,13 +381,13 @@ class Visita extends BaseController
                 }
             }
 
-            //  Actualiza el control con el resultado final
+            // Resultado final
             $this->controlModel->update($idControl, [
                 'score_total'     => $score_total,
                 'estado_gravedad' => $gravedad
             ]);
 
-            // Completa la transacción
+            // Cierra la transaccion
             $this->controlModel->transComplete();
         }
 
@@ -451,8 +420,7 @@ class Visita extends BaseController
     {
         $id = $this->request->getPost('id');
     
-        // Solo los datos de ingreso. Los de egreso se manejan desde
-        // "Cerrar visita", en la pantalla de detalle.
+        // Solo datos de ingreso
         $datos = [
             'id_paciente'        => $this->request->getPost('id_paciente'),
             'id_usuario'         => $this->request->getPost('id_usuario'),
@@ -463,8 +431,7 @@ class Visita extends BaseController
 
         $this->visitaModel->update($id, $datos);
 
-        // Volvemos al detalle y no al listado, porque si la visita esta cerrada
-        // el listado de abiertas no la muestra y parece que no se guardo nada.
+        // Al detalle: el listado de abiertas no muestra las cerradas
         return redirect()->to(base_url('visitas/ver/' . $id))->with('exito', 'Visita actualizada correctamente.');
     }
 
@@ -497,21 +464,13 @@ class Visita extends BaseController
         return redirect()->to(base_url('visitas/eliminados'));
     }
 
-    /**
-     * Devuelve null cuando el campo del formulario vino vacio.
-     * Sin esto, un <input type="date"> sin completar manda "" y MySQL lo
-     * guarda como 0000-00-00 en vez de NULL, y un <select> sin elegir
-     * manda "" que en una columna ENUM se guarda como cadena vacia.
-     */
+    // Campo vacio a NULL: evita 0000-00-00 en date y '' en ENUM
     private function nullSiVacio($valor)
     {
         return ($valor === null || trim((string) $valor) === '') ? null : $valor;
     }
 
-    /**
-     * Cierra la visita: guarda los datos de egreso.
-     * Una visita se considera CERRADA cuando tiene fecha_alta.
-     */
+    // Cierre de visita: carga el egreso, fecha_alta la marca cerrada
     public function cerrar()
     {
         $id_visita = $this->request->getPost('id_visita');
@@ -541,9 +500,7 @@ class Visita extends BaseController
             ->with('exito', 'Visita cerrada correctamente.');
     }
 
-    /**
-     * Reabre una visita: limpia los datos de egreso y vuelve a quedar abierta.
-     */
+    // Reapertura de visita: limpia el egreso
     public function reabrir($id_visita)
     {
         $visita = $this->visitaModel->find($id_visita);
@@ -576,9 +533,14 @@ class Visita extends BaseController
         $factoresRegistrados = $this->pacienteFactoresModel->where('id_visita', $id_visita)->findAll();
         $todosLosFactores = $this->factoresModel->findAll();
 
+        $paciente = $this->pacienteModel->find($visita['id_paciente']);
+
         $datos = [
             'titulo' => 'Detalle de Visita e Historial de Controles',
             'visita' => $visita,
+            'paciente' => $paciente,
+            'tutor' => $paciente ? $this->tutorModel->find($paciente['id_tutor']) : null,
+            'usuario' => $this->usuarioModel->find($visita['id_usuario']),
             'controles' => $controles,
             'factoresRegistrados' => $factoresRegistrados,
             'todosLosFactores' => $todosLosFactores,

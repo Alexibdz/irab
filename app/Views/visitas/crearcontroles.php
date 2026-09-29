@@ -13,9 +13,7 @@
                 <div class="row mb-4">
                     
                     <?php if ($tipo_planilla === 'TAL'): ?>
-                        <!-- ========================================== -->
-                        <!-- SÍNTOMAS ESCALA TAL (MENORES DE 2 AÑOS)    -->
-                        <!-- ========================================== -->
+                        <!-- Síntomas escala TAL (menores DE 2 años) -->
                         
                         <div class="col-md-4 mb-3">
                             <label class="form-label fw-bold small text-success">Frec. Cardiaca</label>
@@ -29,7 +27,7 @@
                         </div>
                         
                         <?php if ($meses_edad <= 6): ?>
-                            <!-- Para 6 meses o menos -->
+                            <!-- 6 meses o menos -->
                             <div class="col-md-4 mb-3">
                                 <label class="form-label fw-bold small text-success">F.R. (<= 6m)</label>
                                 <select class="form-select select-sintoma border-success" name="sintomas[2]" onchange="calcularScoreDinamico()" required>
@@ -41,7 +39,7 @@
                                 </select>
                             </div>
                         <?php else: ?>
-                            <!-- Para más de 6 meses (y menores de 2 años) -->
+                            <!-- Mas de 6 meses -->
                             <div class="col-md-4 mb-3">
                                 <label class="form-label fw-bold small text-success">F.R. (> 6m)</label>
                                 <select class="form-select select-sintoma border-success" name="sintomas[3]" onchange="calcularScoreDinamico()" required>
@@ -77,9 +75,7 @@
                         </div>
 
                     <?php else: ?>
-                        <!-- ========================================== -->
-                        <!-- SÍNTOMAS ESCALA WDF (MAYORES DE 2 AÑOS)    -->
-                        <!-- ========================================== -->
+                        <!-- Síntomas escala WDF (mayores DE 2 años) -->
                         
                         <div class="col-md-4 mb-3">
                             <label class="form-label fw-bold small text-success">Frecuencia Cardiaca</label>

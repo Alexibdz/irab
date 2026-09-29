@@ -12,7 +12,7 @@
                         
                         <?= csrf_field() ?>
                         
-                        <!-- Campo oculto obligatorio para que el controlador identifique al paciente -->
+                        <!-- Id del paciente -->
                         <input type="hidden" name="id" value="<?= $paciente['id'] ?>">
 
                         <div class="mb-3">
@@ -44,7 +44,7 @@
 
                         <div class="mb-3">
                             <label class="form-label">Teléfono del Tutor</label>
-                            <!-- Sin atributo name para que no interfiera con el guardado -->
+                            <!-- Sin name: no se guarda -->
                             <select class="form-select">
                                 <option value="" disabled>Seleccione para ver el teléfono</option>
                                 <?php foreach ($tutores as $tutor): ?>

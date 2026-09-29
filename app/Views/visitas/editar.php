@@ -17,14 +17,12 @@
             <div class="card-body">
                 
                 <div class="row">
-                    <!-- ========================================== -->
-                    <!-- INGRESO Y DIAGNÓSTICO   -->
-                    <!-- ========================================== -->
+                    <!-- Ingreso Y diagnóstico -->
                     <div class="col-lg-6 border-end pe-lg-4">
                         <h5 class="text-secondary border-bottom pb-2 mb-3">Datos de Ingreso</h5>
                         
                         <div class="row">
-                            <!-- PACIENTE -->
+                            <!-- Paciente -->
                             <div class="col-12 mb-3">
                                 <label class="form-label fw-bold">Paciente</label>
                                 <select class="form-select" name="id_paciente" required>
@@ -37,7 +35,7 @@
                                 </select>
                             </div>
 
-                            <!-- USUARIO -->
+                            <!-- Usuario -->
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Usuario</label>
                                 <select class="form-select" id="id_usuario" name="id_usuario" required>
@@ -50,7 +48,7 @@
                                 </select>
                             </div>
 
-                            <!-- ESTABLECIMIENTO -->
+                            <!-- Establecimiento -->
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Establecimiento</label>
                                 <select class="form-select" id="id_establecimiento" name="id_establecimiento" required>
@@ -63,21 +61,21 @@
                                 </select>
                             </div>
 
-                            <!-- FECHA DE INGRESO -->
+                            <!-- Fecha de ingreso -->
                             <div class="col-md-6 mb-3">
                                 <label for="fecha_ingreso" class="form-label">Fecha de ingreso</label>
                                 <input type="datetime-local" class="form-control" id="fecha_ingreso" name="fecha_ingreso" 
                                        value="<?= !empty($visita['fecha_ingreso']) ? date('Y-m-d\TH:i', strtotime($visita['fecha_ingreso'])) : '' ?>" required>
                             </div>
 
-                            <!-- DIAGNÓSTICO -->
+                            <!-- Diagnostico -->
                             <div class="col-md-6 mb-3">
                                 <label for="diagnostico" class="form-label">Diagnóstico</label>
                                 
-                                <!-- El input muestra el valor guardado y se conecta a la datalist -->
+                                <!-- Input del diagnostico -->
                                 <input type="text" class="form-control" id="diagnostico" name="diagnostico" list="lista_diagnosticos" value="<?= esc($visita['diagnostico']) ?>" required>
                                 
-                                <!-- lista de opciones predefinidas -->
+                                <!-- Opciones -->
                                 <datalist id="lista_diagnosticos">
                                     <option value="SBO">
                                     <option value="BQL">
@@ -87,9 +85,7 @@
                         </div>
                     </div>
 
-                    <!-- ========================================== -->
-                    <!-- EGRESO: se carga al cerrar la visita       -->
-                    <!-- ========================================== -->
+                    <!-- Egreso: se carga al cerrar la visita -->
                     <div class="col-lg-6 ps-lg-4 mt-4 mt-lg-0">
                         <h5 class="text-success border-bottom pb-2 mb-3">Egreso</h5>
 

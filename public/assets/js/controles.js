@@ -2,21 +2,21 @@
 function calcularScoreDinamico() {
     let scoreTotal = 0;
     
-    // Seleccionamos todos los elementos que tengan la clase .select-sintoma
+    // Selects de sintomas
     let selects = document.querySelectorAll('.select-sintoma');
 
     selects.forEach(function(select) {
-        // Obtenemos la opción seleccionada actualmente por el usuario
+        // Opcion elegida
         let opcionSeleccionada = select.options[select.selectedIndex];
         
-        // Extraemos los puntos guardados en el atributo data-puntos (si no existe, toma 0)
+        // Puntos desde data-puntos
         let puntos = parseInt(opcionSeleccionada.getAttribute('data-puntos')) || 0;
         
-        // Sumamos al acumulador
+        // Acumula
         scoreTotal += puntos;
     });
 
-    // Actualizamos el número visible en la pantalla para el personal de enfermería
+    // Muestra el total
     let scoreDisplay = document.getElementById('score_display');
     if (scoreDisplay) {
         scoreDisplay.innerText = scoreTotal;

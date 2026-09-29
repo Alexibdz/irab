@@ -1,6 +1,5 @@
 <?php
-// Toasts de Bootstrap para los mensajes flash.
-// Los controladores los mandan con ->with('exito', '...') o ->with('error', '...')
+// Toasts de los mensajes flash
 $avisos = [
     'exito' => 'text-bg-success',
     'error' => 'text-bg-danger',

@@ -1,7 +1,6 @@
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h2>Gestión de Tutores</h2>
     <div>
-        <a href="<?= base_url('tutor/nuevo') ?>" class="btn btn-primary">Registrar Tutor</a>
         <a href="<?= base_url('tutor/eliminados') ?>" class="btn btn-danger">Ver Papelera</a>
     </div>
 </div>

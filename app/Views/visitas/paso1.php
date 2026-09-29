@@ -1,22 +1,7 @@
 <?php
-/**
- * PASO 1 del alta de visita: resolver a quien estamos atendiendo.
- * Nunca se sale de esta pantalla: si el paciente no existe, se registra
- * aca mismo junto con su tutor.
- */
+// Paso 1 alta de visita
 
-// Edad en formato corto, para poder distinguir hermanos en la lista.
-$edad = function (?string $nacimiento): string {
-    if (empty($nacimiento)) {
-        return 'edad desconocida';
-    }
-    $diferencia = (new DateTime($nacimiento))->diff(new DateTime('today'));
-    $meses = $diferencia->y * 12 + $diferencia->m;
-
-    return $meses < 24 ? $meses . ' meses' : $diferencia->y . ' años';
-};
-
-// Reabrimos el panel de alta si el POST volvio con error.
+// Panel abierto si el POST volvio con error
 $panelAbierto = !empty(old('nombre'));
 ?>
 <div class="container" style="max-width: 820px;">
@@ -27,9 +12,7 @@ $panelAbierto = !empty(old('nombre'));
     </div>
     <p class="text-muted small mb-4">Primero identificamos al paciente. Después se carga la visita.</p>
 
-    <!-- ============================================================ -->
-    <!-- BUSCADOR                                                      -->
-    <!-- ============================================================ -->
+    <!-- Buscador -->
     <div class="card shadow-sm mb-4">
         <div class="card-body">
             <form action="<?= base_url('visitas/crear') ?>" method="GET">
@@ -47,9 +30,7 @@ $panelAbierto = !empty(old('nombre'));
 
     <?php if ($q !== ''): ?>
 
-        <!-- ======================================================== -->
-        <!-- PACIENTES ENCONTRADOS                                     -->
-        <!-- ======================================================== -->
+        <!-- Pacientes encontrados -->
         <?php if (!empty($pacientes)): ?>
             <h6 class="text-uppercase text-muted small fw-bold mb-2">
                 Pacientes encontrados (<?= count($pacientes) ?>)
@@ -63,7 +44,7 @@ $panelAbierto = !empty(old('nombre'));
                                 <div class="fw-bold"><?= esc($paciente['nombre']) ?></div>
                                 <div class="small text-muted">
                                     DNI <?= esc($paciente['dni'] ?: 's/d') ?>
-                                    · <?= esc($edad($paciente['fecha_nacimiento'])) ?>
+                                    · <?= esc(edad_texto($paciente['fecha_nacimiento'])) ?>
                                     <?php if (!empty($paciente['tutor_nombre'])): ?>
                                         · Tutor: <?= esc($paciente['tutor_nombre']) ?>
                                         <?php if (!empty($paciente['tutor_telefono'])): ?>
@@ -90,9 +71,7 @@ $panelAbierto = !empty(old('nombre'));
 
     <?php endif; ?>
 
-    <!-- ============================================================ -->
-    <!-- ALTA DE PACIENTE (y de tutor si hace falta)                   -->
-    <!-- ============================================================ -->
+    <!-- Alta de paciente -->
     <div class="text-center mb-3">
         <button class="btn btn-outline-secondary" type="button"
                 data-bs-toggle="collapse" data-bs-target="#panelPacienteNuevo">
@@ -111,7 +90,7 @@ $panelAbierto = !empty(old('nombre'));
 
                 <div class="card-body">
 
-                    <!-- ---------- DATOS DEL PACIENTE ---------- -->
+                    <!-- Datos del paciente -->
                     <div class="row">
                         <div class="col-md-8 mb-3">
                             <label class="form-label">Nombre completo <span class="text-danger">*</span></label>
@@ -161,7 +140,7 @@ $panelAbierto = !empty(old('nombre'));
                         </div>
                     </div>
 
-                    <!-- ---------- TUTOR ---------- -->
+                    <!-- Tutor -->
                     <h6 class="text-success border-bottom pb-2 mt-3 mb-3">
                         <i class="bi bi-people"></i> Tutor responsable
                     </h6>
@@ -177,7 +156,7 @@ $panelAbierto = !empty(old('nombre'));
                     </div>
 
                     <div class="mb-3 ps-4" id="bloque_tutor_existente">
-                        <!-- El id real viaja aca; el input de texto es solo para buscar. -->
+                        <!-- Id del tutor elegido -->
                         <input type="hidden" name="id_tutor" id="id_tutor" value="">
 
                         <div class="input-group">
@@ -186,10 +165,10 @@ $panelAbierto = !empty(old('nombre'));
                                    placeholder="Buscar tutor por nombre, apellido o DNI...">
                         </div>
 
-                        <!-- Resultados de la busqueda -->
+                        <!-- Resultados -->
                         <div class="list-group mt-1 d-none" id="resultados_tutor"></div>
 
-                        <!-- Tutor ya elegido -->
+                        <!-- Tutor elegido -->
                         <div class="alert alert-success py-2 px-3 mt-2 mb-0 d-none d-flex justify-content-between align-items-center"
                              id="tutor_elegido">
                             <span id="tutor_elegido_texto"></span>
@@ -243,9 +222,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const quitar      = document.getElementById('quitar_tutor');
     const camposNuevo = document.querySelectorAll('#campos_tutor_nuevo input');
 
-    // --- Los dos modos son excluyentes -------------------------------------
-    // Deshabilitamos los campos del modo que no se usa para que no viajen
-    // en el POST y el controlador no tenga que desempatar.
+    // Modos excluyentes: deshabilita el que no se usa
     function aplicarModo() {
         idTutor.disabled = !existente.checked;
         buscador.disabled = !existente.checked;
@@ -256,15 +233,13 @@ document.addEventListener('DOMContentLoaded', function () {
     nuevo.addEventListener('change', aplicarModo);
     aplicarModo();
 
-    // --- Buscador de tutor --------------------------------------------------
-    // Va por GET, que el filtro CSRF no verifica, asi que no rota el token
-    // del formulario que el usuario tiene abierto.
+    // Buscador de tutor: por GET, no rota el token CSRF
     let esperando = null;
 
     buscador.addEventListener('input', function () {
         const q = buscador.value.trim();
 
-        // Si estaba eligiendo y vuelve a escribir, se descarta la eleccion.
+        // Al tipear se descarta la eleccion previa
         idTutor.value = '';
         elegido.classList.add('d-none');
 
@@ -275,7 +250,7 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
 
-        // Esperamos a que deje de tipear para no disparar una consulta por tecla.
+        // Debounce
         esperando = setTimeout(() => buscarTutor(q), 300);
     });
 

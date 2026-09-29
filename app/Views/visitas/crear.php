@@ -1,9 +1,6 @@
 <?php
-// El paciente llega resuelto del paso 1, asi que la edad se calcula aca
-// en vez de deducirla en JS a partir de un <select>.
-$diferencia = (new DateTime($paciente['fecha_nacimiento']))->diff(new DateTime('today'));
-$meses = $diferencia->y * 12 + $diferencia->m;
-$edad  = $meses < 24 ? $meses . ' meses' : $diferencia->y . ' años';
+// Edad del paciente, resuelto en el paso 1
+$edad = edad_texto($paciente['fecha_nacimiento']);
 ?>
 <div class="container-fluid px-4 mt-4 mb-5">
 
@@ -19,9 +16,7 @@ $edad  = $meses < 24 ? $meses . ' meses' : $diferencia->y . ' años';
         <?= csrf_field() ?>
 
         <div class="row">    
-            <!-- ========================================== -->
-            <!-- DATOS DE LA VISITA      -->
-            <!-- ========================================== -->
+            <!-- Datos DE LA visita -->
             <div class="col-lg-6 mb-4">
                 <div class="card shadow-sm h-100">
                     <div class="card-header bg-success text-white">
@@ -30,7 +25,7 @@ $edad  = $meses < 24 ? $meses . ' meses' : $diferencia->y . ' años';
                     <div class="card-body">
                         
                         <div class="row">
-                            <!-- PACIENTE: viene resuelto del paso 1, no se elige aca -->
+                            <!-- Paciente -->
                             <div class="col-md-12 mb-3">
                                 <label class="form-label fw-bold text-success">Paciente</label>
 
@@ -56,7 +51,7 @@ $edad  = $meses < 24 ? $meses . ' meses' : $diferencia->y . ' años';
                                 <input type="hidden" name="id_paciente" value="<?= $paciente['id'] ?>">
                             </div>
 
-                            <!-- USUARIO -->
+                            <!-- Usuario -->
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Usuario (Enfermera/Médico)</label>
                                 <select class="form-select" id="id_usuario" name="id_usuario" required>
@@ -69,7 +64,7 @@ $edad  = $meses < 24 ? $meses . ' meses' : $diferencia->y . ' años';
                                 </select>
                             </div>
 
-                            <!-- ESTABLECIMIENTO -->
+                            <!-- Establecimiento -->
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Establecimiento</label>
                                 <select class="form-select" id="id_establecimiento" name="id_establecimiento" required>
@@ -82,20 +77,20 @@ $edad  = $meses < 24 ? $meses . ' meses' : $diferencia->y . ' años';
                                 </select>
                             </div>
 
-                            <!-- FECHA DE INGRESO -->
+                            <!-- Fecha de ingreso -->
                             <div class="col-md-6 mb-3">
                                 <label for="fecha_ingreso" class="form-label">Fecha y Hora de ingreso</label>
                                 <input type="datetime-local" class="form-control" id="fecha_ingreso" name="fecha_ingreso" required>
                             </div>
 
-                            <!-- DIAGNÓSTICO -->
+                            <!-- Diagnostico -->
                             <div class="col-md-6 mb-3">
                                 <label for="diagnostico" class="form-label text-success fw-bold">Diagnóstico Inicial</label>
                                 
-                                <!-- el input text normal, enlazado a la lista  -->
+                                <!-- Input del diagnostico -->
                                 <input type="text" class="form-control border-success" id="diagnostico" name="diagnostico" list="lista_diagnosticos" placeholder="Seleccione o escriba..." required>
                                 
-                                <!-- las opciones (no se ve en pantalla hasta que haces clic en el input) -->
+                                <!-- Opciones -->
                                 <datalist id="lista_diagnosticos">
                                     <option value="SBO">
                                     <option value="BQL">
@@ -108,19 +103,17 @@ $edad  = $meses < 24 ? $meses . ' meses' : $diferencia->y . ' años';
                 </div>
             </div>
 
-            <!-- ========================================== -->
-            <!-- FACTORES Y CONTROL        -->
-            <!-- ========================================== -->
+            <!-- Factores Y control -->
             <div class="col-lg-6 mb-4">
                 
-                <!-- FACTORES DE RIESGO Y PROTECCIÓN -->
+                <!-- Factores de riesgo y proteccion -->
                 <div class="card shadow-sm mb-4">
                     <div class="card-header bg-success text-white">
                         <h5 class="mb-0">Factores de Riesgo y Protección</h5>
                     </div>
                     <div class="card-body bg-light">
                         <div class="row">
-                            <!-- Columna de RIESGOS -->
+                            <!-- Riesgos -->
                             <div class="col-md-6 mb-3">
                                 <div class="p-3 border border-danger rounded bg-white h-100">
                                     <h6 class="text-danger border-bottom pb-2 mb-3">
@@ -157,7 +150,7 @@ $edad  = $meses < 24 ? $meses . ' meses' : $diferencia->y . ' años';
                                 </div>
                             </div>
 
-                            <!--PROTECCIÓN -->
+                            <!-- Proteccion -->
                             <div class="col-md-6 mb-3">
                                 <div class="p-3 border border-success rounded bg-white h-100">
                                     <h6 class="text-success border-bottom pb-2 mb-3">
@@ -185,7 +178,7 @@ $edad  = $meses < 24 ? $meses . ' meses' : $diferencia->y . ' años';
                     </div>
                 </div>
 
-                <!-- CONTROL CLÍNICO DE INGRESO (primer control)-->
+                <!-- Control clinico de ingreso -->
                 <div class="card shadow-sm border-success" id="seccion_control_inicial" style="display: none;">
                     <div class="card-header bg-success text-white">
                         <h5 class="mb-0"><i class="bi bi-heart-pulse"></i> Control Clínico Inicial</h5>
@@ -194,9 +187,7 @@ $edad  = $meses < 24 ? $meses . ' meses' : $diferencia->y . ' años';
                         
                         <div id="contenedor_sintomas_dinamicos" class="row">
                             
-                            <!-- ========================================== -->
-                            <!-- SÍNTOMAS ESCALA TAL (MENORES DE 2 AÑOS)    -->
-                            <!-- ========================================== -->
+                            <!-- Síntomas escala TAL (menores DE 2 años) -->
                             
                             <div class="col-md-6 mb-3 sintoma-tal" style="display:none;">
                                 <label class="form-label fw-bold">Frec. Cardiaca</label>
@@ -254,9 +245,7 @@ $edad  = $meses < 24 ? $meses . ' meses' : $diferencia->y . ' años';
                             </div>
 
 
-                            <!-- ========================================== -->
-                            <!-- SÍNTOMAS ESCALA WDF (2 A 5 AÑOS)           -->
-                            <!-- ========================================== -->
+                            <!-- Síntomas escala WDF (2 A 5 años) -->
 
                             <div class="col-md-6 mb-3 sintoma-wdf" style="display:none;">
                                 <label class="form-label fw-bold">Frec. Cardiaca</label>
@@ -327,9 +316,7 @@ $edad  = $meses < 24 ? $meses . ' meses' : $diferencia->y . ' años';
             </div>
         </div>
 
-        <!-- ========================================== -->
-        <!-- botones finales                -->
-        <!-- ========================================== -->
+        <!-- Botones finales -->
         <div class="row">
             <div class="col-12 text-end">
                 <hr>

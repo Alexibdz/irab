@@ -32,36 +32,6 @@ class Paciente extends BaseController
         echo view('templates/footer');
     }
 
-    public function nuevo()
-    {
-        $datos = [
-            'titulo'  => 'Registrar Paciente',
-            'tutores' => $this->tutorModel->findAll(), //  lista de tutores a la vista
-            'establecimientos' =>$this ->establecimientosModel ->findAll()
-        ];
-
-        echo view('templates/header', $datos);
-        echo view('paciente/nuevo', $datos);
-        echo view('templates/footer');
-    }
-
-    public function insertar()
-    {
-        $datos = [
-            'dni'                         => $this->request->getPost('dni'),
-            'nombre'                      => $this->request->getPost('nombre'),
-            'fecha_nacimiento'            => $this->request->getPost('fecha_nacimiento'),
-            'id_tutor'                    => $this->request->getPost('id_tutor'),
-            'domicilio'                   => $this->request->getPost('domicilio'),
-            'barrio'                      => $this->request->getPost('barrio'),
-            'id_area_programatica'        => $this->request->getPost('id_area_programatica'),
-            'id_establecimiento_habitual' => $this->request->getPost('id_establecimiento_habitual')
-        ];
-
-        $this->pacienteModel->insert($datos);
-        return redirect()->to(base_url('paciente'))->with('exito', 'Paciente creado correctamente.');
-    }
-
     public function editar($id)
     {
         $datos = [

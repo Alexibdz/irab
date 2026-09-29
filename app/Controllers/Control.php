@@ -32,11 +32,11 @@ class Control extends BaseController
 
         $paciente = $this->pacienteModel->find($visita['id_paciente']);
 
-        // la edad exacta para enviarla a la vista
+        // Edad exacta para la vista
         $fecha_nac = new \DateTime($paciente['fecha_nacimiento']);
         $hoy = new \DateTime(); 
         $meses_edad = ($fecha_nac->diff($hoy)->y * 12) + $fecha_nac->diff($hoy)->m;
-        //tal para menores a 2 años y wdf para mayores
+        // TAL menores de 2 anios, WDF mayores
         $tipo_planilla = ($meses_edad < 24) ? 'TAL' : 'WDF';
 
         $datos = [
@@ -58,7 +58,7 @@ class Control extends BaseController
         $medicacion = $this->request->getPost('medicacion');
         $observaciones = $this->request->getPost('observaciones');
         
-        //recibimos 'sintomas' exactamente igual que en Visita.php
+        // Sintomas, igual que en Visita.php
         $sintomas_enviados = $this->request->getPost('sintomas');
 
         if ($id_visita && !empty($sintomas_enviados)) {
@@ -85,7 +85,7 @@ class Control extends BaseController
 
             $score_total = 0;
 
-            // Recorremos y buscamos puntos igual que en Visita.php
+            // Puntos, igual que en Visita.php
             foreach ($sintomas_enviados as $idSintoma => $valor) {
                 $puntos = 0;
                 $builder = $this->valoresSintomasModel->where('id_sintoma', $idSintoma);

@@ -1,7 +1,17 @@
+<?php
+// El paciente llega resuelto del paso 1, asi que la edad se calcula aca
+// en vez de deducirla en JS a partir de un <select>.
+$diferencia = (new DateTime($paciente['fecha_nacimiento']))->diff(new DateTime('today'));
+$meses = $diferencia->y * 12 + $diferencia->m;
+$edad  = $meses < 24 ? $meses . ' meses' : $diferencia->y . ' años';
+?>
 <div class="container-fluid px-4 mt-4 mb-5">
-    
+
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="h3 mb-0 text-primary"><i class="bi bi-journal-medical"></i> Registrar Nueva Visita</h2>
+        <div class="d-flex align-items-center gap-3">
+            <h2 class="h3 mb-0 text-primary"><i class="bi bi-journal-medical"></i> Registrar Nueva Visita</h2>
+            <span class="badge bg-secondary">Paso 2 de 2</span>
+        </div>
         <a href="<?= base_url('visitas') ?>" class="btn btn-outline-secondary">Volver al listado</a>
     </div>
 
@@ -20,26 +30,30 @@
                     <div class="card-body">
                         
                         <div class="row">
-                            <!-- PACIENTE -->
+                            <!-- PACIENTE: viene resuelto del paso 1, no se elige aca -->
                             <div class="col-md-12 mb-3">
                                 <label class="form-label fw-bold text-success">Paciente</label>
-                                
-                                <select class="form-select border-success" id="select_paciente" name="id_paciente" onchange="filtrarFactoresPorEdad()" required>
-                                    <option value="" data-nacimiento="" disabled selected>Seleccione un paciente...</option>
-                                    <?php foreach ($pacientes as $paciente): ?>
-                                        <option value="<?= $paciente['id'] ?>" data-nacimiento="<?= $paciente['fecha_nacimiento'] ?>">
-                                            <?= esc($paciente['nombre']) ?> (DNI: <?= esc($paciente['dni']) ?>)
-                                        </option>
-                                    <?php endforeach; ?>
-                                </select>
-                                
-                                <!--  para registrar nuevo paciente -->
-                                <div class="mt-2 text-end">
-                                    <small class="text-muted me-2">¿No está en la lista?</small>
-                                    <a href="<?= base_url('paciente/nuevo') ?>" class="btn btn-sm btn-outline-success">
-                                        <i class="bi bi-person-plus"></i> Registrar paciente
+
+                                <div class="border border-success rounded p-3 bg-light d-flex justify-content-between align-items-start"
+                                     id="paciente_fijo" data-nacimiento="<?= esc($paciente['fecha_nacimiento']) ?>">
+                                    <div>
+                                        <div class="fw-bold fs-5"><?= esc($paciente['nombre']) ?></div>
+                                        <div class="small text-muted">
+                                            DNI <?= esc($paciente['dni'] ?: 's/d') ?> · <?= esc($edad) ?>
+                                            <?php if ($tutor): ?>
+                                                <br>Tutor: <?= esc($tutor['nombre']) ?>
+                                                <?php if (!empty($tutor['telefono'])): ?>
+                                                    · Tel. <?= esc($tutor['telefono']) ?>
+                                                <?php endif; ?>
+                                            <?php endif; ?>
+                                        </div>
+                                    </div>
+                                    <a href="<?= base_url('visitas/crear') ?>" class="btn btn-sm btn-outline-secondary text-nowrap">
+                                        <i class="bi bi-arrow-left"></i> Cambiar
                                     </a>
                                 </div>
+
+                                <input type="hidden" name="id_paciente" value="<?= $paciente['id'] ?>">
                             </div>
 
                             <!-- USUARIO -->
@@ -165,8 +179,8 @@
                             </div>
                         </div>
                         
-                        <div id="mensaje_seleccione_paciente" class="alert alert-info mt-2 mb-0 py-2 text-center">
-                            <small>Seleccione un paciente a la izquierda para visualizar los factores y el control clínico.</small>
+                        <div class="alert alert-secondary mt-2 mb-0 py-2 text-center">
+                            <small>Se muestran solo los factores que corresponden a <?= esc($edad) ?>.</small>
                         </div>
                     </div>
                 </div>

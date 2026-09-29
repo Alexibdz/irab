@@ -118,7 +118,11 @@ $routes->get('valores-sintomas/eliminar/(:num)', 'ValoresSintomas::eliminar/$1')
 //--------------------------visitas(Gaby) ----------------------------
 $routes->get('visitas', 'Visita::index');
 $routes->get('visitas/historial', 'Visita::historial');
+// Alta de visita en dos pasos: sin id busca/crea el paciente, con id va al form.
 $routes->get('visitas/crear', 'Visita::crear');
+$routes->get('visitas/crear/(:num)', 'Visita::crear/$1');
+$routes->get('visitas/buscar-tutor', 'Visita::buscarTutor');
+$routes->post('visitas/paciente-nuevo', 'Visita::pacienteNuevo');
 $routes->post('visitas/insertar', 'Visita::insertar');
 $routes->get('visitas/editar/(:num)', 'Visita::editar/$1');
 $routes->post('visitas/actualizar', 'Visita::actualizar');

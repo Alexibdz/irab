@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Models\VisitaModel;
 use App\Models\PacienteModel;
+use App\Models\TutorModel;
 use App\Models\UsuariosModel;
 use App\Models\EstablecimientosModel;
 use App\Models\ControlModel;
@@ -18,6 +19,7 @@ class Visita extends BaseController
     protected $visitaModel;
     protected $usuarioModel;
     protected $pacienteModel;
+    protected $tutorModel;
     protected $establecimientoModel;
     protected $controlModel;
     protected $factoresModel;
@@ -29,6 +31,7 @@ class Visita extends BaseController
     {
         $this->visitaModel = new VisitaModel();
         $this->pacienteModel = new PacienteModel();
+        $this->tutorModel = new TutorModel();
         $this->usuarioModel = new UsuariosModel();
         $this->establecimientoModel = new EstablecimientosModel();
         $this->factoresModel = new FactoresModel();
@@ -79,11 +82,46 @@ class Visita extends BaseController
         echo view('templates/footer');
     }
 
-    public function crear()
+    /**
+     * Alta de visita en dos pasos.
+     */
+    public function crear($id_paciente = null)
     {
+        if ($id_paciente !== null) {
+            return $this->formulario($id_paciente);
+        }
+
+        $q = trim((string) $this->request->getGet('q'));
+
+        $datos = [
+            'titulo' => 'Nueva visita',
+            'q' => $q,
+            'pacientes' => $q === '' ? [] : $this->buscarPacientes($q),
+            'establecimientos' => $this->establecimientoModel->findAll()
+        ];
+
+        echo view('templates/header', $datos);
+        echo view('visitas/paso1', $datos);
+        echo view('templates/footer');
+    }
+
+    /**
+     * PASO 2: formulario clinico. El paciente llega resuelto desde el paso 1,
+     * asi que su edad se conoce aca y no hace falta elegirlo de un select.
+     */
+    private function formulario($id_paciente)
+    {
+        $paciente = $this->pacienteModel->find($id_paciente);
+
+        if (!$paciente) {
+            return redirect()->to(base_url('visitas/crear'))
+                ->with('error', 'El paciente no existe.');
+        }
+
         $datos = [
             'titulo' => 'Registrar visita',
-            'pacientes' => $this->pacienteModel->findAll(),
+            'paciente' => $paciente,
+            'tutor' => $this->tutorModel->find($paciente['id_tutor']),
             'usuarios' => $this->usuarioModel->findAll(),
             'establecimientos' => $this->establecimientoModel->findAll(),
             'factores' => $this->factoresModel->findAll()
@@ -92,6 +130,167 @@ class Visita extends BaseController
         echo view('templates/header', $datos);
         echo view('visitas/crear', $datos);
         echo view('templates/footer');
+    }
+
+    /**
+     * Busca pacientes por su propio nombre o DNI.
+     *
+     * A proposito NO busca por los datos del tutor: un tutor puede tener varios
+     * chicos a cargo, asi que buscar por tutor devuelve a todos los hermanos y
+     * no ayuda a identificar al paciente que se esta atendiendo.
+     * El tutor se muestra igual en cada resultado, para poder distinguirlos.
+     */
+    private function buscarPacientes(string $q): array
+    {
+        $digitos = preg_replace('/\D/', '', $q);
+
+        // builder() saltea el soft delete del modelo, por eso va el where a mano.
+        $builder = $this->pacienteModel->builder()
+            ->select('pacientes.*, tutores.nombre AS tutor_nombre, tutores.telefono AS tutor_telefono')
+            ->join('tutores', 'tutores.id = pacientes.id_tutor', 'left')
+            ->where('pacientes.fecha_borrado IS NULL')
+            ->groupStart()
+                ->like('pacientes.nombre', $q)
+                ->orLike('pacientes.dni', $q);
+
+        // El DNI puede estar cargado con puntos y el usuario escribirlo sin ellos.
+        if ($digitos !== '') {
+            $builder->orWhere("REPLACE(REPLACE(pacientes.dni, '.', ''), ' ', '') LIKE", '%' . $digitos . '%');
+        }
+
+        $pacientes = $builder->groupEnd()
+            ->orderBy('pacientes.nombre')
+            ->limit(15)
+            ->get()
+            ->getResultArray();
+
+        if (empty($pacientes)) {
+            return [];
+        }
+
+        // Cantidad de visitas previas de cada paciente, en una sola consulta.
+        $conteos = $this->visitaModel->builder()
+            ->select('id_paciente, COUNT(*) AS total')
+            ->where('fecha_borrado IS NULL')
+            ->whereIn('id_paciente', array_column($pacientes, 'id'))
+            ->groupBy('id_paciente')
+            ->get()
+            ->getResultArray();
+
+        $visitasPor = array_column($conteos, 'total', 'id_paciente');
+
+        foreach ($pacientes as &$paciente) {
+            $paciente['visitas_previas'] = (int) ($visitasPor[$paciente['id']] ?? 0);
+        }
+
+        return $pacientes;
+    }
+
+    /**
+     * Busca tutores por nombre, DNI o telefono. Lo consume el buscador de tutor
+     * del paso 1, que reemplaza al viejo select.
+     *
+     * Va por GET a proposito: el filtro CSRF solo verifica POST/PUT/DELETE/PATCH,
+     * asi que esta consulta no rota el token del formulario que esta abierto.
+     */
+    public function buscarTutor()
+    {
+        $q = trim((string) $this->request->getGet('q'));
+
+        if (mb_strlen($q) < 2) {
+            return $this->response->setJSON([]);
+        }
+
+        $digitos = preg_replace('/\D/', '', $q);
+
+        $builder = $this->tutorModel->builder()
+            ->select('id, nombre, dni, telefono')
+            ->where('fecha_borrado IS NULL')
+            ->groupStart()
+                ->like('nombre', $q)
+                ->orLike('dni', $q);
+
+        if ($digitos !== '') {
+            $builder->orLike('telefono', $digitos)
+                    ->orWhere("REPLACE(REPLACE(dni, '.', ''), ' ', '') LIKE", '%' . $digitos . '%');
+        }
+
+        $tutores = $builder->groupEnd()
+            ->orderBy('nombre')
+            ->limit(8)
+            ->get()
+            ->getResultArray();
+
+        return $this->response->setJSON($tutores);
+    }
+
+    /**
+     * PASO 1 -> PASO 2: da de alta al paciente (y al tutor si hace falta)
+     * y manda al formulario clinico.
+     *
+     * Tutor y paciente van en una transaccion: si falla el paciente no queda
+     * un tutor suelto. Si en cambio se abandona el paso 2, el paciente ya
+     * creado queda igual, que es un estado valido: existe y no tuvo visitas.
+     */
+    public function pacienteNuevo()
+    {
+        $id_tutor = $this->request->getPost('id_tutor');
+        $dni      = trim((string) $this->request->getPost('tutor_dni'));
+        $telefono = trim((string) $this->request->getPost('tutor_telefono'));
+        $nombre   = trim((string) $this->request->getPost('tutor_nombre'));
+
+        // Eligio "tutor ya registrado" pero no llego a elegir ninguno.
+        if ($this->request->getPost('modo_tutor') === 'existente' && empty($id_tutor)) {
+            return redirect()->back()->withInput()
+                ->with('error', 'Buscá y elegí un tutor de la lista, o cargá uno nuevo.');
+        }
+
+        // Tutor nuevo: lo buscamos antes por DNI o telefono para no duplicarlo.
+        if (empty($id_tutor)) {
+            if ($dni === '' || $nombre === '') {
+                return redirect()->back()->withInput()
+                    ->with('error', 'Para crear un tutor hacen falta al menos el DNI y el nombre.');
+            }
+
+            $tutor = $this->tutorModel->where('dni', $dni)->first();
+
+            if (!$tutor && $telefono !== '') {
+                $tutor = $this->tutorModel->where('telefono', $telefono)->first();
+            }
+
+            $id_tutor = $tutor['id'] ?? null;
+        }
+
+        $this->pacienteModel->transStart();
+
+        if (empty($id_tutor)) {
+            $id_tutor = $this->tutorModel->insert([
+                'dni'      => $dni,
+                'nombre'   => $nombre,
+                'telefono' => $this->nullSiVacio($telefono)
+            ]);
+        }
+
+        $id_paciente = $this->pacienteModel->insert([
+            'dni'                         => $this->nullSiVacio($this->request->getPost('dni')),
+            'nombre'                      => $this->request->getPost('nombre'),
+            'fecha_nacimiento'            => $this->request->getPost('fecha_nacimiento'),
+            'id_tutor'                    => $id_tutor,
+            'domicilio'                   => $this->nullSiVacio($this->request->getPost('domicilio')),
+            'barrio'                      => $this->nullSiVacio($this->request->getPost('barrio')),
+            'id_area_programatica'        => $this->nullSiVacio($this->request->getPost('id_area_programatica')),
+            'id_establecimiento_habitual' => $this->request->getPost('id_establecimiento_habitual')
+        ]);
+
+        $this->pacienteModel->transComplete();
+
+        if (!$id_paciente) {
+            return redirect()->back()->withInput()
+                ->with('error', 'No se pudo registrar el paciente. Revisá que el DNI no esté repetido.');
+        }
+
+        return redirect()->to(base_url('visitas/crear/' . $id_paciente))
+            ->with('exito', 'Paciente registrado. Ahora cargá la visita.');
     }
 
     public function insertar()

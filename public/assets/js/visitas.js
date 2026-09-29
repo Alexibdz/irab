@@ -1,12 +1,26 @@
-function filtrarFactoresPorEdad() {
-    // Obtener la fecha de nacimiento 
-    let selectPaciente = document.getElementById('select_paciente');
-    let opcionSeleccionada = selectPaciente.options[selectPaciente.selectedIndex];
-    let fechaNacimiento = opcionSeleccionada.getAttribute('data-nacimiento');
+// La fecha de nacimiento sale de la ficha del paciente, que en el paso 2 ya
+// viene fija desde el servidor. Se deja el <select> como alternativa por si
+// alguna pantalla todavia deja elegir al paciente a mano.
+function obtenerFechaNacimiento() {
+    let fichaPaciente = document.getElementById('paciente_fijo');
+    if (fichaPaciente) {
+        return fichaPaciente.dataset.nacimiento;
+    }
 
-    // para ocultar mensaje y mostrar secciones
-    document.getElementById('mensaje_seleccione_paciente').style.display = 'none';
-    document.getElementById('seccion_control_inicial').style.display = 'block';
+    let selectPaciente = document.getElementById('select_paciente');
+    if (!selectPaciente || selectPaciente.selectedIndex < 0) {
+        return null;
+    }
+    return selectPaciente.options[selectPaciente.selectedIndex].getAttribute('data-nacimiento');
+}
+
+function filtrarFactoresPorEdad() {
+    let fechaNacimiento = obtenerFechaNacimiento();
+
+    let seccionControl = document.getElementById('seccion_control_inicial');
+    if (seccionControl) {
+        seccionControl.style.display = fechaNacimiento ? 'block' : 'none';
+    }
 
     if (fechaNacimiento) {
         // Calcular la edad exacta en meses
@@ -66,7 +80,11 @@ document.addEventListener("DOMContentLoaded", function() {
         inputFecha.value = ahora.toISOString().slice(0, 16);
     }
     // ------------------------------------------------
-    filtrarFactoresPorEdad();
+    // Solo corre en las pantallas que tienen el bloque de factores.
+    if (document.getElementById('seccion_control_inicial')) {
+        filtrarFactoresPorEdad();
+    }
+
     let selectPaciente = document.getElementById('select_paciente');
     if (selectPaciente) {
         selectPaciente.addEventListener('change', filtrarFactoresPorEdad);

@@ -59,10 +59,10 @@ $edad  = $meses < 24 ? $meses . ' meses' : $diferencia->y . ' años';
                             <!-- USUARIO -->
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Usuario (Enfermera/Médico)</label>
-                                <select class="form-select" name="id_usuario" required>
+                                <select class="form-select" id="id_usuario" name="id_usuario" required>
                                     <option value="" disabled selected>Seleccione...</option>
                                     <?php foreach ($usuarios as $usuario): ?>
-                                        <option value="<?= $usuario['id'] ?>">
+                                        <option value="<?= $usuario['id'] ?>" data-establecimiento="<?= esc($usuario['id_establecimiento_asignado'] ?? '') ?>">
                                             <?= esc($usuario['nombre']) ?>
                                         </option>
                                     <?php endforeach; ?>
@@ -72,7 +72,7 @@ $edad  = $meses < 24 ? $meses . ' meses' : $diferencia->y . ' años';
                             <!-- ESTABLECIMIENTO -->
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Establecimiento</label>
-                                <select class="form-select" name="id_establecimiento" required>
+                                <select class="form-select" id="id_establecimiento" name="id_establecimiento" required>
                                     <option value="" disabled selected>Seleccione...</option>
                                     <?php foreach ($establecimientos as $establecimiento): ?>
                                         <option value="<?= $establecimiento['id'] ?>">

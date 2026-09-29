@@ -40,10 +40,10 @@
                             <!-- USUARIO -->
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Usuario</label>
-                                <select class="form-select" name="id_usuario" required>
+                                <select class="form-select" id="id_usuario" name="id_usuario" required>
                                     <option value="" disabled>Seleccione un usuario</option>
                                     <?php foreach ($usuarios as $usuario): ?>
-                                        <option value="<?= $usuario['id'] ?>" <?= $usuario['id'] == $visita['id_usuario'] ? 'selected' : '' ?>>
+                                        <option value="<?= $usuario['id'] ?>" data-establecimiento="<?= esc($usuario['id_establecimiento_asignado'] ?? '') ?>" <?= $usuario['id'] == $visita['id_usuario'] ? 'selected' : '' ?> >
                                             <?= esc($usuario['nombre']) ?>
                                         </option>
                                     <?php endforeach; ?>
@@ -53,7 +53,7 @@
                             <!-- ESTABLECIMIENTO -->
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Establecimiento</label>
-                                <select class="form-select" name="id_establecimiento" required>
+                                <select class="form-select" id="id_establecimiento" name="id_establecimiento" required>
                                     <option value="" disabled>Seleccione un establecimiento</option>
                                     <?php foreach ($establecimientos as $establecimiento): ?>
                                         <option value="<?= $establecimiento['id'] ?>" <?= $establecimiento['id'] == $visita['id_establecimiento'] ? 'selected' : '' ?>>

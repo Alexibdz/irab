@@ -27,15 +27,15 @@ function filtrarFactoresPorEdad() {
         let fechaNac = new Date(fechaNacimiento);
         let hoy = new Date();
         let mesesEdad = (hoy.getFullYear() - fechaNac.getFullYear()) * 12 + (hoy.getMonth() - fechaNac.getMonth());
-        
+
         if (hoy.getDate() < fechaNac.getDate()) {
-            mesesEdad--; 
+            mesesEdad--;
         }
 
         // Ocultar y deshabilitar todos los factores y síntomas por defecto
         $('.div-factor').hide();
         $('.div-factor input, .div-factor select').prop('disabled', true);
-        
+
         $('.sintoma-tal, .sintoma-wdf').hide();
         $('.sintoma-tal select, .sintoma-wdf select').prop('disabled', true);
 
@@ -44,7 +44,7 @@ function filtrarFactoresPorEdad() {
             // Es menor de 2 años: Mostrar factores TAL y Ambos
             $('.tipo-TAL, .tipo-Ambos').show();
             $('.tipo-TAL input, .tipo-TAL select, .tipo-Ambos input, .tipo-Ambos select').prop('disabled', false);
-            
+
             // Mostrar síntomas TAL
             $('.sintoma-tal').show();
             $('.sintoma-tal select').prop('disabled', false);
@@ -62,11 +62,39 @@ function filtrarFactoresPorEdad() {
             // Es mayor o igual a 2 años: Mostrar factores WDF y Ambos
             $('.tipo-WDF, .tipo-Ambos').show();
             $('.tipo-WDF input, .tipo-WDF select, .tipo-Ambos input, .tipo-Ambos select').prop('disabled', false);
-            
+
             // Mostrar síntomas WDF
             $('.sintoma-wdf').show();
             $('.sintoma-wdf select').prop('disabled', false);
         }
+    }
+}
+
+// Al elegir un usuario, se selecciona automaticamente su establecimiento asignado.
+function cargarEstablecimientoPorUsuario() {
+    const usuarioSelect = document.getElementById('id_usuario');
+    const establecimientoSelect = document.getElementById('id_establecimiento');
+    if (!usuarioSelect || !establecimientoSelect) return;
+
+    const usuarioSeleccionado = usuarioSelect.options[usuarioSelect.selectedIndex];
+    const establecimientoAsignado = usuarioSeleccionado ? usuarioSeleccionado.dataset.establecimiento : '';
+
+    if (!establecimientoAsignado) {
+        establecimientoSelect.value = '';
+        return;
+    }
+
+    let encontrado = false;
+    for (const option of establecimientoSelect.options) {
+        if (option.value === establecimientoAsignado) {
+            establecimientoSelect.value = establecimientoAsignado;
+            encontrado = true;
+            break;
+        }
+    }
+
+    if (!encontrado) {
+        establecimientoSelect.value = '';
     }
 }
 
@@ -88,5 +116,13 @@ document.addEventListener("DOMContentLoaded", function() {
     let selectPaciente = document.getElementById('select_paciente');
     if (selectPaciente) {
         selectPaciente.addEventListener('change', filtrarFactoresPorEdad);
+    }
+
+    // Sincronizar establecimiento segun usuario (si existen los selects)
+    const usuarioSelect = document.getElementById('id_usuario');
+    const establecimientoSelect = document.getElementById('id_establecimiento');
+    if (usuarioSelect && establecimientoSelect) {
+        usuarioSelect.addEventListener('change', cargarEstablecimientoPorUsuario);
+        cargarEstablecimientoPorUsuario();
     }
 });

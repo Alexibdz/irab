@@ -13,6 +13,7 @@ $activo = fn(array $rutas) => in_array($seg, $rutas, true) ? ' active' : '';
     <link href="https://cdn.datatables.net/2.1.8/css/dataTables.bootstrap5.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link href="<?= base_url('assets/css/app.css') ?>" rel="stylesheet">
+    <link rel="shortcut icon" href="<?= base_url('assets/img/favicon.ico') ?>" type="image/x-icon">
 </head>
 <body>
 

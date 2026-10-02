@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link href="<?= base_url('assets/css/app.css') ?>" rel="stylesheet">
 </head>
-<body class="bg-body-secondary">
+<body class="bg-body-secondary pagina-login">
 
 <main class="container min-vh-100 d-flex align-items-center justify-content-center py-4">
     <div class="col-12" style="max-width: 420px;">
@@ -19,7 +19,7 @@
         </div>
 
         <div class="card shadow-sm">
-            <div class="card-header bg-primary text-white">
+            <div class="card-header login-verde-degradado text-center py-3">
                 <h2 class="h5 mb-0">Iniciar sesión</h2>
             </div>
 
@@ -53,7 +53,7 @@
                     
 
                     <div class="d-grid">
-                        <button type="submit" class="btn btn-primary">Entrar</button>
+                        <button type="submit" class="btn login-verde-degradado btn-login-verde w-100 py-2 fw-semibold">Entrar</button>
                     </div>
                 </form>
 

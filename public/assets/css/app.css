@@ -50,3 +50,26 @@
 .panel-num {
     font-variant-numeric: tabular-nums;
 }
+
+/* ----- login ---  */
+
+/* fondo */
+body.pagina-login {
+    min-height: 100vh;
+    margin: 0;
+    background: linear-gradient(120deg, rgba(212, 252, 121, 0.18) 0%, rgba(150, 230, 161, 0.18) 100%), #ffffff !important;
+    background-attachment: fixed;
+}
+
+/* Degradado verde para el encabezado y el botón */
+.login-verde-degradado {
+    background: linear-gradient(315deg, #224f00 0.000%, #658c1a 20.000%, #9dbd5f 40.000%, #c8e0aa 60.000%, #e5f2d9 80.000%, #f4f3d6 100.000%) !important;
+    color: #4b574c !important;
+    border: none !important;
+}
+
+/* hover */
+.btn-login-verde:hover {
+    opacity: 0.90;
+    filter: brightness(1.05);
+}

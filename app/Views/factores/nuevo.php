@@ -8,7 +8,7 @@
                 </div>
 
                 <div class="card-body">
-                    <form action="<?= base_url('factores/insertar') ?>" method="POST">
+                    <form action="<?= base_url('configuracion/factores/insertar') ?>" method="POST">
                         <?= csrf_field() ?>
 
                         <div class="mb-3">
@@ -36,7 +36,7 @@
                         </div>
 
                         <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
-                            <a href="<?= base_url('factores') ?>" class="btn btn-secondary">Cancelar</a>
+                            <a href="<?= base_url('configuracion/factores') ?>" class="btn btn-secondary">Cancelar</a>
                             <button type="submit" class="btn btn-primary">Guardar Factor</button>
                         </div>
 

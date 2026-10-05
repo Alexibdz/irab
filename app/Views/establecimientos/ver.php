@@ -12,5 +12,5 @@
         <label for="tipo">Tipo: </label>
         <?php echo esc($establecimiento['tipo']); ?>
     </div>
-    <a href="<?php echo base_url('establecimientos'); ?>">Volver</a>
+    <a href="<?php echo base_url('configuracion/establecimientos'); ?>">Volver</a>
 </div>

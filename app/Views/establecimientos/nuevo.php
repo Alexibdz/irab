@@ -1,6 +1,6 @@
 <div>
     <h2><?= esc($titulo) ?></h2>
-    <form action="<?php echo base_url('establecimientos/insertar'); ?>" method="post"> <?= csrf_field() ?>
+    <form action="<?php echo base_url('configuracion/establecimientos/insertar'); ?>" method="post"> <?= csrf_field() ?>
         <div>
             <label for="nombre">Nombre</label>
             <input type="text" name="nombre" id="nombre" required>
@@ -26,6 +26,6 @@
             </select>
         </div>
         <button type="submit">Guardar</button>
-        <a href="<?php echo base_url('establecimientos'); ?>">Cancelar</a>
+        <a href="<?php echo base_url('configuracion/establecimientos'); ?>">Cancelar</a>
     </form>
 </div>

@@ -1,8 +1,8 @@
 <div>
     <div>
         <h2><?= esc($titulo) ?></h2>
-        <a href="<?php echo base_url('usuarios/nuevo'); ?>">Nuevo Usuario</a>
-        <a href="<?php echo base_url('usuarios/eliminados'); ?>">Ver Papelera</a>
+        <a href="<?php echo base_url('configuracion/usuarios/nuevo'); ?>">Nuevo Usuario</a>
+        <a href="<?php echo base_url('configuracion/usuarios/eliminados'); ?>">Ver Papelera</a>
     </div>
     <table class="table table-striped table-hover tabla-datos">
         <thead>
@@ -22,12 +22,12 @@
                     <td><?= esc($usuario['rol_nombre']) ?></td>
                     <td><?= esc($usuario['establecimiento_nombre']) ?></td>
                     <td>
-                        <a href="<?= base_url('usuarios/eliminar/' . $usuario['id']); ?>"
+                        <a href="<?= base_url('configuracion/usuarios/eliminar/' . $usuario['id']); ?>"
                         onclick="return confirm('¿Deseas eliminar este usuario?');">
                             Eliminar
                         </a>
-                        <a href="<?php echo base_url('usuarios/editar/' . $usuario["id"]); ?>">Editar</a>
-                        <a href="<?php echo base_url('usuarios/ver/' . $usuario["id"]); ?>">Ver</a>
+                        <a href="<?php echo base_url('configuracion/usuarios/editar/' . $usuario["id"]); ?>">Editar</a>
+                        <a href="<?php echo base_url('configuracion/usuarios/ver/' . $usuario["id"]); ?>">Ver</a>
                     </td>
                 </tr>
             <?php endforeach; ?>

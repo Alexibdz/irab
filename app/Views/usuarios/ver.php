@@ -16,7 +16,7 @@
         <label>Establecimiento asignado: </label>
         <?php echo esc($usuario['establecimiento_nombre']); ?>
     </div>
-    <a href="<?php echo base_url('usuarios'); ?>">
+    <a href="<?php echo base_url('configuracion/usuarios'); ?>">
         Volver
     </a>
 </div>

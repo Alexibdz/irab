@@ -73,3 +73,49 @@ body.pagina-login {
     opacity: 0.90;
     filter: brightness(1.05);
 }
+
+/* --botones del datatable--*/
+.dt-buttons {
+    background: transparent !important;
+    display: inline-flex !important;
+    gap: 6px !important;
+    align-items: center !important;
+}
+
+/* cuadrito blanco con letra negra */
+.btn-blanco-dt {
+    background-color: #ffffff !important;
+    color: #000000 !important;
+    border: 1px solid #ced4da !important;
+    border-radius: 4px !important;
+    padding: 0.3rem 0.7rem !important;
+    font-size: 0.85rem !important;
+    font-weight: 500 !important;
+    line-height: 1.5 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 0.35rem !important;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05) !important;
+    cursor: pointer !important;
+    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease !important;
+}
+
+/* iconos color */
+.btn-blanco-dt i {
+    font-size: 0.95rem !important;
+    color: inherit !important;
+}
+
+/* hover */
+.btn-blanco-dt:hover {
+    background-color: #74b77a !important;
+    color: #000000 !important;
+    border-color: #adb5bd !important;
+}
+
+/* cuando clickeas */
+.btn-blanco-dt:active {
+    background-color: #316021 !important;
+    color: #ffffff !important;
+    border-color: #316021 !important;
+}

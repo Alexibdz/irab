@@ -1,6 +1,16 @@
 <?php
-// Edad del paciente, resuelto en el paso 1
+// Edad del paciente.
 $edad = edad_texto($paciente['fecha_nacimiento']);
+
+$meses_edad = null;
+$edad_numero = null;
+
+if (!empty($paciente['fecha_nacimiento'])) {
+    $fechaNac = new DateTime($paciente['fecha_nacimiento']);
+    $hoy = new DateTime('today');
+    $meses_edad = ($fechaNac->diff($hoy)->y * 12) + $fechaNac->diff($hoy)->m;
+    $edad_numero = $meses_edad;
+}
 ?>
 <div class="container-fluid px-4 mt-4 mb-5">
 
@@ -184,132 +194,184 @@ $edad = edad_texto($paciente['fecha_nacimiento']);
                         <h5 class="mb-0"><i class="bi bi-heart-pulse"></i> Control Clínico Inicial</h5>
                     </div>
                     <div class="card-body">
-                        
+
                         <div id="contenedor_sintomas_dinamicos" class="row">
-                            
-                            <!-- Síntomas escala TAL (menores DE 2 años) -->
-                            
-                            <div class="col-md-6 mb-3 sintoma-tal" style="display:none;">
-                                <label class="form-label fw-bold">Frec. Cardiaca</label>
-                                <select class="form-select border-info" name="sintomas[1]">
-                                    <option value="" selected disabled>Seleccione...</option>
-                                    <option value="119">< 120</option>
-                                    <option value="130">121-140</option>
-                                    <option value="150">141-160</option>
-                                    <option value="170">> 160</option>
-                                </select>
-                            </div>
-                            
-                            <div class="col-md-6 mb-3 sintoma-tal" id="div_fr_menor" style="display:none;">
-                                <label class="form-label fw-bold">F.R. (<= 6m)</label>
-                                <select class="form-select border-info" name="sintomas[2]">
-                                    <option value="" selected disabled>Seleccione...</option>
-                                    <option value="40"><= 40</option>
-                                    <option value="50">41-55</option>
-                                    <option value="65">56-70</option>
-                                    <option value="75">> 70</option>
-                                </select>
-                            </div>
-                            
-                            <div class="col-md-6 mb-3 sintoma-tal" id="div_fr_mayor" style="display:none;">
-                                <label class="form-label fw-bold">F.R. (> 6m)</label>
-                                <select class="form-select border-info" name="sintomas[3]">
-                                    <option value="" selected disabled>Seleccione...</option>
-                                    <option value="30"><= 30</option>
-                                    <option value="40">31-45</option>
-                                    <option value="55">46-60</option>
-                                    <option value="65">> 60</option>
-                                </select>
-                            </div>
-                            
-                            <div class="col-md-6 mb-3 sintoma-tal" style="display:none;">
-                                <label class="form-label fw-bold">Sibilancias</label>
-                                <select class="form-select border-info" name="sintomas[4]">
-                                    <option value="" selected disabled>Seleccione...</option>
-                                    <option value="No">No</option>
-                                    <option value="Fin espiración con estetoscopio">Fin espir.</option>
-                                    <option value="Inspiración y espiración con estetoscopio">Insp/Esp.</option>
-                                    <option value="Audible sin estetoscopio">Audibles</option>
-                                </select>
-                            </div>
-                            
-                            <div class="col-md-6 mb-3 sintoma-tal" style="display:none;">
-                                <label class="form-label fw-bold">Retracción</label>
-                                <select class="form-select border-info" name="sintomas[5]">
-                                    <option value="" selected disabled>Seleccione...</option>
-                                    <option value="No">No</option>
-                                    <option value="Subcostal">Subcostal</option>
-                                    <option value="Subcostal e intercostal">Sub/Inter.</option>
-                                    <option value="Generalizado">General.</option>
-                                </select>
-                            </div>
 
+                            <?php if ($edad_numero !== null && $edad_numero < 24): ?>
 
-                            <!-- Síntomas escala WDF (2 A 5 años) -->
+                                <div class="col-md-4 mb-3 sintoma-tal">
+                                    <label class="form-label fw-bold small text-success">Frec. Cardíaca</label>
+                                    <input type="number"
+                                           class="form-control input-score border-success"
+                                           name="sintomas[1]"
+                                           min="0"
+                                           data-rangos='[
+                                               {"min":0,"max":120,"puntos":0},
+                                               {"min":121,"max":140,"puntos":1},
+                                               {"min":141,"max":160,"puntos":2},
+                                               {"min":161,"max":999,"puntos":3}
+                                           ]'
+                                           onchange="calcularScoreDinamico()"
+                                           required>
+                                </div>
 
-                            <div class="col-md-6 mb-3 sintoma-wdf" style="display:none;">
-                                <label class="form-label fw-bold">Frec. Cardiaca</label>
-                                <select class="form-select border-info" name="sintomas[6]">
-                                    <option value="" selected disabled>Seleccione...</option>
-                                    <option value="119">< 120 lpm</option>
-                                    <option value="130">> 120 lpm</option>
-                                </select>
-                            </div>
-                            
-                            <div class="col-md-6 mb-3 sintoma-wdf" style="display:none;">
-                                <label class="form-label fw-bold">Frec. Respiratoria</label>
-                                <select class="form-select border-info" name="sintomas[7]">
-                                    <option value="" selected disabled>Seleccione...</option>
-                                    <option value="29">< 30 rpm</option>
-                                    <option value="40">31 - 45</option>
-                                    <option value="55">46 - 60</option>
-                                    <option value="65">> 60 rpm</option>
-                                </select>
-                            </div>
-                            
-                            <div class="col-md-6 mb-3 sintoma-wdf" style="display:none;">
-                                <label class="form-label fw-bold">Sibilancias</label>
-                                <select class="form-select border-info" name="sintomas[8]">
-                                    <option value="" selected disabled>Seleccione...</option>
-                                    <option value="No">No</option>
-                                    <option value="Final espiración">Fin espir.</option>
-                                    <option value="Todo espiración">Toda espir.</option>
-                                    <option value="+ Inspiración">Insp/Esp.</option>
-                                </select>
-                            </div>
-                            
-                            <div class="col-md-6 mb-3 sintoma-wdf" style="display:none;">
-                                <label class="form-label fw-bold">Tiraje</label>
-                                <select class="form-select border-info" name="sintomas[9]">
-                                    <option value="" selected disabled>Seleccione...</option>
-                                    <option value="No">No</option>
-                                    <option value="Subcostal / Intercostal">Sub/Intercostal</option>
-                                    <option value="+ Supraclavicular + Aleteo nasal">+ Supraclav.</option>
-                                    <option value="+ Todo lo anterior + Supraesternal">+ Supraester.</option>
-                                </select>
-                            </div>
-                            
-                            <div class="col-md-6 mb-3 sintoma-wdf" style="display:none;">
-                                <label class="form-label fw-bold">Ventilación</label>
-                                <select class="form-select border-info" name="sintomas[10]">
-                                    <option value="" selected disabled>Seleccione...</option>
-                                    <option value="Buena, Simétrica">Buena</option>
-                                    <option value="Regular. Simétrica">Regular</option>
-                                    <option value="Muy disminuida">Muy dism.</option>
-                                    <option value="Tórax silente">Silente</option>
-                                </select>
-                            </div>
-                            
-                            <div class="col-md-6 mb-3 sintoma-wdf" style="display:none;">
-                                <label class="form-label fw-bold">Cianosis</label>
-                                <select class="form-select border-info" name="sintomas[11]">
-                                    <option value="" selected disabled>Seleccione...</option>
-                                    <option value="No">No</option>
-                                    <option value="Sí">Sí</option>
-                                </select>
-                            </div>
+                                <?php if ($meses_edad <= 6): ?>
+                                    <div class="col-md-4 mb-3 sintoma-tal" id="div_fr_menor">
+                                        <label class="form-label fw-bold small text-success">F.R. (<= 6m)</label>
+                                        <input type="number"
+                                               class="form-control input-score border-success"
+                                               name="sintomas[2]"
+                                               min="0"
+                                               data-rangos='[
+                                                   {"min":0,"max":40,"puntos":0},
+                                                   {"min":41,"max":55,"puntos":1},
+                                                   {"min":56,"max":70,"puntos":2},
+                                                   {"min":71,"max":999,"puntos":3}
+                                               ]'
+                                               onchange="calcularScoreDinamico()"
+                                               required>
+                                    </div>
+                                <?php else: ?>
+                                    <div class="col-md-4 mb-3 sintoma-tal" id="div_fr_mayor">
+                                        <label class="form-label fw-bold small text-success">F.R. (> 6m)</label>
+                                        <input type="number"
+                                               class="form-control input-score border-success"
+                                               name="sintomas[3]"
+                                               min="0"
+                                               data-rangos='[
+                                                   {"min":0,"max":30,"puntos":0},
+                                                   {"min":31,"max":45,"puntos":1},
+                                                   {"min":46,"max":60,"puntos":2},
+                                                   {"min":61,"max":999,"puntos":3}
+                                               ]'
+                                               onchange="calcularScoreDinamico()"
+                                               required>
+                                    </div>
+                                <?php endif; ?>
+
+                                <div class="col-md-4 mb-3 sintoma-tal">
+                                    <label class="form-label fw-bold small text-success">Sibilancias</label>
+                                    <select class="form-select select-sintoma border-success" name="sintomas[4]" onchange="calcularScoreDinamico()" required>
+                                        <option value="" data-puntos="0" selected disabled>Seleccione...</option>
+                                        <option value="No" data-puntos="0">No (0 pts)</option>
+                                        <option value="Fin espiración con estetoscopio" data-puntos="1">Fin espir. (1 pt)</option>
+                                        <option value="Inspiración y espiración con estetoscopio" data-puntos="2">Insp/Esp. (2 pts)</option>
+                                        <option value="Audible sin estetoscopio" data-puntos="3">Audibles (3 pts)</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-md-4 mb-3 sintoma-tal">
+                                    <label class="form-label fw-bold small text-success">Retracción</label>
+                                    <select class="form-select select-sintoma border-success" name="sintomas[5]" onchange="calcularScoreDinamico()" required>
+                                        <option value="" data-puntos="0" selected disabled>Seleccione...</option>
+                                        <option value="No" data-puntos="0">No (0 pts)</option>
+                                        <option value="Subcostal" data-puntos="1">Subcostal (1 pt)</option>
+                                        <option value="Subcostal e intercostal" data-puntos="2">Sub/Inter. (2 pts)</option>
+                                        <option value="Generalizado" data-puntos="3">Generalizado (3 pts)</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-md-4 mb-3 sintoma-tal">
+                                    <label class="form-label fw-bold small text-success">Saturación de oxígeno</label>
+                                    <input type="number" class="form-control border-success" name="saturacion_oxigeno" min="0" max="100" step="0.1" placeholder="%">
+                                </div>
+
+                                <div class="col-md-4 mb-3 sintoma-tal">
+                                    <label class="form-label fw-bold small text-success">Temperatura</label>
+                                    <input type="number" class="form-control border-success" name="temperatura" step="0.1" placeholder="°C">
+                                </div>
+
+                            <?php else: ?>
+
+                                <div class="col-md-4 mb-3 sintoma-wdf">
+                                    <label class="form-label fw-bold small text-success">Frecuencia Cardíaca</label>
+                                    <input type="number"
+                                           class="form-control input-score border-success"
+                                           name="sintomas[6]"
+                                           min="0"
+                                           data-rangos='[
+                                               {"min":0,"max":120,"puntos":0},
+                                               {"min":121,"max":999,"puntos":1}
+                                           ]'
+                                           onchange="calcularScoreDinamico()"
+                                           required>
+                                </div>
+
+                                <div class="col-md-4 mb-3 sintoma-wdf">
+                                    <label class="form-label fw-bold small text-success">Frecuencia Respiratoria</label>
+                                    <input type="number"
+                                           class="form-control input-score border-success"
+                                           name="sintomas[7]"
+                                           min="0"
+                                           data-rangos='[
+                                               {"min":0,"max":30,"puntos":0},
+                                               {"min":31,"max":45,"puntos":1},
+                                               {"min":46,"max":60,"puntos":2},
+                                               {"min":61,"max":999,"puntos":3}
+                                           ]'
+                                           onchange="calcularScoreDinamico()"
+                                           required>
+                                </div>
+
+                                <div class="col-md-4 mb-3 sintoma-wdf">
+                                    <label class="form-label fw-bold small text-success">Sibilancias</label>
+                                    <select class="form-select select-sintoma border-success" name="sintomas[8]" onchange="calcularScoreDinamico()" required>
+                                        <option value="" data-puntos="0" selected disabled>Seleccione...</option>
+                                        <option value="No" data-puntos="0">No (0 pts)</option>
+                                        <option value="Final espiración" data-puntos="1">Final espiración (1 pt)</option>
+                                        <option value="Todo espiración" data-puntos="2">Todo espiración (2 pts)</option>
+                                        <option value="+ Inspiración" data-puntos="3">+ Inspiración (3 pts)</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-md-4 mb-3 sintoma-wdf">
+                                    <label class="form-label fw-bold small text-success">Tiraje</label>
+                                    <select class="form-select select-sintoma border-success" name="sintomas[9]" onchange="calcularScoreDinamico()" required>
+                                        <option value="" data-puntos="0" selected disabled>Seleccione...</option>
+                                        <option value="No" data-puntos="0">No (0 pts)</option>
+                                        <option value="Subcostal / Intercostal" data-puntos="1">Subcostal / Intercostal (1 pt)</option>
+                                        <option value="+ Supraclavicular + Aleteo nasal" data-puntos="2">+ Supraclavicular (2 pts)</option>
+                                        <option value="+ Todo lo anterior + Supraesternal" data-puntos="3">+ Supraesternal (3 pts)</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-md-4 mb-3 sintoma-wdf">
+                                    <label class="form-label fw-bold small text-success">Ventilación</label>
+                                    <select class="form-select select-sintoma border-success" name="sintomas[10]" onchange="calcularScoreDinamico()" required>
+                                        <option value="" data-puntos="0" selected disabled>Seleccione...</option>
+                                        <option value="Buena, Simétrica" data-puntos="0">Buena, Simétrica (0 pts)</option>
+                                        <option value="Regular. Simétrica" data-puntos="1">Regular. Simétrica (1 pt)</option>
+                                        <option value="Muy disminuida" data-puntos="2">Muy disminuida (2 pts)</option>
+                                        <option value="Tórax silente" data-puntos="3">Tórax silente (3 pts)</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-md-4 mb-3 sintoma-wdf">
+                                    <label class="form-label fw-bold small text-success">Cianosis</label>
+                                    <select class="form-select select-sintoma border-success" name="sintomas[11]" onchange="calcularScoreDinamico()" required>
+                                        <option value="" data-puntos="0" selected disabled>Seleccione...</option>
+                                        <option value="No" data-puntos="0">No (0 pts)</option>
+                                        <option value="Sí" data-puntos="1">Sí (1 pt)</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-md-4 mb-3 sintoma-wdf">
+                                    <label class="form-label fw-bold small text-success">Saturación de oxígeno</label>
+                                    <input type="number" class="form-control border-success" name="saturacion_oxigeno" min="0" max="100" step="0.1" placeholder="%">
+                                </div>
+
+                                <div class="col-md-4 mb-3 sintoma-wdf">
+                                    <label class="form-label fw-bold small text-success">Temperatura</label>
+                                    <input type="number" class="form-control border-success" name="temperatura" step="0.1" placeholder="°C">
+                                </div>
+
+                            <?php endif; ?>
                         </div>
-                        
+
+                        <div class="alert alert-success text-center mt-3 mb-0 border-success">
+                            <h5 class="mb-0 text-success">Score Total en Vivo: <span id="score_display" class="fw-bold fs-2 text-success">0</span></h5>
+                        </div>
+
                     </div>
                 </div>
 

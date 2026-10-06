@@ -75,12 +75,10 @@ $activo = fn(array $rutas) => in_array($seg, $rutas, true) ? ' active' : '';
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="<?= base_url('logout') ?>"
-                           title="Cerrar sesión" aria-label="Cerrar sesión"
-                           onclick="return confirm('¿Cerrar la sesión?');">
-                            <i class="bi bi-box-arrow-right fs-5"></i>
-                            <span class="d-lg-none">Cerrar sesión</span>
-                        </a>
+                    <!-- Botón que activa el Modal -->
+                    <a href="#" class="nav-link text-black" data-bs-toggle="modal" data-bs-target="#modalCerrarSesion">
+                        <i class="bi bi-box-arrow-right"></i> Cerrar sesión
+                    </a>
                     </li>
                 <?php endif; ?>
 
@@ -91,3 +89,26 @@ $activo = fn(array $rutas) => in_array($seg, $rutas, true) ? ' active' : '';
 </nav>
 
 <main class="container my-4">
+
+<!-- Modal de Confirmación de Cierre de Sesión -->
+<div class="modal fade" id="modalCerrarSesion" tabindex="-1" aria-labelledby="modalCerrarSesionLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+            
+            <div class="modal-header login-verde-degradado text-white">
+                <h5 class="modal-title" id="modalCerrarSesionLabel">Cerrar Sesión</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            
+            <div class="modal-body text-center py-4">
+                <p class="fs-5 mb-0">¿Deseas salir del sistema?</p>
+            </div>
+            
+            <div class="modal-footer justify-content-center bg-light">
+                <button type="button" class="btn btn-secondary px-4" data-bs-dismiss="modal">Cancelar</button>
+                <a href="<?= base_url('logout') ?>" class="btn btn-danger px-4">Sí, cerrar sesión</a>
+            </div>
+            
+        </div>
+    </div>
+</div>

@@ -1,7 +1,7 @@
 <div>
     <h2><?= esc($titulo) ?></h2>
     <a href="<?= base_url('usuarios') ?>">Volver a Usuarios Activos</a>
-    <table class="table table-striped table-hover tabla-datos">
+    <table class="table table-striped table-hover text-center tabla-datos">
         <thead>
             <tr>
                 <th>Nombre</th>

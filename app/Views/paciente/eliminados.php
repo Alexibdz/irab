@@ -2,8 +2,8 @@
     <h2 class="mb-4 text-danger">Pacientes Eliminados (Inactivos)</h2>
     <a href="<?= base_url('paciente') ?>" class="btn btn-secondary mb-3">Volver a Pacientes Activos</a>
     
-    <table class="table table-bordered bg-white shadow-sm tabla-datos">
-        <thead class="table-dark">
+    <table class="table table-bordered bg-white shadow-sm text-center tabla-datos">
+        <thead>
             <tr>
                 <th>DNI</th>
                 <th>Nombre Completo</th>

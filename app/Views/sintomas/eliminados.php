@@ -2,8 +2,8 @@
     <h2 class="mb-4 text-danger">Sintomas Eliminados (Inactivos)</h2>
     <a href="<?= base_url('sintomas') ?>" class="btn btn-secondary mb-3">Volver a Sintomas Activos</a>
 
-    <table class="table table-bordered bg-white shadow-sm tabla-datos">
-        <thead class="table-dark">
+    <table class="table table-bordered bg-white shadow-sm text-center tabla-datos">
+        <thead>
             <tr>
                 <th>Nombre del Sintoma</th>
                 <th>Tipo de Formulario</th>

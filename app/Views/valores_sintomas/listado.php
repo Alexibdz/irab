@@ -7,7 +7,7 @@
 
     <div class="card shadow-sm">
         <div class="card-body">
-            <table class="table table-striped table-hover tabla-datos">
+            <table class="table table-striped table-hover text-center tabla-datos">
                 <thead>
                     <tr>
                         <th>Valor Mínimo</th>
@@ -25,8 +25,12 @@
                             <td><?= esc($valor['valor_texto'] ?? '-') ?></td>
                             <td><?= esc($valor['puntos']) ?></td>
                             <td>
-                                <a href="<?= base_url('valores-sintomas/editar/'.$valor['id']) ?>" class="btn btn-warning btn-sm">Editar</a>
-                                <a href="<?= base_url('valores-sintomas/eliminar/'.$valor['id']) ?>" class="btn btn-danger btn-sm" onclick="return confirm('¿Seguro que deseas borrar este valor?');">Eliminar</a>
+                                <a href="<?= base_url('valores-sintomas/editar/'.$valor['id']) ?>" class="btn btn-warning btn-sm" title="Editar">
+                                    <i class="bi bi-pencil-square"></i>
+                                </a>
+                                <a href="<?= base_url('valores-sintomas/eliminar/'.$valor['id']) ?>" class="btn btn-danger btn-sm" title="Eliminar" onclick="return confirm('¿Seguro que deseas borrar este valor?');">
+                                    <i class="bi bi-trash"></i>
+                                </a>
                             </td>
                         </tr>
                     <?php endforeach; ?>

@@ -2,8 +2,8 @@
     <h2 class="mb-4 text-danger">Factores Eliminados (Inactivos)</h2>
     <a href="<?= base_url('factores') ?>" class="btn btn-secondary mb-3">Volver a Factores Activos</a>
 
-    <table class="table table-bordered bg-white shadow-sm tabla-datos">
-        <thead class="table-dark">
+    <table class="table table-bordered bg-white shadow-sm text-center tabla-datos">
+        <thead>
             <tr>
                 <th>Denominación</th>
                 <th>Tipo</th>

@@ -1,11 +1,11 @@
 <div class="container mt-5">
-        <h2 class="mb-4">Listado de Pacientes Registrados</h2>
+        <h2 class="mb-4">Listado de Pacientes</h2>
         
-        <a href="<?= base_url('paciente/eliminados') ?>" class="btn btn-danger mb-3">Ver Pacientes Eliminados</a>
+        <a href="<?= base_url('paciente/eliminados') ?>" class="btn btn-danger mb-3">Pacientes Eliminados</a>
 
         <div class="card shadow-sm">
             <div class="card-body">
-                <table class="table table-striped table-hover tabla-datos">
+                <table class="table table-striped table-hover text-center tabla-datos">
                     <thead>
                         <tr>
                             <th>DNI</th>
@@ -74,8 +74,12 @@
                                 </td>
 
                                 <td>
-                                    <a href="<?= base_url('paciente/editar/'.$paciente['id']) ?>" class="btn btn-warning btn-sm">Editar</a>
-                                    <a href="<?= base_url('paciente/borrar/'.$paciente['id']) ?>" class="btn btn-danger btn-sm" onclick="return confirm('¿Seguro que deseas borrar este paciente?');">Borrar</a>
+                                    <a href="<?= base_url('paciente/editar/'.$paciente['id']) ?>" class="btn btn-warning btn-sm">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </a>
+                                    <a href="<?= base_url('paciente/borrar/'.$paciente['id']) ?>" class="btn btn-danger btn-sm" onclick="return confirm('¿Seguro que deseas borrar este paciente?');">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
                                 </td>
                             </tr>
                             </tr>

@@ -1,43 +1,54 @@
-<div class="container mt-5">
-        <h2 class="mb-4">Listado de Pacientes</h2>
+<div class="container-fluid py-4">
+    <div class="mb-4">
+        <h2 class="fw-normal mb-3">Listado de Pacientes</h2>
         
-        <a href="<?= base_url('paciente/eliminados') ?>" class="btn btn-danger mb-3">Pacientes Eliminados</a>
+        <div class="d-flex gap-2">
+            <a href="<?= base_url('visitas/crear') ?>" class="btn btn-primary fw-semibold">
+                <i class="bi bi-plus-lg"></i> Nuevo Paciente
+            </a>
+            <a href="<?= base_url('paciente/eliminados') ?>" class="btn btn-danger fw-semibold">
+                Ver Papelera
+            </a>
+        </div>
+    </div>
 
-        <div class="card shadow-sm">
-            <div class="card-body">
-                <table class="table table-striped table-hover text-center tabla-datos">
-                    <thead>
+    <div class="card shadow-sm border rounded-3">
+        <div class="card-body p-3">
+            <div class="table-responsive">
+                <table class="table table-striped table-hover text-center align-middle tabla-datos w-100">
+                    <thead class="table-light">
                         <tr>
-                            <th>DNI</th>
-                            <th>Nombre Completo</th>
-                            <th>Fecha de Nacimiento</th>
-                            <th>Tutor / Responsable</th>
-                            <th>Teléfono</th>
-                            <th>Domicilio</th>
-                            <th>Barrio</th>
-                            <th>Establecimiento Habitual</th>
-                            <th>Área Programática</th>
-                            <th>Acciones</th>
+                            <th class="text-center align-middle">DNI</th>
+                            <th class="text-center align-middle">Nombre Completo</th>
+                            <th class="text-center align-middle">Fecha de Nacimiento</th>
+                            <th class="text-center align-middle">Tutor / Responsable</th>
+                            <th class="text-center align-middle">Teléfono</th>
+                            <th class="text-center align-middle">Domicilio</th>
+                            <th class="text-center align-middle">Barrio</th>
+                            <th class="text-center align-middle">Establecimiento Habitual</th>
+                            <th class="text-center align-middle">Área Programática</th>
+                            <th class="text-center align-middle" style="width: 130px;">Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- Filas -->
                         <?php foreach ($pacientes as $paciente): ?>
                             <tr>
-                                <td><?= $paciente['dni'] ?></td>
-                                <td><?= $paciente['nombre'] ?></td>
-                                <td><?= $paciente['fecha_nacimiento'] ?></td>
-                                <td>
+                                <td class="text-center align-middle"><?= esc($paciente['dni']) ?></td>
+                                <td class="text-center align-middle"><?= esc($paciente['nombre']) ?></td>
+                                <td class="text-center align-middle"><?= esc($paciente['fecha_nacimiento']) ?></td> 
+                                <td class="text-center align-middle">
                                     <?php  
+                                        $nombre_tutor = 'No asignado';
                                         foreach($tutores as $tutor) {
                                             if($tutor['id'] == $paciente['id_tutor']) {
-                                                echo $tutor['nombre'];
+                                                $nombre_tutor = $tutor['nombre'];
                                                 break;
                                             }
                                         }
+                                        echo esc($nombre_tutor);
                                     ?>
                                 </td>
-                                <td>
+                                <td class="text-center align-middle">
                                     <?php
                                         $telefono_tutor = 'No registrado';
                                         foreach($tutores as $tutor) {
@@ -49,43 +60,52 @@
                                         echo esc($telefono_tutor);
                                     ?>
                                 </td>
-                                <td><?= $paciente['domicilio'] ?></td>
-                                <td><?= $paciente['barrio'] ?></td>
-                                <td>
+                                <td class="text-center align-middle"><?= esc($paciente['domicilio']) ?></td>
+                                <td class="text-center align-middle"><?= esc($paciente['barrio']) ?></td>
+                                <td class="text-center align-middle">
                                     <?php  
+                                        $nombre_est_habitual = '-';
                                         foreach($establecimientos as $establecimiento) {
                                             if($establecimiento['id'] == $paciente['id_establecimiento_habitual']) {
-                                                echo $establecimiento['nombre'];
+                                                $nombre_est_habitual = $establecimiento['nombre'];
                                                 break;
                                             }
                                         }
+                                        echo esc($nombre_est_habitual);
                                     ?>
                                 </td>
-                                
-                                <td>
+                                <td class="text-center align-middle">
                                     <?php  
+                                        $nombre_area = '-';
                                         foreach($establecimientos as $establecimiento) {
                                             if($establecimiento['id'] == $paciente['id_area_programatica']) {
-                                                echo $establecimiento['nombre'];
+                                                $nombre_area = $establecimiento['nombre'];
                                                 break;
                                             }
                                         }
+                                        echo esc($nombre_area);
                                     ?>
                                 </td>
-
-                                <td>
-                                    <a href="<?= base_url('paciente/editar/'.$paciente['id']) ?>" class="btn btn-warning btn-sm">
-                                        <i class="bi bi-pencil-square"></i>
-                                    </a>
-                                    <a href="<?= base_url('paciente/borrar/'.$paciente['id']) ?>" class="btn btn-danger btn-sm" onclick="return confirm('¿Seguro que deseas borrar este paciente?');">
-                                        <i class="bi bi-trash"></i>
-                                    </a>
+                                <td class="text-center align-middle">
+                                    <div class="d-inline-flex gap-1 justify-content-center">
+                                        <a href="<?= base_url('paciente/editar/' . $paciente['id']) ?>" 
+                                           class="btn btn-warning btn-sm text-dark" 
+                                           title="Editar paciente">
+                                            <i class="bi bi-pencil-square"></i>
+                                        </a>
+                                        <a href="<?= base_url('paciente/borrar/' . $paciente['id']) ?>" 
+                                           class="btn btn-danger btn-sm text-white" 
+                                           onclick="return confirm('¿Seguro que deseas borrar este paciente?');" 
+                                           title="Borrar paciente">
+                                            <i class="bi bi-trash"></i>
+                                        </a>
+                                    </div>
                                 </td>
-                            </tr>
                             </tr>
                         <?php endforeach; ?>
                     </tbody>
                 </table>
             </div>
         </div>
+    </div>
 </div>

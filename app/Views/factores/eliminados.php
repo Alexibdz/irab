@@ -5,19 +5,19 @@
     <table class="table table-bordered bg-white shadow-sm text-center tabla-datos">
         <thead>
             <tr>
-                <th>Denominación</th>
-                <th>Tipo</th>
-                <th>Fecha de Borrado</th>
-                <th>Acciones</th>
+                <th class="text-center align-middle">Denominación</th>
+                <th class="text-center align-middle">Tipo</th>
+                <th class="text-center align-middle">Fecha de Borrado</th>
+                <th class="text-center align-middle">Acciones</th>
             </tr>
         </thead>
         <tbody>
             <?php foreach ($factores as $factor): ?>
                 <tr>
-                    <td><?= esc($factor['denominacion']) ?></td>
-                    <td><?= esc($factor['tipo']) ?></td>
-                    <td><?= esc($factor['fecha_borrado']) ?></td>
-                    <td>
+                    <td class="text-center align-middle"><?= esc($factor['denominacion']) ?></td>
+                    <td class="text-center align-middle"><?= esc($factor['tipo']) ?></td>
+                    <td class="text-center align-middle"><?= esc($factor['fecha_borrado']) ?></td>
+                    <td class="text-center align-middle">
                         <a href="<?= base_url('configuracion/factores/recuperar/'.$factor['id']) ?>" class="btn btn-success btn-sm">Recuperar</a>
                     </td>
                 </tr>

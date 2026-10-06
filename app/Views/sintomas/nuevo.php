@@ -3,7 +3,7 @@
         <div class="col-md-8">
 
             <div class="card shadow-sm">
-                <div class="card-header bg-primary text-white">
+                <div class="card-header bg-success text-white">
                     <h2 class="h4 mb-0">Nuevo Sintoma</h2>
                 </div>
 
@@ -27,7 +27,7 @@
 
                         <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
                             <a href="<?= base_url('configuracion/sintomas') ?>" class="btn btn-secondary">Cancelar</a>
-                            <button type="submit" class="btn btn-primary">Guardar Sintoma</button>
+                            <button type="submit" class="btn btn-success">Guardar Sintoma</button>
                         </div>
 
                     </form>

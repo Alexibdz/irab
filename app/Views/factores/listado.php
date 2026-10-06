@@ -1,36 +1,67 @@
-<div class="container mt-5">
-    <h2 class="mb-4">Listado de Factores</h2>
+<div class="container-fluid py-4">
+    <div class="mb-4">
+        <h2 class="fw-normal mb-3">Listado de Factores</h2>
+        <div class="d-flex gap-2">
+            <a href="<?= base_url('configuracion/factores/nuevo') ?>" class="btn btn-primary fw-semibold">
+                <i class="bi bi-plus-lg"></i> Nuevo Factor
+            </a>
+            <a href="<?= base_url('configuracion/factores/eliminados') ?>" class="btn btn-danger fw-semibold">
+              Factores Eliminados
+            </a>
+        </div>
+    </div>
 
-    <a href="<?= base_url('configuracion/factores/nuevo') ?>" class="btn btn-primary mb-3">+ Nuevo Factor</a>
-    <a href="<?= base_url('configuracion/factores/eliminados') ?>" class="btn btn-danger mb-3">Ver Factores Eliminados</a>
-
-    <div class="card shadow-sm">
-        <div class="card-body">
-            <table class="table table-striped table-hover text-center tabla-datos">
-                <thead>
-                    <tr>
-                        <th>Denominación</th>
-                        <th>Tipo</th>
-                        <th>Tipo de Formulario</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php foreach ($factores as $factor): ?>
+    <div class="card shadow-sm border rounded-3">
+        <div class="card-body p-3">
+            <div class="table-responsive">
+                <table class="table table-striped table-hover text-center align-middle tabla-datos w-100">
+                    <thead class="table-light">
                         <tr>
-                            <td><?= esc($factor['denominacion']) ?></td>
-                            <td><?= esc($factor['tipo']) ?></td>
-                            <td><?= esc($factor['tipo_formulario']) ?></td>
-                            <td>
-                                <a href="<?= base_url('configuracion/factores/ver/'.$factor['id']) ?>" class="btn btn-info btn-sm">Ver</a>
-                                <a href="<?= base_url('configuracion/factores/valores/'.$factor['id']) ?>" class="btn btn-primary btn-sm">Valores</a>
-                                <a href="<?= base_url('configuracion/factores/editar/'.$factor['id']) ?>" class="btn btn-warning btn-sm">Editar</a>
-                                <a href="<?= base_url('configuracion/factores/eliminar/'.$factor['id']) ?>" class="btn btn-danger btn-sm" onclick="return confirm('¿Seguro que deseas borrar este factor?');">Eliminar</a>
-                            </td>
+                            <th class="text-center align-middle">Denominación</th>
+                            <th class="text-center align-middle">Tipo</th>
+                            <th class="text-center align-middle">Tipo de Formulario</th>
+                            <th class="text-center align-middle" style="width: 180px;">Acciones</th>
                         </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($factores as $factor): ?>
+                            <tr>
+                                <td class="text-center align-middle"><?= esc($factor['denominacion']) ?></td>
+                                <td class="text-center align-middle"><?= esc($factor['tipo']) ?></td>
+                                <td class="text-center align-middle"><?= esc($factor['tipo_formulario']) ?></td>
+                                <td class="text-center align-middle">
+                                    <div class="d-inline-flex gap-1 justify-content-center">
+                                        <a href="<?= base_url('configuracion/factores/ver/' . $factor['id']) ?>" 
+                                           class="btn btn-info btn-sm text-white" 
+                                           title="Ver detalle">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+
+                                        <a href="<?= base_url('configuracion/factores/valores/' . $factor['id']) ?>" 
+                                           class="btn btn-primary btn-sm text-white" 
+                                           title="Valores del factor">
+                                            <i class="bi bi-bar-chart-line"></i> Valores
+                                        </a>
+
+                                        <a href="<?= base_url('configuracion/factores/editar/' . $factor['id']) ?>" 
+                                           class="btn btn-warning btn-sm text-dark" 
+                                           title="Editar factor">
+                                            <i class="bi bi-pencil-square"></i>
+                                        </a>
+
+                                        <a href="<?= base_url('configuracion/factores/eliminar/' . $factor['id']) ?>" 
+                                           class="btn btn-danger btn-sm text-white" 
+                                           onclick="return confirm('¿Seguro que deseas borrar este factor?');" 
+                                           title="Eliminar factor">
+                                            <i class="bi bi-trash"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>

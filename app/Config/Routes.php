@@ -25,7 +25,6 @@ $routes->group('configuracion', static function ($routes) {
     $routes->post('usuarios/insertar', 'Usuarios::insertar');
     $routes->get('usuarios/editar/(:num)', 'Usuarios::editar/$1');
     $routes->post('usuarios/actualizar', 'Usuarios::actualizar');
-    $routes->get('usuarios/ver/(:num)', 'Usuarios::ver/$1');
     $routes->get('usuarios/eliminar/(:num)', 'Usuarios::eliminar/$1');
     $routes->get('usuarios/eliminados', 'Usuarios::eliminados');
     $routes->get('usuarios/recuperar/(:num)', 'Usuarios::recuperar/$1');
@@ -35,7 +34,6 @@ $routes->group('configuracion', static function ($routes) {
     $routes->post('establecimientos/insertar', 'Establecimientos::insertar');
     $routes->get('establecimientos/editar/(:num)', 'Establecimientos::editar/$1');
     $routes->post('establecimientos/actualizar', 'Establecimientos::actualizar');
-    $routes->get('establecimientos/ver/(:num)', 'Establecimientos::ver/$1');
     $routes->get('establecimientos/eliminar/(:num)', 'Establecimientos::eliminar/$1');
     $routes->get('establecimientos/eliminados', 'Establecimientos::eliminados');
     $routes->get('establecimientos/recuperar/(:num)', 'Establecimientos::recuperar/$1');

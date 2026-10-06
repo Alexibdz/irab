@@ -109,26 +109,6 @@ class Usuarios extends BaseController
         return redirect()->to(base_url('configuracion/usuarios'))->with('exito', 'Usuario actualizado correctamente.');
     }
 
-    public function ver($id)
-    {
-        $usuario = $this->usuarios
-            ->select('usuarios.id, usuarios.nombre, usuarios.username, usuarios.id_rol, usuarios.id_establecimiento_asignado, 
-                    roles.nombre AS rol_nombre, establecimientos_salud.nombre AS establecimiento_nombre')
-            ->join('roles', 'roles.id = usuarios.id_rol', 'left')
-            ->join('establecimientos_salud', 'establecimientos_salud.id = usuarios.id_establecimiento_asignado','left')
-            ->where('usuarios.id', $id)
-            ->first();
-
-        $datos = [
-            "usuario" => $usuario,
-            "titulo" => "Ver Usuario"
-        ];
-
-        echo view('templates/header');
-        echo view('usuarios/ver', $datos);
-        echo view('templates/footer');
-    }
-
     public function eliminar($id)
     {
         $this->usuarios->delete($id);

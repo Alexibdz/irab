@@ -51,20 +51,6 @@ class Establecimientos extends BaseController
         return redirect()->to(base_url('configuracion/establecimientos'))->with('exito', 'Establecimiento creado correctamente.');
     }
 
-    public function ver($id)
-    {
-        $establecimiento = $this->establecimiento->where('id', $id)->first();
-
-        $datos = [
-            "establecimiento" => $establecimiento,
-            "titulo" => "Ver Establecimiento"
-        ];
-
-        echo view('templates/header');
-        echo view('establecimientos/ver', $datos);
-        echo view('templates/footer');
-    }
-
     public function editar($id)
     {
         $establecimiento = $this->establecimiento->where('id', $id)->first();

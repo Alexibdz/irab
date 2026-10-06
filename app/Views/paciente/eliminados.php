@@ -5,19 +5,19 @@
     <table class="table table-bordered bg-white shadow-sm text-center tabla-datos">
         <thead>
             <tr>
-                <th>DNI</th>
-                <th>Nombre Completo</th>
-                <th>Fecha de Borrado</th>
-                <th>Acciones</th>
+                <th class="text-center align-middle">DNI</th>
+                <th class="text-center align-middle">Nombre Completo</th>
+                <th class="text-center align-middle">Fecha de Borrado</th>
+                <th class="text-center align-middle">Acciones</th>
             </tr>
         </thead>
         <tbody>
             <?php foreach ($pacientes as $paciente): ?>
                 <tr>
-                    <td><?= $paciente['dni'] ?></td>
-                    <td><?= $paciente['nombre'] ?></td>
-                    <td><?= $paciente['fecha_borrado'] ?></td>
-                    <td>
+                    <td class="text-center align-middle"><?= $paciente['dni'] ?></td>
+                    <td class="text-center align-middle"><?= $paciente['nombre'] ?></td>
+                    <td class="text-center align-middle"><?= $paciente['fecha_borrado'] ?></td>
+                    <td class="text-center align-middle">
                         <a href="<?= base_url('paciente/recuperar/'.$paciente['id']) ?>" class="btn btn-success btn-sm">Recuperar</a>
                     </td>
                 </tr>

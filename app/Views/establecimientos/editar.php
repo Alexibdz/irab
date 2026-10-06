@@ -1,6 +1,6 @@
 <div>
     <h2><?= esc($titulo) ?></h2>
-    <form action="<?php echo base_url('establecimientos/actualizar'); ?>" method="post"> <?= csrf_field() ?>
+    <form action="<?php echo base_url('configuracion/establecimientos/actualizar'); ?>" method="post"> <?= csrf_field() ?>
         <input type="hidden" name="id" value="<?= esc($establecimiento['id']) ?>">
         <div>
             <label for="nombre">Nombre</label>
@@ -41,6 +41,6 @@
             </select>
         </div>
         <button type="submit">Actualizar</button>
-        <a href="<?php echo base_url('establecimientos'); ?>">Cancelar</a>
+        <a href="<?php echo base_url('configuracion/establecimientos'); ?>">Cancelar</a>
     </form>
 </div>

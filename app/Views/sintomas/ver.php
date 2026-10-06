@@ -45,9 +45,9 @@
                     <?php endif; ?>
 
                     <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
-                        <a href="<?= base_url('sintomas') ?>" class="btn btn-secondary">Volver</a>
-                        <a href="<?= base_url('sintomas/valores/'.$sintoma['id']) ?>" class="btn btn-primary">Gestionar Valores</a>
-                        <a href="<?= base_url('sintomas/editar/'.$sintoma['id']) ?>" class="btn btn-warning">Editar</a>
+                        <a href="<?= base_url('configuracion/sintomas') ?>" class="btn btn-secondary">Volver</a>
+                        <a href="<?= base_url('configuracion/sintomas/valores/'.$sintoma['id']) ?>" class="btn btn-primary">Gestionar Valores</a>
+                        <a href="<?= base_url('configuracion/sintomas/editar/'.$sintoma['id']) ?>" class="btn btn-warning">Editar</a>
                     </div>
                 </div>
             </div>

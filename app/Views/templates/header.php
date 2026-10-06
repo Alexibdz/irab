@@ -33,50 +33,22 @@ $activo = fn(array $rutas) => in_array($seg, $rutas, true) ? ' active' : '';
         <div class="collapse navbar-collapse" id="navbarNav">
 
             <!-- Navegacion principal -->
-            <ul class="navbar-nav me-auto gap-2 align-items-lg-center">
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle<?= $activo(['visitas', 'paciente', 'tutor', 'control']) ?>"
-                       href="#" role="button" data-bs-toggle="dropdown">
-                        <i class="bi bi-clipboard2-pulse"></i> Atención
+            <ul class="navbar-nav me-auto gap-1 align-items-lg-center">
+                <li class="nav-item">
+                    <a class="nav-link<?= $activo(['visitas', 'control']) ?>" href="<?= base_url('visitas') ?>">
+                        <i class="bi bi-journal-medical"></i> Visitas
                     </a>
-                    <ul class="dropdown-menu">
-                        <li>
-                            <a class="dropdown-item" href="<?= base_url('visitas') ?>">
-                                <i class="bi bi-journal-medical"></i> Visitas
-                            </a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item" href="<?= base_url('paciente') ?>">
-                                <i class="bi bi-person-badge"></i> Pacientes
-                            </a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item" href="<?= base_url('tutor') ?>">
-                                <i class="bi bi-people"></i> Tutores
-                            </a>
-                        </li>
-                    </ul>
                 </li>
-
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle<?= $activo(['factores', 'sintomas', 'valores-factores', 'valores-sintomas']) ?>"
-                       href="#" role="button" data-bs-toggle="dropdown">
-                        <i class="bi bi-activity"></i> Evaluación
+                <li class="nav-item">
+                    <a class="nav-link<?= $activo(['paciente']) ?>" href="<?= base_url('paciente') ?>">
+                        <i class="bi bi-person-badge"></i> Pacientes
                     </a>
-                    <ul class="dropdown-menu">
-                        <li>
-                            <a class="dropdown-item" href="<?= base_url('factores') ?>">
-                                <i class="bi bi-exclamation-triangle"></i> Factores de riesgo
-                            </a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item" href="<?= base_url('sintomas') ?>">
-                                <i class="bi bi-thermometer-half"></i> Síntomas
-                            </a>
-                        </li>
-                    </ul>
                 </li>
-
+                <li class="nav-item">
+                    <a class="nav-link<?= $activo(['tutor']) ?>" href="<?= base_url('tutor') ?>">
+                        <i class="bi bi-people"></i> Tutores
+                    </a>
+                </li>
             </ul>
 
             <!-- Reloj, administracion y sesion -->
@@ -95,25 +67,12 @@ $activo = fn(array $rutas) => in_array($seg, $rutas, true) ? ' active' : '';
                             <i class="bi bi-person-circle"></i> <?= esc(session('nombre')) ?>
                         </span>
                     </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle<?= $activo(['usuarios', 'roles', 'establecimientos']) ?>"
-                           href="#" role="button" data-bs-toggle="dropdown"
-                           title="Administración" aria-label="Administración">
+                    <li class="nav-item">
+                        <a class="nav-link<?= $activo(['configuracion']) ?>" href="<?= base_url('configuracion') ?>"
+                           title="Configuración" aria-label="Configuración">
                             <i class="bi bi-gear-fill fs-5"></i>
+                            <span class="d-lg-none">Configuración</span>
                         </a>
-                        <ul class="dropdown-menu dropdown-menu-lg-end">
-                            <li><h6 class="dropdown-header">Administración</h6></li>
-                            <li>
-                                <a class="dropdown-item" href="<?= base_url('usuarios') ?>">
-                                    <i class="bi bi-person-gear"></i> Usuarios
-                                </a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item" href="<?= base_url('establecimientos') ?>">
-                                    <i class="bi bi-hospital"></i> Establecimientos
-                                </a>
-                            </li>
-                        </ul>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="<?= base_url('logout') ?>"

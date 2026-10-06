@@ -8,7 +8,7 @@
                 </div>
 
                 <div class="card-body">
-                    <form action="<?= base_url('factores/actualizar') ?>" method="POST">
+                    <form action="<?= base_url('configuracion/factores/actualizar') ?>" method="POST">
                         <?= csrf_field() ?>
 
                         <input type="hidden" name="id" value="<?= $factor['id'] ?>">
@@ -36,7 +36,7 @@
                         </div>
 
                         <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
-                            <a href="<?= base_url('factores') ?>" class="btn btn-secondary">Cancelar</a>
+                            <a href="<?= base_url('configuracion/factores') ?>" class="btn btn-secondary">Cancelar</a>
                             <button type="submit" class="btn btn-warning">Actualizar Factor</button>
                         </div>
 
@@ -63,7 +63,7 @@
                             </tbody>
                         </table>
                     <?php endif; ?>
-                    <a href="<?= base_url('factores/valores/'.$factor['id']) ?>" class="btn btn-primary btn-sm">Gestionar Valores</a>
+                    <a href="<?= base_url('configuracion/factores/valores/'.$factor['id']) ?>" class="btn btn-primary btn-sm">Gestionar Valores</a>
 
                 </div>
             </div>

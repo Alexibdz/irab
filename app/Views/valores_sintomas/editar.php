@@ -8,7 +8,7 @@
                 </div>
 
                 <div class="card-body">
-                    <form action="<?= base_url('valores-sintomas/actualizar') ?>" method="POST">
+                    <form action="<?= base_url('configuracion/valores-sintomas/actualizar') ?>" method="POST">
                         <?= csrf_field() ?>
                         <input type="hidden" name="id" value="<?= $valor['id'] ?>">
                         <input type="hidden" name="id_sintoma" value="<?= $valor['id_sintoma'] ?>">
@@ -34,7 +34,7 @@
                         </div>
 
                         <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
-                            <a href="<?= base_url('sintomas/valores/'.$valor['id_sintoma']) ?>" class="btn btn-secondary">Cancelar</a>
+                            <a href="<?= base_url('configuracion/sintomas/valores/'.$valor['id_sintoma']) ?>" class="btn btn-secondary">Cancelar</a>
                             <button type="submit" class="btn btn-warning">Actualizar Valor</button>
                         </div>
 

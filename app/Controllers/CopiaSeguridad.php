@@ -7,6 +7,11 @@ class CopiaSeguridad extends BaseController
     // Descarga la base completa como .sql
     public function exportar()
     {
+        if (! puede('copia-seguridad', 'ver')) {
+            return redirect()->to(base_url('panel'))
+                ->with('error', 'No tenés permiso para exportar la base de datos.');
+        }
+
         $nombre = 'irab_' . date('Y-m-d_His') . '.sql';
 
         return $this->response->download($nombre, $this->volcado());

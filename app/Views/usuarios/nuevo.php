@@ -38,19 +38,65 @@
                                 Debe tener al menos 8 caracteres y un símbolo especial (ej: #!*@$%&?¿).
                             </div>
                         </div>
-                        
-                        <div class="mb-3">
-                            <label for="id_rol" class="form-label">Rol</label>
-                            <select class="form-select" name="id_rol" id="id_rol" required>
-                                <option value="" disabled <?= set_select('id_rol', '', true) ?>>Seleccione un rol</option>
+                        <!-- Rol -->
+                        <h6 class="text-success border-bottom pb-2 mt-3 mb-3">
+                            <i class="bi bi-person-badge"></i> Rol
+                        </h6>
+
+                        <p class="small text-muted">
+                            Elegí un rol existente o cargá uno nuevo.
+                        </p>
+
+                        <!-- Rol existente -->
+                        <div class="form-check mb-2">
+                            <input class="form-check-input"
+                                type="radio"
+                                name="modo_rol"
+                                id="rol_existente"
+                                value="existente"
+                                checked>
+
+                            <label class="form-check-label" for="rol_existente">
+                                Rol ya registrado
+                            </label>
+                        </div>
+
+                        <div class="mb-3 ps-4" id="bloque_rol_existente">
+
+                            <select class="form-select" name="id_rol" id="id_rol">
+                                <option value="" selected disabled>Seleccione un rol</option>
+
                                 <?php foreach ($roles as $rol): ?>
-                                    <option value="<?= esc($rol['id']) ?>" <?= set_select('id_rol', $rol['id']) ?>>
+                                    <option value="<?= esc($rol['id']) ?>">
                                         <?= esc($rol['nombre']) ?>
                                     </option>
                                 <?php endforeach; ?>
                             </select>
+
                         </div>
-                        
+
+                        <!-- Rol nuevo -->
+                        <div class="form-check mb-2">
+                            <input class="form-check-input"
+                                type="radio"
+                                name="modo_rol"
+                                id="rol_nuevo"
+                                value="nuevo">
+
+                            <label class="form-check-label" for="rol_nuevo">
+                                Crear rol nuevo
+                            </label>
+                        </div>
+
+                        <div class="mb-3 ps-4 d-none" id="bloque_rol_nuevo">
+
+                            <input type="text"
+                                class="form-control"
+                                name="nombre_rol"
+                                id="nombre_rol"
+                                placeholder="Nombre del nuevo rol">
+
+                        </div>            
                         <div class="mb-3">
                             <label for="id_establecimiento_asignado" class="form-label">Establecimiento asignado</label>
                             <select class="form-select" name="id_establecimiento_asignado" id="id_establecimiento_asignado" required>
@@ -73,3 +119,24 @@
         </div>
     </div>
 </div>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const rolExistenteRadio = document.getElementById('rol_existente');
+        const rolNuevoRadio = document.getElementById('rol_nuevo');
+        const bloqueRolExistente = document.getElementById('bloque_rol_existente');
+        const bloqueRolNuevo = document.getElementById('bloque_rol_nuevo');
+
+        rolExistenteRadio.addEventListener('change', toggleRolBlocks);
+        rolNuevoRadio.addEventListener('change', toggleRolBlocks);
+
+        function toggleRolBlocks() {
+            if (rolExistenteRadio.checked) {
+                bloqueRolExistente.classList.remove('d-none');
+                bloqueRolNuevo.classList.add('d-none');
+            } else if (rolNuevoRadio.checked) {
+                bloqueRolExistente.classList.add('d-none');
+                bloqueRolNuevo.classList.remove('d-none');
+            }
+        }
+    });
+</script>

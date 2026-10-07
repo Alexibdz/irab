@@ -38,7 +38,11 @@
                                            title="Editar usuario">
                                             <i class="bi bi-pencil-square"></i>
                                         </a>
-
+                                        <a href="<?= base_url('configuracion/usuarios/permisos/' . $usuario["id"]); ?>" 
+                                           class="btn btn-primary btn-sm text-dark" 
+                                           title="Editar permisos">
+                                            <i class="bi bi-key"></i>
+                                        </a>
                                         <a href="<?= base_url('configuracion/usuarios/eliminar/' . $usuario['id']); ?>" 
                                            class="btn btn-danger btn-sm text-white" 
                                            onclick="return confirm('¿Deseas eliminar este usuario?');" 

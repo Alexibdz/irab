@@ -10,9 +10,7 @@ $routes->get('/login', 'Auth::index');
 $routes->post('/validarLogin', 'Auth::validarLogin');
 $routes->get('logout', 'Auth::logout');
 
-// Rutas protegidas por autenticacion
-
-$routes->group('', ['filter' => 'auth'], function ($routes) {
+$routes->group('', ['filter' => ['auth', 'permisos']], static function ($routes) {
 
 $routes->get('panel', 'Panel::index');
 
@@ -25,6 +23,8 @@ $routes->group('configuracion', static function ($routes) {
     $routes->post('usuarios/insertar', 'Usuarios::insertar');
     $routes->get('usuarios/editar/(:num)', 'Usuarios::editar/$1');
     $routes->post('usuarios/actualizar', 'Usuarios::actualizar');
+    $routes->get('usuarios/permisos/(:num)', 'Usuarios::permisos/$1');
+    $routes->post('usuarios/permisos/actualizar', 'Usuarios::guardarPermisos');
     $routes->get('usuarios/eliminar/(:num)', 'Usuarios::eliminar/$1');
     $routes->get('usuarios/eliminados', 'Usuarios::eliminados');
     $routes->get('usuarios/recuperar/(:num)', 'Usuarios::recuperar/$1');

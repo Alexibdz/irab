@@ -5,20 +5,23 @@ namespace App\Controllers;
 use App\Models\UsuariosModel;
 use App\Models\RolesModel;
 use App\Models\EstablecimientosModel;
+use App\Models\PermisoModel;
 
 class Usuarios extends BaseController
 {
     protected $usuarios;
     protected $rol;
     protected $establecimiento;
+    protected $permiso;
 
     public function __construct()
     {
         $this->usuarios = new UsuariosModel();
         $this->rol = new RolesModel();
         $this->establecimiento = new EstablecimientosModel();
+        $this->permiso = new PermisoModel();
         // carga el asistente de formularios de CodeIgniter
-        helper('form');
+        helper(['form', 'permiso']);
     }
 
     public function index()
@@ -72,12 +75,11 @@ class Usuarios extends BaseController
     // }
     public function insertar()
     {
-        // definimos eglas de validación
+        // definimos reglas de validación
         $reglas = [
             'nombre'                      => 'required|min_length[3]|max_length[100]',
             'username'                    => 'required|min_length[3]|max_length[50]',
             'password'                    => 'required|min_length[8]|regex_match[/[#!*@$%&?¿]/]',
-            'id_rol'                      => 'required',
             'id_establecimiento_asignado' => 'required'
         ];
         //traduccion de msj porque sino los muestra en ingles
@@ -94,9 +96,6 @@ class Usuarios extends BaseController
                 'required'    => 'La contraseña es obligatoria.',
                 'min_length'  => 'La contraseña debe tener al menos 8 caracteres.',
                 'regex_match' => 'La contraseña debe tener al menos un carácter especial (ej: #!*@$%&?¿).'
-            ],
-            'id_rol' => [
-                'required' => 'Debes seleccionar un Rol.'
             ],
             'id_establecimiento_asignado' => [
                 'required' => 'Debes asignar un Establecimiento.'
@@ -121,12 +120,58 @@ class Usuarios extends BaseController
             return redirect()->back()->withInput()->with('errors', ['username' => $errorMsg]);
         }
 
+        // verificamos si se eligió un rol nuevo
+        $modoRol = $this->request->getPost('modo_rol');
+
+        if ($modoRol == 'nuevo') {
+
+            // obtenemos el nombre del nuevo rol
+            $nombreRol = trim($this->request->getPost('nombre_rol'));
+
+            // verificamos que se haya ingresado un nombre
+            if ($nombreRol == '') {
+                return redirect()->back()->withInput()->with('errors', [
+                    'nombre_rol' => 'Debes ingresar el nombre del nuevo rol.'
+                ]);
+            }
+
+            // verificamos si el rol ya existe
+            $rolExistente = $this->rol->where('nombre', $nombreRol)->first();
+
+            if ($rolExistente) {
+
+                // si ya existe, usamos ese rol
+                $idRol = $rolExistente['id'];
+
+            } else {
+
+                // si no existe, creamos el rol
+                $this->rol->insert([
+                    'nombre' => $nombreRol
+                ]);
+
+                // obtenemos el ID del rol recién creado
+                $idRol = $this->rol->getInsertID();
+            }
+
+        } else {
+
+            // si se eligió un rol existente, usamos el ID seleccionado
+            $idRol = $this->request->getPost('id_rol');
+
+            if (empty($idRol)) {
+                return redirect()->back()->withInput()->with('errors', [
+                    'id_rol' => 'Debes seleccionar un Rol.'
+                ]);
+            }
+        }
+
         // guardamos en la bbdd
         $datos = [
             "nombre"                      => trim($this->request->getPost('nombre')),
             "username"                    => $username,
             "password"                    => password_hash($this->request->getPost('password'), PASSWORD_DEFAULT),
-            "id_rol"                      => $this->request->getPost('id_rol'),
+            "id_rol"                      => $idRol,
             "id_establecimiento_asignado" => $this->request->getPost('id_establecimiento_asignado')
         ];
 
@@ -241,6 +286,125 @@ class Usuarios extends BaseController
         $this->usuarios->update($id, $datos);
 
         return redirect()->to(base_url('configuracion/usuarios'))->with('exito', 'Usuario actualizado correctamente.');
+    }
+    public function permisos($id)
+    {
+        $usuario = $this->usuarios->where('id', $id)->first();
+
+        if (!$usuario) {
+            return redirect()->to(base_url('configuracion/usuarios'))
+                ->with('error', 'Usuario no encontrado.');
+        }
+
+        $rol = $this->rol->find($usuario['id_rol']);
+
+        if (!$rol) {
+            return redirect()->to(base_url('configuracion/usuarios'))
+                ->with('error', 'El usuario no tiene un rol asignado.');
+        }
+
+        $permisos = $this->permiso->where('id_rol', $rol['id'])->findAll();
+        $actuales = [];
+
+        foreach ($permisos as $permiso) {
+            $actuales[$permiso['modulo']] = $permiso;
+        }
+
+        $datos = [
+            'usuario' => $usuario,
+            'rol' => $rol,
+            'modulos' => [
+                'panel' => 'Panel',
+                'pacientes' => 'Pacientes',
+                'tutores' => 'Tutores',
+                'visitas' => 'Visitas',
+                'usuarios' => 'Usuarios',
+                'establecimientos' => 'Establecimientos',
+                'factores' => 'Factores',
+                'sintomas' => 'Síntomas',
+                'permisos' => 'Permisos',
+                'copia-seguridad' => 'Copia de seguridad'
+            ],
+            'actuales' => $actuales,
+            'acciones' => [
+                'ver' => 'Ver',
+                'crear' => 'Crear',
+                'editar' => 'Editar',
+                'eliminar' => 'Eliminar'
+            ],
+            'titulo' => 'Permisos de ' . $usuario['nombre']
+        ];
+
+        echo view('templates/header');
+        echo view('usuarios/permisos', $datos);
+        echo view('templates/footer');
+    }
+
+    public function guardarPermisos()
+    {
+        $idUsuario = $this->request->getPost('id_usuario');
+        $usuario = $this->usuarios->find($idUsuario);
+
+        if (!$usuario) {
+            return redirect()->to(base_url('configuracion/usuarios'))
+                ->with('error', 'Usuario no encontrado.');
+        }
+
+        $idRol = (int) $usuario['id_rol'];
+
+        if (!$this->rol->find($idRol)) {
+            return redirect()->to(base_url('configuracion/usuarios'))
+                ->with('error', 'Rol no encontrado.');
+        }
+
+        $permisosEnviados = $this->request->getPost('permisos') ?? [];
+
+        $modulos = [
+            'panel',
+            'pacientes',
+            'tutores',
+            'visitas',
+            'usuarios',
+            'establecimientos',
+            'factores',
+            'sintomas',
+            'permisos',
+            'copia-seguridad'
+        ];
+
+        $acciones = ['ver', 'crear', 'editar', 'eliminar'];
+        $filas = [];
+
+        foreach ($modulos as $modulo) {
+            $fila = [
+                'id_rol' => $idRol,
+                'modulo' => $modulo,
+            ];
+
+            foreach ($acciones as $accion) {
+                $fila['puede_' . $accion] = isset($permisosEnviados[$modulo][$accion]) ? 1 : 0;
+            }
+
+            if ($idRol == session()->get('id_rol') && $modulo === 'permisos') {
+                $fila['puede_ver'] = 1;
+                $fila['puede_editar'] = 1;
+            }
+
+            $filas[] = $fila;
+        }
+
+        $db = db_connect();
+        $db->transStart();
+        $this->permiso->where('id_rol', $idRol)->delete();
+        $this->permiso->insertBatch($filas);
+        $db->transComplete();
+
+        if (!$db->transStatus()) {
+            return redirect()->back()->with('error', 'No se pudieron guardar los permisos.');
+        }
+
+        return redirect()->to(base_url('configuracion/usuarios'))
+            ->with('exito', 'Permisos actualizados correctamente.');
     }
 
     public function eliminar($id)

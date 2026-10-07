@@ -10,7 +10,16 @@
                 <?= csrf_field() ?>
 
                 <input type="hidden" name="id_visita" value="<?= $visita['id'] ?? '' ?>">
-
+                    <?php if (session()->has('errors')): ?>
+                        <div class="alert alert-danger mb-4 shadow-sm">
+                            <ul class="mb-0">
+                                <?php foreach (session('errors') as $error): ?>
+                                    <li><?= esc($error) ?></li>
+                                <?php endforeach; ?>
+                            </ul>
+                        </div>
+                    <?php endif; ?>
+                    
                 <div class="row mb-4">
 
                     <?php if ($tipo_planilla === 'TAL'): ?>

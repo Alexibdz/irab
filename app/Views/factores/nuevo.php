@@ -8,6 +8,15 @@
                 </div>
 
                 <div class="card-body">
+                    <?php if (session()->has('errors')): ?>
+                        <div class="alert alert-danger mb-4 shadow-sm">
+                            <ul class="mb-0">
+                                <?php foreach (session('errors') as $error): ?>
+                                    <li><?= esc($error) ?></li>
+                                <?php endforeach; ?>
+                            </ul>
+                        </div>
+                    <?php endif; ?>
                     <form action="<?= base_url('configuracion/factores/insertar') ?>" method="POST">
                         <?= csrf_field() ?>
 

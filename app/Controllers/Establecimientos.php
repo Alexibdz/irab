@@ -11,6 +11,8 @@ class Establecimientos extends BaseController
     public function __construct()
     {
         $this->establecimiento = new EstablecimientosModel();
+        // Cargamos el helper de formularios para prevenir errores en las vistas
+        helper('form');
     }
 
     public function index()
@@ -40,10 +42,35 @@ class Establecimientos extends BaseController
 
     public function insertar()
     {
+        // reglas
+        $reglas = [
+            'nombre'  => 'required|min_length[3]|max_length[100]',
+            'cuartel' => 'required',
+            'tipo'    => 'required'
+        ];
+
+        $mensajes = [
+            'nombre' => [
+                'required'   => 'El nombre del establecimiento es obligatorio.',
+                'min_length' => 'El nombre debe tener al menos 3 caracteres.',
+                'max_length' => 'El nombre es demasiado largo.'
+            ],
+            'cuartel' => [
+                'required' => 'Debes seleccionar un cuartel.'
+            ],
+            'tipo' => [
+                'required' => 'Debes seleccionar el tipo de establecimiento.'
+            ]
+        ];
+
+        if (!$this->validate($reglas, $mensajes)) {
+            return redirect()->back()->with('errors', $this->validator->getErrors());
+        }
+
         $datos = [
-            "nombre" => $this->request->getPost('nombre'),
+            "nombre"  => trim($this->request->getPost('nombre')),
             "cuartel" => $this->request->getPost('cuartel'),
-            "tipo" => $this->request->getPost('tipo')
+            "tipo"    => $this->request->getPost('tipo')
         ];
 
         $this->establecimiento->save($datos);
@@ -69,10 +96,35 @@ class Establecimientos extends BaseController
     {
         $id = $this->request->getPost('id');
 
+        $reglas = [
+            'nombre'  => 'required|min_length[3]|max_length[100]',
+            'cuartel' => 'required',
+            'tipo'    => 'required'
+        ];
+
+        $mensajes = [
+            'nombre' => [
+                'required'   => 'El nombre del establecimiento es obligatorio.',
+                'min_length' => 'El nombre debe tener al menos 3 caracteres.',
+                'max_length' => 'El nombre es demasiado largo.'
+            ],
+            'cuartel' => [
+                'required' => 'Debes seleccionar un cuartel.'
+            ],
+            'tipo' => [
+                'required' => 'Debes seleccionar el tipo de establecimiento.'
+            ]
+        ];
+
+        // hace la validación
+        if (!$this->validate($reglas, $mensajes)) {
+            return redirect()->back()->with('errors', $this->validator->getErrors());
+        }
+
         $datos = [
-            "nombre" => $this->request->getPost('nombre'),
+            "nombre"  => trim($this->request->getPost('nombre')),
             "cuartel" => $this->request->getPost('cuartel'),
-            "tipo" => $this->request->getPost('tipo')
+            "tipo"    => $this->request->getPost('tipo')
         ];
 
         $this->establecimiento->update($id, $datos);
@@ -86,6 +138,7 @@ class Establecimientos extends BaseController
 
         return redirect()->to(base_url('configuracion/establecimientos'))->with('exito', 'Establecimiento eliminado correctamente.');
     }
+
     public function eliminados()
     {
         $datos = [

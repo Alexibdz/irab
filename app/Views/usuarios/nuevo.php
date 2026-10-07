@@ -7,9 +7,20 @@
                 </div>
                 
                 <div class="card-body">
+                    <!-- para mostrar errores de validación -->
+                    <?php if (session()->has('errors')): ?>
+                        <div class="alert alert-danger mb-4 shadow-sm">
+                            <ul class="mb-0">
+                                <?php foreach (session('errors') as $error): ?>
+                                    <li><?= esc($error) ?></li>
+                                <?php endforeach; ?>
+                            </ul>
+                        </div>
+                    <?php endif; ?>
+
                     <form action="<?= base_url('configuracion/usuarios/insertar') ?>" method="post">
                         <?= csrf_field() ?>
-                        
+
                         <div class="mb-3">
                             <label for="nombre" class="form-label">Nombre</label>
                             <input type="text" class="form-control" name="nombre" id="nombre" required>
@@ -23,14 +34,17 @@
                         <div class="mb-3">
                             <label for="password" class="form-label">Contraseña</label>
                             <input type="password" class="form-control" name="password" id="password" required>
+                            <div class="form-text text-muted">
+                                Debe tener al menos 8 caracteres y un símbolo especial (ej: #!*@$%&?¿).
+                            </div>
                         </div>
                         
                         <div class="mb-3">
                             <label for="id_rol" class="form-label">Rol</label>
                             <select class="form-select" name="id_rol" id="id_rol" required>
-                                <option value="" disabled selected>Seleccione un rol</option>
+                                <option value="" disabled <?= set_select('id_rol', '', true) ?>>Seleccione un rol</option>
                                 <?php foreach ($roles as $rol): ?>
-                                    <option value="<?= esc($rol['id']) ?>">
+                                    <option value="<?= esc($rol['id']) ?>" <?= set_select('id_rol', $rol['id']) ?>>
                                         <?= esc($rol['nombre']) ?>
                                     </option>
                                 <?php endforeach; ?>
@@ -40,9 +54,9 @@
                         <div class="mb-3">
                             <label for="id_establecimiento_asignado" class="form-label">Establecimiento asignado</label>
                             <select class="form-select" name="id_establecimiento_asignado" id="id_establecimiento_asignado" required>
-                                <option value="" disabled selected>Seleccione un establecimiento</option>
+                                <option value="" disabled <?= set_select('id_establecimiento_asignado', '', true) ?>>Seleccione un establecimiento</option>
                                 <?php foreach ($establecimientos as $establecimiento): ?>
-                                    <option value="<?= esc($establecimiento['id']) ?>">
+                                    <option value="<?= esc($establecimiento['id']) ?>" <?= set_select('id_establecimiento_asignado', $establecimiento['id']) ?>>
                                         <?= esc($establecimiento['nombre']) ?>
                                     </option>
                                 <?php endforeach; ?>

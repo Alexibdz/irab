@@ -3,14 +3,25 @@
         <div class="col-md-8">
 
             <div class="card shadow-sm">
-                <div class="card-header bg-success text-white">
+                <div class="card-header bg-primary text-white">
                     <h2 class="h4 mb-0">Nuevo Valor - <?= esc($sintoma['nombre_sintoma']) ?></h2>
                 </div>
 
                 <div class="card-body">
+            
+                    <?php if (session()->has('errors')): ?>
+                        <div class="alert alert-danger mb-4 shadow-sm">
+                            <ul class="mb-0">
+                                <?php foreach (session('errors') as $error): ?>
+                                    <li><?= esc($error) ?></li>
+                                <?php endforeach; ?>
+                            </ul>
+                        </div>
+                    <?php endif; ?>
+
                     <form action="<?= base_url('configuracion/valores-sintomas/insertar') ?>" method="POST">
                         <?= csrf_field() ?>
-                        <input type="hidden" name="id_sintoma" value="<?= $sintoma['id'] ?>">
+                        <input type="hidden" name="id_sintoma" value="<?= esc($sintoma['id']) ?>">
 
                         <div class="mb-3">
                             <label for="valor_min" class="form-label">Valor Mínimo</label>
@@ -33,8 +44,8 @@
                         </div>
 
                         <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
-                            <a href="<?= base_url('configuracion/sintomas/valores/'.$sintoma['id']) ?>" class="btn btn-secondary">Cancelar</a>
-                            <button type="submit" class="btn btn-success">Guardar Valor</button>
+                            <a href="<?= base_url('configuracion/sintomas/valores/'.esc($sintoma['id'])) ?>" class="btn btn-secondary">Cancelar</a>
+                            <button type="submit" class="btn btn-primary">Guardar Valor</button>
                         </div>
 
                     </form>

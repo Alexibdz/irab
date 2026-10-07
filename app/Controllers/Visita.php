@@ -39,6 +39,7 @@ class Visita extends BaseController
         $this->pacienteFactoresModel = new PacienteFactoresModel();
         $this->controlSintomasModel = new ControlSintomasModel();
         $this->valoresSintomasModel = new ValoresSintomasModel();
+        helper('form');
     }
 
     // Listado de visitas abiertas
@@ -204,6 +205,38 @@ class Visita extends BaseController
     // Alta de paciente y tutor, en transaccion
     public function pacienteNuevo()
     {
+        // reglas
+        $reglas = [
+            //el dni vacio por ej si el bebe todav no tiene dni, pero si lo tiene no puede repetirse
+            'dni'                         => 'permit_empty|numeric|is_unique[pacientes.dni]',
+            'nombre'                      => 'required|min_length[3]|max_length[100]',
+            'fecha_nacimiento'            => 'required|valid_date',
+            'id_establecimiento_habitual' => 'required'
+        ];
+
+        $mensajes = [
+            'dni' => [
+                'numeric'   => 'El DNI solo deben ser números.',
+                'is_unique' => 'Este DNI ya se encuentra registrado en otro paciente.'
+            ],
+            'nombre' => [
+                'required'   => 'El nombre del paciente es obligatorio.',
+                'min_length' => 'El nombre debe tener al menos 3 caracteres.'
+            ],
+            'fecha_nacimiento' => [
+                'required'   => 'La fecha de nacimiento es obligatoria.',
+                'valid_date' => 'Debe ingresar una fecha válida.'
+            ],
+            'id_establecimiento_habitual' => [
+                'required' => 'Debe seleccionar el establecimiento habitual del paciente.'
+            ]
+        ];
+
+        // with input te guarda si ya estabas completando el campo, y te lo devuelve en el formulario
+        if (!$this->validate($reglas, $mensajes)) {
+            return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
+        }
+
         $id_tutor = $this->request->getPost('id_tutor');
         $dni      = trim((string) $this->request->getPost('tutor_dni'));
         $telefono = trim((string) $this->request->getPost('tutor_telefono'));
@@ -212,14 +245,14 @@ class Visita extends BaseController
         // Tutor registrado sin elegir
         if ($this->request->getPost('modo_tutor') === 'existente' && empty($id_tutor)) {
             return redirect()->back()->withInput()
-                ->with('error', 'Buscá y elegí un tutor de la lista, o cargá uno nuevo.');
+                ->with('errors', ['tutor' => 'Buscá y elegí un tutor de la lista, o seleccioná "Tutor nuevo".']);
         }
 
         // Tutor nuevo: deduplica por DNI o telefono
         if (empty($id_tutor)) {
             if ($dni === '' || $nombre === '') {
                 return redirect()->back()->withInput()
-                    ->with('error', 'Para crear un tutor hacen falta al menos el DNI y el nombre.');
+                    ->with('errors', ['tutor' => 'Para registrar un tutor nuevo hacen falta al menos el DNI y el Nombre.']);
             }
 
             $tutor = $this->tutorModel->where('dni', $dni)->first();
@@ -243,7 +276,7 @@ class Visita extends BaseController
 
         $id_paciente = $this->pacienteModel->insert([
             'dni'                         => $this->nullSiVacio($this->request->getPost('dni')),
-            'nombre'                      => $this->request->getPost('nombre'),
+            'nombre'                      => trim($this->request->getPost('nombre')),
             'fecha_nacimiento'            => $this->request->getPost('fecha_nacimiento'),
             'id_tutor'                    => $id_tutor,
             'domicilio'                   => $this->nullSiVacio($this->request->getPost('domicilio')),
@@ -256,15 +289,40 @@ class Visita extends BaseController
 
         if (!$id_paciente) {
             return redirect()->back()->withInput()
-                ->with('error', 'No se pudo registrar el paciente. Revisá que el DNI no esté repetido.');
+                ->with('errors', ['bd' => 'No se pudo registrar el paciente. Revisá que el DNI no esté repetido en el sistema.']);
         }
 
         return redirect()->to(base_url('visitas/crear/' . $id_paciente))
             ->with('exito', 'Paciente registrado. Ahora cargá la visita.');
     }
-
     public function insertar()
     {
+        $reglas = [
+            'id_paciente'        => 'required',
+            'id_usuario'         => 'required',
+            'id_establecimiento' => 'required',
+            'fecha_ingreso'      => 'required|valid_date',
+            'diagnostico'        => 'required',
+            'sintomas'           => 'required'
+        ];
+
+        $mensajes = [
+            'id_paciente'        => ['required' => 'Falta la identificación del paciente.'],
+            'id_usuario'         => ['required' => 'Debe seleccionar el Usuario (Enfermera/Médico).'],
+            'id_establecimiento' => ['required' => 'Debe seleccionar el Establecimiento de atención.'],
+            'fecha_ingreso'      => [
+                'required'   => 'La fecha y hora de ingreso son obligatorias.',
+                'valid_date' => 'El formato de fecha no es válido.'
+            ],
+            'diagnostico'        => ['required' => 'El diagnóstico inicial es obligatorio.'],
+            'sintomas'           => ['required' => 'Faltan completar valores en el Control Clínico Inicial (Score).']
+        ];
+
+        // hace el with input te guarda si ya estabas completando el campo, y te lo devuelve en el formulario
+        if (!$this->validate($reglas, $mensajes)) {
+            return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
+        }
+
         // Id del paciente
         $id_paciente = $this->request->getPost('id_paciente');
 
@@ -274,7 +332,7 @@ class Visita extends BaseController
             'id_usuario'               => $this->request->getPost('id_usuario'),
             'id_establecimiento'       => $this->request->getPost('id_establecimiento'),
             'fecha_ingreso'            => $this->request->getPost('fecha_ingreso'),
-            'diagnostico'              => $this->request->getPost('diagnostico'),
+            'diagnostico'              => trim($this->request->getPost('diagnostico')),
             'estado_derivacion'        => null,
             'id_turno_protegido_lugar' => null,
             'turno_protegido_fecha'    => null,
@@ -358,16 +416,6 @@ class Visita extends BaseController
             }
 
             // Gravedad segun la escala
-            $gravedad = 'Grave';
-            if ($form === 'TAL') {
-                if ($score_total <= 5) $gravedad = 'Leve';
-                elseif ($score_total <= 8) $gravedad = 'Moderada';
-            } else {
-                // Cortes WDF
-                if ($score_total <= 3) $gravedad = 'Leve';
-                elseif ($score_total <= 7) $gravedad = 'Moderada';
-            }
-            // Gravedad segun la escala
             $gravedad = null; // Para la escala TAL (menores de 2 años) no se guarda gravedad
 
             if ($form === 'WDF') {
@@ -387,13 +435,12 @@ class Visita extends BaseController
                 'estado_gravedad' => $gravedad
             ]);
 
-            // Cierra la transaccion
+            // cierra la transaccion
             $this->controlModel->transComplete();
         }
 
-        return redirect()->to(base_url('visitas'));
+        return redirect()->to(base_url('visitas'))->with('exito', 'Visita clínica registrada correctamente.');
     }
-
     public function editar($id)
     {
         $visita = $this->visitaModel->find($id);
@@ -419,6 +466,29 @@ class Visita extends BaseController
     public function actualizar()
     {
         $id = $this->request->getPost('id');
+
+        $reglas = [
+            'id_paciente'        => 'required',
+            'id_usuario'         => 'required',
+            'id_establecimiento' => 'required',
+            'fecha_ingreso'      => 'required|valid_date',
+            'diagnostico'        => 'required'
+        ];
+
+        $mensajes = [
+            'id_paciente'        => ['required' => 'Debe seleccionar un paciente.'],
+            'id_usuario'         => ['required' => 'Debe seleccionar un usuario.'],
+            'id_establecimiento' => ['required' => 'Debe seleccionar un establecimiento.'],
+            'fecha_ingreso'      => [
+                'required'   => 'La fecha de ingreso es obligatoria.',
+                'valid_date' => 'Formato de fecha inválido.'
+            ],
+            'diagnostico'        => ['required' => 'El diagnóstico es obligatorio.']
+        ];
+
+        if (!$this->validate($reglas, $mensajes)) {
+            return redirect()->back()->with('errors', $this->validator->getErrors());
+        }
     
         // Solo datos de ingreso
         $datos = [
@@ -426,15 +496,13 @@ class Visita extends BaseController
             'id_usuario'         => $this->request->getPost('id_usuario'),
             'id_establecimiento' => $this->request->getPost('id_establecimiento'),
             'fecha_ingreso'      => $this->request->getPost('fecha_ingreso'),
-            'diagnostico'        => $this->request->getPost('diagnostico')
+            'diagnostico'        => trim($this->request->getPost('diagnostico'))
         ];
 
         $this->visitaModel->update($id, $datos);
 
-        // Al detalle: el listado de abiertas no muestra las cerradas
         return redirect()->to(base_url('visitas/ver/' . $id))->with('exito', 'Visita actualizada correctamente.');
     }
-
 
     public function borrar($id)
     {

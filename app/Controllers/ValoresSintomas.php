@@ -14,6 +14,7 @@ class ValoresSintomas extends BaseController
     {
         $this->valor = new ValoresSintomasModel();
         $this->sintoma = new SintomasModel();
+        helper('form');
     }
 
     public function index($idSintoma)
@@ -45,17 +46,80 @@ class ValoresSintomas extends BaseController
     {
         $idSintoma = $this->request->getPost('id_sintoma');
 
+        $reglas = [
+            'puntos'      => 'required|numeric',
+            'valor_min'   => 'permit_empty|numeric',
+            'valor_max'   => 'permit_empty|numeric'
+        ];
+
+        $mensajes = [
+            'puntos' => [
+                'required' => 'El campo puntos es obligatorio.',
+                'numeric'  => 'Los puntos deben ser un número.'
+            ],
+            'valor_min' => [
+                'numeric'  => 'El valor mínimo debe ser numérico.'
+            ],
+            'valor_max' => [
+                'numeric'  => 'El valor máximo debe ser numérico.'
+            ]
+        ];
+
+        if (!$this->validate($reglas, $mensajes)) {
+            return redirect()->back()->with('errors', $this->validator->getErrors());
+        }
+
         $datos = [
-            "id_sintoma" => $idSintoma,
-            "valor_min" => $this->request->getPost('valor_min') ?: null,
-            "valor_max" => $this->request->getPost('valor_max') ?: null,
-            "valor_texto" => $this->request->getPost('valor_texto') ?: null,
-            "puntos" => $this->request->getPost('puntos')
+            "id_sintoma"  => $idSintoma,
+            "valor_min"   => trim($this->request->getPost('valor_min')) ?: null,
+            "valor_max"   => trim($this->request->getPost('valor_max')) ?: null,
+            "valor_texto" => trim($this->request->getPost('valor_texto')) ?: null,
+            "puntos"      => trim($this->request->getPost('puntos'))
         ];
 
         $this->valor->save($datos);
 
         return redirect()->to(base_url('configuracion/sintomas/valores/'.$idSintoma))->with('exito', 'Valor creado correctamente.');
+    }
+
+    public function actualizar()
+    {
+        $id = $this->request->getPost('id');
+        $idSintoma = $this->request->getPost('id_sintoma');
+
+        $reglas = [
+            'puntos'      => 'required|numeric',
+            'valor_min'   => 'permit_empty|numeric',
+            'valor_max'   => 'permit_empty|numeric'
+        ];
+
+        $mensajes = [
+            'puntos' => [
+                'required' => 'El campo puntos es obligatorio.',
+                'numeric'  => 'Los puntos deben ser un número.'
+            ],
+            'valor_min' => [
+                'numeric'  => 'El valor mínimo debe ser numérico.'
+            ],
+            'valor_max' => [
+                'numeric'  => 'El valor máximo debe ser numérico.'
+            ]
+        ];
+
+        if (!$this->validate($reglas, $mensajes)) {
+            return redirect()->back()->with('errors', $this->validator->getErrors());
+        }
+
+        $datos = [
+            "valor_min"   => trim($this->request->getPost('valor_min')) ?: null,
+            "valor_max"   => trim($this->request->getPost('valor_max')) ?: null,
+            "valor_texto" => trim($this->request->getPost('valor_texto')) ?: null,
+            "puntos"      => trim($this->request->getPost('puntos'))
+        ];
+
+        $this->valor->update($id, $datos);
+
+        return redirect()->to(base_url('configuracion/sintomas/valores/'.$idSintoma))->with('exito', 'Valor actualizado correctamente.');
     }
 
     public function editar($id)
@@ -71,23 +135,6 @@ class ValoresSintomas extends BaseController
         echo view('templates/header');
         echo view('valores_sintomas/editar', $datos);
         echo view('templates/footer');
-    }
-
-    public function actualizar()
-    {
-        $id = $this->request->getPost('id');
-        $idSintoma = $this->request->getPost('id_sintoma');
-
-        $datos = [
-            "valor_min" => $this->request->getPost('valor_min') ?: null,
-            "valor_max" => $this->request->getPost('valor_max') ?: null,
-            "valor_texto" => $this->request->getPost('valor_texto') ?: null,
-            "puntos" => $this->request->getPost('puntos')
-        ];
-
-        $this->valor->update($id, $datos);
-
-        return redirect()->to(base_url('configuracion/sintomas/valores/'.$idSintoma))->with('exito', 'Valor actualizado correctamente.');
     }
 
     public function eliminar($id)

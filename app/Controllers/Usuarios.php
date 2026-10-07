@@ -17,6 +17,8 @@ class Usuarios extends BaseController
         $this->usuarios = new UsuariosModel();
         $this->rol = new RolesModel();
         $this->establecimiento = new EstablecimientosModel();
+        // carga el asistente de formularios de CodeIgniter
+        helper('form');
     }
 
     public function index()
@@ -54,13 +56,77 @@ class Usuarios extends BaseController
         echo view('templates/footer');
     }
 
+    // public function insertar()
+    // {
+    //     $datos = [
+    //         "nombre" => $this->request->getPost('nombre'),
+    //         "username" => $this->request->getPost('username'),
+    //         "password" => password_hash( $this->request->getPost('password'), PASSWORD_DEFAULT ),
+    //         "id_rol" => $this->request->getPost('id_rol'),
+    //         "id_establecimiento_asignado" => $this->request->getPost('id_establecimiento_asignado')
+    //     ];
+
+    //     $this->usuarios->save($datos);
+
+    //     return redirect()->to(base_url('configuracion/usuarios'))->with('exito', 'Usuario creado correctamente.');
+    // }
     public function insertar()
     {
+        // definimos eglas de validación
+        $reglas = [
+            'nombre'                      => 'required|min_length[3]|max_length[100]',
+            'username'                    => 'required|min_length[3]|max_length[50]',
+            'password'                    => 'required|min_length[8]|regex_match[/[#!*@$%&?¿]/]',
+            'id_rol'                      => 'required',
+            'id_establecimiento_asignado' => 'required'
+        ];
+        //traduccion de msj porque sino los muestra en ingles
+        $mensajes = [
+            'nombre' => [
+                'required'   => 'El campo Nombre es obligatorio.',
+                'min_length' => 'El Nombre debe tener al menos 3 caracteres.'
+            ],
+            'username' => [
+                'required'   => 'El nombre de Usuario es obligatorio.',
+                'min_length' => 'El Usuario debe tener al menos 3 caracteres.'
+            ],
+            'password' => [
+                'required'    => 'La contraseña es obligatoria.',
+                'min_length'  => 'La contraseña debe tener al menos 8 caracteres.',
+                'regex_match' => 'La contraseña debe tener al menos un carácter especial (ej: #!*@$%&?¿).'
+            ],
+            'id_rol' => [
+                'required' => 'Debes seleccionar un Rol.'
+            ],
+            'id_establecimiento_asignado' => [
+                'required' => 'Debes asignar un Establecimiento.'
+            ]
+        ];
+
+        if (!$this->validate($reglas, $mensajes)) {
+            return redirect()->back()->with('errors', $this->validator->getErrors());
+        }
+
+        // pasamos a minusculas y eliminamos espacios en blanco del nombre de usuario
+        $username = strtolower(trim($this->request->getPost('username')));
+
+        // se verifica si el nombre de usuario ya existe, incluyendo los eliminados
+        $usuarioExistente = $this->usuarios->where('username', $username)->withDeleted()->first();
+        
+        if ($usuarioExistente) {
+            $errorMsg = empty($usuarioExistente['fecha_borrado']) 
+                ? 'El nombre de usuario ya está en uso.' 
+                : 'El usuario existe en la papelera. Por favor, recupérelo.';
+            
+            return redirect()->back()->withInput()->with('errors', ['username' => $errorMsg]);
+        }
+
+        // guardamos en la bbdd
         $datos = [
-            "nombre" => $this->request->getPost('nombre'),
-            "username" => $this->request->getPost('username'),
-            "password" => password_hash( $this->request->getPost('password'), PASSWORD_DEFAULT ),
-            "id_rol" => $this->request->getPost('id_rol'),
+            "nombre"                      => trim($this->request->getPost('nombre')),
+            "username"                    => $username,
+            "password"                    => password_hash($this->request->getPost('password'), PASSWORD_DEFAULT),
+            "id_rol"                      => $this->request->getPost('id_rol'),
             "id_establecimiento_asignado" => $this->request->getPost('id_establecimiento_asignado')
         ];
 
@@ -87,21 +153,89 @@ class Usuarios extends BaseController
         echo view('templates/footer');
     }
 
+    // public function actualizar()
+    // {
+    //     $id = $this->request->getPost('id');
+
+    //     $datos = [
+    //         "nombre" => $this->request->getPost('nombre'),
+    //         "username" => $this->request->getPost('username'),
+    //         "id_rol" => $this->request->getPost('id_rol'),
+    //         "id_establecimiento_asignado" => $this->request->getPost('id_establecimiento_asignado')
+    //     ];
+
+    //     $password = $this->request->getPost('password');
+
+    //     if ($password != '') {
+    //         $datos["password"] = password_hash( $password, PASSWORD_DEFAULT );
+    //     }
+
+    //     $this->usuarios->update($id, $datos);
+
+    //     return redirect()->to(base_url('configuracion/usuarios'))->with('exito', 'Usuario actualizado correctamente.');
+    // }
     public function actualizar()
     {
         $id = $this->request->getPost('id');
 
+        // el permit_empty en password permite que el campo de contraseña sea opcional durante la actualización. Si el usuario no ingresa una nueva contraseña, no se actualizará.
+        $reglas = [
+            'nombre'                      => 'required|min_length[3]|max_length[100]',
+            'username'                    => 'required|min_length[3]|max_length[50]',
+            'password'                    => 'permit_empty|min_length[8]|regex_match[/[#!*@$%&?¿]/]',
+            'id_rol'                      => 'required',
+            'id_establecimiento_asignado' => 'required'
+        ];
+
+        $mensajes = [
+            'nombre' => [
+                'required'   => 'El campo Nombre es obligatorio.',
+                'min_length' => 'El Nombre debe tener al menos 3 caracteres.'
+            ],
+            'username' => [
+                'required'   => 'El nombre de Usuario es obligatorio.',
+                'min_length' => 'El Usuario debe tener al menos 3 caracteres.'
+            ],
+            'password' => [
+                'required'    => 'La contraseña es obligatoria.',
+                'min_length'  => 'La contraseña debe tener al menos 8 caracteres.',
+                'regex_match' => 'La contraseña debe tener al menos un carácter especial (ej: #!*@$%&?¿).'
+            ],
+            'id_rol' => [
+                'required' => 'Debes seleccionar un Rol.'
+            ],
+            'id_establecimiento_asignado' => [
+                'required' => 'Debes asignar un Establecimiento.'
+            ]
+        ];
+
+        if (!$this->validate($reglas, $mensajes)) {
+            return redirect()->back()->with('errors', $this->validator->getErrors());
+        }
+
+        $username = strtolower(trim($this->request->getPost('username')));
+        $usuarioExistente = $this->usuarios->where('username', $username)->where('id !=', $id)->withDeleted()->first();
+        
+        if ($usuarioExistente) {
+            $errorMsg = empty($usuarioExistente['fecha_borrado']) 
+                ? 'El nombre de usuario ya está en uso por otra persona.' 
+                : 'Ese nombre de usuario existe en la papelera.';
+            
+            return redirect()->back()->withInput()->with('errors', ['username' => $errorMsg]);
+        }
+
+        //se prepara para act
         $datos = [
-            "nombre" => $this->request->getPost('nombre'),
-            "username" => $this->request->getPost('username'),
-            "id_rol" => $this->request->getPost('id_rol'),
+            "nombre"                      => trim($this->request->getPost('nombre')),
+            "username"                    => $username,
+            "id_rol"                      => $this->request->getPost('id_rol'),
             "id_establecimiento_asignado" => $this->request->getPost('id_establecimiento_asignado')
         ];
 
+        // aca actualiza la contraseña solo si se escribió algo
         $password = $this->request->getPost('password');
-
-        if ($password != '') {
-            $datos["password"] = password_hash( $password, PASSWORD_DEFAULT );
+        if (!empty($password)) {
+            $datos["password"] = password_hash($password, PASSWORD_DEFAULT);
         }
 
         $this->usuarios->update($id, $datos);

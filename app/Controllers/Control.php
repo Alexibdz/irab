@@ -23,6 +23,7 @@ class Control extends BaseController
         $this->valoresSintomasModel = new ValoresSintomasModel();
         $this->visitaModel          = new VisitaModel();
         $this->pacienteModel        = new PacienteModel();
+        helper('form'); 
     }
 
     public function crear($id_visita)
@@ -51,19 +52,31 @@ class Control extends BaseController
         echo view('visitas/crearcontroles', $datos);
         echo view('templates/footer');
     }
-
     public function guardar()
-    {
-        $id_visita = $this->request->getPost('id_visita');
-        $medicacion = $this->request->getPost('medicacion');
-        $observaciones = $this->request->getPost('observaciones');
-        
-        // Sintomas, igual que en Visita.php
-        $sintomas_enviados = $this->request->getPost('sintomas');
+        {
+            $id_visita = $this->request->getPost('id_visita');
+            $medicacion = trim($this->request->getPost('medicacion'));
+            $observaciones = trim($this->request->getPost('observaciones'));
+            $sintomas_enviados = $this->request->getPost('sintomas');
 
-        if ($id_visita && !empty($sintomas_enviados)) {
+            // Validamos que al menos lleguen los síntomas
+            $reglas = [
+                'id_visita' => 'required',
+                'sintomas'  => 'required'
+            ];
+
+            $mensajes = [
+                'sintomas' => ['required' => 'Faltan completar valores en la evaluación clínica (Score).']
+            ];
+
+            if (!$this->validate($reglas, $mensajes)) {
+                return redirect()->back()->with('errors', $this->validator->getErrors());
+            }
+
+            if ($id_visita && !empty($sintomas_enviados)) {
             
             $visita = $this->visitaModel->find($id_visita);
+
             $paciente = $this->pacienteModel->find($visita['id_paciente']);
             
             $form = 'TAL';
@@ -127,6 +140,6 @@ class Control extends BaseController
             $this->controlModel->transComplete();
         }
 
-        return redirect()->to(base_url('visitas/ver/' . $id_visita))->with('mensaje', 'Control evolutivo registrado correctamente.');
+        return redirect()->to(base_url('visitas/ver/' . $id_visita))->with('exito', 'Control evolutivo registrado correctamente.');
     }
 }

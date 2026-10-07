@@ -14,6 +14,7 @@ class ValoresFactores extends BaseController
     {
         $this->valor = new ValoresFactoresModel();
         $this->factor = new FactoresModel();
+        helper('form');
     }
 
     public function index($idFactor)
@@ -41,18 +42,65 @@ class ValoresFactores extends BaseController
         echo view('templates/footer');
     }
 
-    public function insertar()
+public function insertar()
     {
         $idFactor = $this->request->getPost('id_factor');
 
+        // 1. Reglas de validación
+        $reglas = [
+            'valor' => 'required'
+        ];
+
+        // 2. Mensajes en español
+        $mensajes = [
+            'valor' => [
+                'required' => 'El campo valor es obligatorio.'
+            ]
+        ];
+
+        // 3. Ejecutar validación
+        if (!$this->validate($reglas, $mensajes)) {
+            return redirect()->back()->with('errors', $this->validator->getErrors());
+        }
+
+        // 4. Sanitizar y guardar
         $datos = [
             "id_factor" => $idFactor,
-            "valor" => $this->request->getPost('valor')
+            "valor"     => trim($this->request->getPost('valor'))
         ];
 
         $this->valor->save($datos);
 
         return redirect()->to(base_url('configuracion/factores/valores/'.$idFactor))->with('exito', 'Valor creado correctamente.');
+    }
+
+    public function actualizar()
+    {
+        $id = $this->request->getPost('id');
+        $idFactor = $this->request->getPost('id_factor');
+
+        $reglas = [
+            'valor' => 'required'
+        ];
+
+        $mensajes = [
+            'valor' => [
+                'required' => 'El campo valor es obligatorio.'
+            ]
+        ];
+
+        // 3. Ejecutar validación
+        if (!$this->validate($reglas, $mensajes)) {
+            return redirect()->back()->with('errors', $this->validator->getErrors());
+        }
+
+        $datos = [
+            "valor" => trim($this->request->getPost('valor'))
+        ];
+
+        $this->valor->update($id, $datos);
+
+        return redirect()->to(base_url('configuracion/factores/valores/'.$idFactor))->with('exito', 'Valor actualizado correctamente.');
     }
 
     public function editar($id)
@@ -68,20 +116,6 @@ class ValoresFactores extends BaseController
         echo view('templates/header');
         echo view('valores_factores/editar', $datos);
         echo view('templates/footer');
-    }
-
-    public function actualizar()
-    {
-        $id = $this->request->getPost('id');
-        $idFactor = $this->request->getPost('id_factor');
-
-        $datos = [
-            "valor" => $this->request->getPost('valor')
-        ];
-
-        $this->valor->update($id, $datos);
-
-        return redirect()->to(base_url('configuracion/factores/valores/'.$idFactor))->with('exito', 'Valor actualizado correctamente.');
     }
 
     public function eliminar($id)

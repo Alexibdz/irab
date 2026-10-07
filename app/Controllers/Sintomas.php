@@ -14,6 +14,7 @@ class Sintomas extends BaseController
     {
         $this->sintoma = new SintomasModel();
         $this->valor = new ValoresSintomasModel();
+        helper('form');
     }
 
     public function index()
@@ -43,8 +44,28 @@ class Sintomas extends BaseController
 
     public function insertar()
     {
+        $reglas = [
+            'nombre_sintoma'  => 'required|min_length[3]|max_length[100]',
+            'tipo_formulario' => 'required'
+        ];
+
+        $mensajes = [
+            'nombre_sintoma' => [
+                'required'   => 'El nombre del síntoma es obligatorio.',
+                'min_length' => 'El nombre debe tener al menos 3 caracteres.',
+                'max_length' => 'El nombre es demasiado largo.'
+            ],
+            'tipo_formulario' => [
+                'required' => 'Debes seleccionar el tipo de formulario.'
+            ]
+        ];
+
+        if (!$this->validate($reglas, $mensajes)) {
+            return redirect()->back()->with('errors', $this->validator->getErrors());
+        }
+
         $datos = [
-            "nombre_sintoma" => $this->request->getPost('nombre_sintoma'),
+            "nombre_sintoma"  => trim($this->request->getPost('nombre_sintoma')),
             "tipo_formulario" => $this->request->getPost('tipo_formulario')
         ];
 
@@ -68,12 +89,32 @@ class Sintomas extends BaseController
         echo view('templates/footer');
     }
 
-    public function actualizar()
+public function actualizar()
     {
         $id = $this->request->getPost('id');
 
+        $reglas = [
+            'nombre_sintoma'  => 'required|min_length[3]|max_length[100]',
+            'tipo_formulario' => 'required'
+        ];
+
+        $mensajes = [
+            'nombre_sintoma' => [
+                'required'   => 'El nombre del síntoma es obligatorio.',
+                'min_length' => 'El nombre debe tener al menos 3 caracteres.',
+                'max_length' => 'El nombre es demasiado largo.'
+            ],
+            'tipo_formulario' => [
+                'required' => 'Debes seleccionar el tipo de formulario.'
+            ]
+        ];
+
+        if (!$this->validate($reglas, $mensajes)) {
+            return redirect()->back()->with('errors', $this->validator->getErrors());
+        }
+
         $datos = [
-            "nombre_sintoma" => $this->request->getPost('nombre_sintoma'),
+            "nombre_sintoma"  => trim($this->request->getPost('nombre_sintoma')),
             "tipo_formulario" => $this->request->getPost('tipo_formulario')
         ];
 

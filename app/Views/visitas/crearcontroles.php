@@ -175,7 +175,7 @@
 
                             <input type="number"
                                    class="form-control border-success"
-                                   name="saturacion_oxigeno"
+                                   name="sintomas[6]"
                                    min="0"
                                    max="100"
                                    step="0.1"
@@ -192,7 +192,7 @@
 
                             <input type="number"
                                    class="form-control border-success"
-                                   name="temperatura"
+                                   name="sintomas[7]"
                                    step="0.1"
                                    placeholder="°C">
                         </div>
@@ -212,7 +212,7 @@
 
                             <input type="number"
                                    class="form-control input-score border-success"
-                                   name="sintomas[6]"
+                                   name="sintomas[8]"
                                    min="0"
                                    data-rangos='[
                                        {"min":0,"max":120,"puntos":0},
@@ -231,7 +231,7 @@
 
                             <input type="number"
                                    class="form-control input-score border-success"
-                                   name="sintomas[7]"
+                                   name="sintomas[9]"
                                    min="0"
                                    data-rangos='[
                                        {"min":0,"max":30,"puntos":0},
@@ -251,7 +251,7 @@
                             </label>
 
                             <select class="form-select select-sintoma border-success"
-                                    name="sintomas[8]"
+                                    name="sintomas[10]"
                                     onchange="calcularScoreDinamico()"
                                     required>
 
@@ -263,11 +263,11 @@
                                     No (0 pts)
                                 </option>
 
-                                <option value="Final espiración" data-puntos="1">
+                                <option value="Final de la espiración" data-puntos="1">
                                     Final espiración (1 pt)
                                 </option>
 
-                                <option value="Todo espiración" data-puntos="2">
+                                <option value="Todo la espiración" data-puntos="2">
                                     Todo espiración (2 pts)
                                 </option>
 
@@ -286,7 +286,7 @@
                             </label>
 
                             <select class="form-select select-sintoma border-success"
-                                    name="sintomas[9]"
+                                    name="sintomas[11]"
                                     onchange="calcularScoreDinamico()"
                                     required>
 
@@ -298,15 +298,15 @@
                                     No (0 pts)
                                 </option>
 
-                                <option value="Subcostal / Intercostal" data-puntos="1">
+                                <option value="Subcostal o Intercostal." data-puntos="1">
                                     Subcostal / Intercostal (1 pt)
                                 </option>
 
-                                <option value="+ Supraclavicular + Aleteo nasal" data-puntos="2">
+                                <option value="+ supraclavicular + aleteo nasal" data-puntos="2">
                                     + Supraclavicular (2 pts)
                                 </option>
 
-                                <option value="+ Todo lo anterior + Supraesternal" data-puntos="3">
+                                <option value="+ Todo lo anterior + supraesternal" data-puntos="3">
                                     + Supraesternal (3 pts)
                                 </option>
 
@@ -321,7 +321,7 @@
                             </label>
 
                             <select class="form-select select-sintoma border-success"
-                                    name="sintomas[10]"
+                                    name="sintomas[12]"
                                     onchange="calcularScoreDinamico()"
                                     required>
 
@@ -329,11 +329,11 @@
                                     Seleccione...
                                 </option>
 
-                                <option value="Buena, Simétrica" data-puntos="0">
+                                <option value="Buena y Simétrica" data-puntos="0">
                                     Buena, Simétrica (0 pts)
                                 </option>
 
-                                <option value="Regular. Simétrica" data-puntos="1">
+                                <option value="Regular y Simétrica" data-puntos="1">
                                     Regular. Simétrica (1 pt)
                                 </option>
 
@@ -356,7 +356,7 @@
                             </label>
 
                             <select class="form-select select-sintoma border-success"
-                                    name="sintomas[11]"
+                                    name="sintomas[13]"
                                     onchange="calcularScoreDinamico()"
                                     required>
 
@@ -385,7 +385,7 @@
 
                             <input type="number"
                                    class="form-control border-success"
-                                   name="saturacion_oxigeno"
+                                   name="sintomas[14]"
                                    min="0"
                                    max="100"
                                    step="0.1"
@@ -402,7 +402,7 @@
 
                             <input type="number"
                                    class="form-control border-success"
-                                   name="temperatura"
+                                   name="sintomas[15]"
                                    step="0.1"
                                    placeholder="°C">
                         </div>

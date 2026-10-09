@@ -184,7 +184,7 @@ $edad = edad_texto($paciente['fecha_nacimiento'] ?? null, $visita['fecha_ingreso
             <input type="hidden" name="id_visita" value="<?= $visita['id'] ?>">
 
             <div class="modal-content">
-                <div class="modal-header bg-primary text-white">
+                <div class="modal-header bg-success text-white">
                     <h5 class="modal-title">Cerrar visita — datos de egreso</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                 </div>
@@ -238,7 +238,7 @@ $edad = edad_texto($paciente['fecha_nacimiento'] ?? null, $visita['fecha_ingreso
 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="submit" class="btn btn-primary">Cerrar visita</button>
+                    <button type="submit" class="btn btn-success">Cerrar visita</button>
                 </div>
             </div>
         </form>

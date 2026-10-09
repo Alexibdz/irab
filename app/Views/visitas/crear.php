@@ -282,12 +282,12 @@ if (!empty($paciente['fecha_nacimiento'])) {
 
                                 <div class="col-md-4 mb-3 sintoma-tal">
                                     <label class="form-label fw-bold small text-success">Saturación de oxígeno</label>
-                                    <input type="number" class="form-control border-success" name="saturacion_oxigeno" min="0" max="100" step="0.1" placeholder="%">
+                                    <input type="number" class="form-control border-success" name="sintomas[6]" min="0" max="100" step="0.1" placeholder="%">
                                 </div>
 
                                 <div class="col-md-4 mb-3 sintoma-tal">
                                     <label class="form-label fw-bold small text-success">Temperatura</label>
-                                    <input type="number" class="form-control border-success" name="temperatura" step="0.1" placeholder="°C">
+                                    <input type="number" class="form-control border-success" name="sintomas[7]" step="0.1" placeholder="°C">
                                 </div>
 
                             <?php else: ?>
@@ -296,7 +296,7 @@ if (!empty($paciente['fecha_nacimiento'])) {
                                     <label class="form-label fw-bold small text-success">Frecuencia Cardíaca</label>
                                     <input type="number"
                                            class="form-control input-score border-success"
-                                           name="sintomas[6]"
+                                           name="sintomas[8]"
                                            min="0"
                                            data-rangos='[
                                                {"min":0,"max":120,"puntos":0},
@@ -310,7 +310,7 @@ if (!empty($paciente['fecha_nacimiento'])) {
                                     <label class="form-label fw-bold small text-success">Frecuencia Respiratoria</label>
                                     <input type="number"
                                            class="form-control input-score border-success"
-                                           name="sintomas[7]"
+                                           name="sintomas[9]"
                                            min="0"
                                            data-rangos='[
                                                {"min":0,"max":30,"puntos":0},
@@ -324,32 +324,32 @@ if (!empty($paciente['fecha_nacimiento'])) {
 
                                 <div class="col-md-4 mb-3 sintoma-wdf">
                                     <label class="form-label fw-bold small text-success">Sibilancias</label>
-                                    <select class="form-select select-sintoma border-success" name="sintomas[8]" onchange="calcularScoreDinamico()" required>
+                                    <select class="form-select select-sintoma border-success" name="sintomas[10]" onchange="calcularScoreDinamico()" required>
                                         <option value="" data-puntos="0" selected disabled>Seleccione...</option>
                                         <option value="No" data-puntos="0">No (0 pts)</option>
-                                        <option value="Final espiración" data-puntos="1">Final espiración (1 pt)</option>
-                                        <option value="Todo espiración" data-puntos="2">Todo espiración (2 pts)</option>
+                                        <option value="Final de la espiración" data-puntos="1">Final espiración (1 pt)</option>
+                                        <option value="Todo la espiración" data-puntos="2">Todo espiración (2 pts)</option>
                                         <option value="+ Inspiración" data-puntos="3">+ Inspiración (3 pts)</option>
                                     </select>
                                 </div>
 
                                 <div class="col-md-4 mb-3 sintoma-wdf">
                                     <label class="form-label fw-bold small text-success">Tiraje</label>
-                                    <select class="form-select select-sintoma border-success" name="sintomas[9]" onchange="calcularScoreDinamico()" required>
+                                    <select class="form-select select-sintoma border-success" name="sintomas[11]" onchange="calcularScoreDinamico()" required>
                                         <option value="" data-puntos="0" selected disabled>Seleccione...</option>
                                         <option value="No" data-puntos="0">No (0 pts)</option>
-                                        <option value="Subcostal / Intercostal" data-puntos="1">Subcostal / Intercostal (1 pt)</option>
-                                        <option value="+ Supraclavicular + Aleteo nasal" data-puntos="2">+ Supraclavicular (2 pts)</option>
-                                        <option value="+ Todo lo anterior + Supraesternal" data-puntos="3">+ Supraesternal (3 pts)</option>
+                                        <option value="Subcostal o Intercostal" data-puntos="1">Subcostal / Intercostal (1 pt)</option>
+                                        <option value="+ supraclavicular + aleteo nasal" data-puntos="2">+ Supraclavicular (2 pts)</option>
+                                        <option value="+ Todo lo anterior + supraesternal" data-puntos="3">+ Supraesternal (3 pts)</option>
                                     </select>
                                 </div>
 
                                 <div class="col-md-4 mb-3 sintoma-wdf">
                                     <label class="form-label fw-bold small text-success">Ventilación</label>
-                                    <select class="form-select select-sintoma border-success" name="sintomas[10]" onchange="calcularScoreDinamico()" required>
+                                    <select class="form-select select-sintoma border-success" name="sintomas[12]" onchange="calcularScoreDinamico()" required>
                                         <option value="" data-puntos="0" selected disabled>Seleccione...</option>
-                                        <option value="Buena, Simétrica" data-puntos="0">Buena, Simétrica (0 pts)</option>
-                                        <option value="Regular. Simétrica" data-puntos="1">Regular. Simétrica (1 pt)</option>
+                                        <option value="Buena y Simétrica" data-puntos="0">Buena, Simétrica (0 pts)</option>
+                                        <option value="Regular y Simétrica" data-puntos="1">Regular. Simétrica (1 pt)</option>
                                         <option value="Muy disminuida" data-puntos="2">Muy disminuida (2 pts)</option>
                                         <option value="Tórax silente" data-puntos="3">Tórax silente (3 pts)</option>
                                     </select>
@@ -357,7 +357,7 @@ if (!empty($paciente['fecha_nacimiento'])) {
 
                                 <div class="col-md-4 mb-3 sintoma-wdf">
                                     <label class="form-label fw-bold small text-success">Cianosis</label>
-                                    <select class="form-select select-sintoma border-success" name="sintomas[11]" onchange="calcularScoreDinamico()" required>
+                                    <select class="form-select select-sintoma border-success" name="sintomas[13]" onchange="calcularScoreDinamico()" required>
                                         <option value="" data-puntos="0" selected disabled>Seleccione...</option>
                                         <option value="No" data-puntos="0">No (0 pts)</option>
                                         <option value="Sí" data-puntos="1">Sí (1 pt)</option>
@@ -366,12 +366,12 @@ if (!empty($paciente['fecha_nacimiento'])) {
 
                                 <div class="col-md-4 mb-3 sintoma-wdf">
                                     <label class="form-label fw-bold small text-success">Saturación de oxígeno</label>
-                                    <input type="number" class="form-control border-success" name="saturacion_oxigeno" min="0" max="100" step="0.1" placeholder="%">
+                                    <input type="number" class="form-control border-success" name="sintomas[14]" min="0" max="100" step="0.1" placeholder="%">
                                 </div>
 
                                 <div class="col-md-4 mb-3 sintoma-wdf">
                                     <label class="form-label fw-bold small text-success">Temperatura</label>
-                                    <input type="number" class="form-control border-success" name="temperatura" step="0.1" placeholder="°C">
+                                    <input type="number" class="form-control border-success" name="sintomas[15]" step="0.1" placeholder="°C">
                                 </div>
 
                             <?php endif; ?>

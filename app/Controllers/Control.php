@@ -98,26 +98,40 @@ class Control extends BaseController
 
             $score_total = 0;
 
-            // Puntos, igual que en Visita.php
+            // Puntos por síntoma
             foreach ($sintomas_enviados as $idSintoma => $valor) {
                 $puntos = 0;
-                $builder = $this->valoresSintomasModel->where('id_sintoma', $idSintoma);
                 
-                if (is_numeric($valor)) {
-                    $fila = $builder->where('valor_min IS NOT NULL')
-                                    ->where('valor_min <=', $valor)
-                                    ->orderBy('valor_min', 'DESC')
-                                    ->first();
-                } else {
-                    $fila = $builder->where('valor_texto', $valor)->first();
-                }
+                // === EXCLUSIÓN DE PUNTOS PARA SATURACIÓN Y TEMPERATURA ===
+                // IDs 6 y 7 (TAL) o 14 y 15 (WDF) solo se guardan pero no suman puntos!!
+                $esSaturacionOtemperatura = in_array((int)$idSintoma, [6, 7, 14, 15]);
 
-                if ($fila) {
-                    $puntos = (int) $fila['puntos'];
+                if (!$esSaturacionOtemperatura) {
+                    $builder = $this->valoresSintomasModel->where('id_sintoma', $idSintoma);
+                    if (is_numeric($valor)) {
+                        $fila = $builder->where('valor_min IS NOT NULL')
+                                        ->where('valor_min <=', $valor)
+                                        ->where('valor_max >=', $valor)
+                                        ->first();
+                                        
+                        if (!$fila) {
+                            $fila = $builder->where('valor_min IS NOT NULL')
+                                            ->where('valor_min <=', $valor)
+                                            ->orderBy('valor_min', 'DESC')
+                                            ->first();
+                        }
+                    } else {
+                        $fila = $builder->where('valor_texto', $valor)->first();
+                    }
+
+                    if ($fila) {
+                        $puntos = (int) $fila['puntos'];
+                    }
                 }
 
                 $score_total += $puntos;
 
+                // El valor se guarda en la base de datos
                 $this->controlSintomasModel->insert([
                     'id_control'       => $id_control_nuevo,
                     'id_sintoma'       => (int) $idSintoma,

@@ -208,16 +208,30 @@ class Visita extends BaseController
         // reglas
         $reglas = [
             //el dni vacio por ej si el bebe todav no tiene dni, pero si lo tiene no puede repetirse
-            'dni'                         => 'permit_empty|numeric|is_unique[pacientes.dni]',
+            'dni'                         => 'permit_empty|numeric|min_length[7]|max_length[8]|is_unique[pacientes.dni]',
             'nombre'                      => 'required|min_length[3]|max_length[100]',
             'fecha_nacimiento'            => 'required|valid_date',
-            'id_establecimiento_habitual' => 'required'
+            'id_establecimiento_habitual' => 'required',
+            'tutor_dni'                   => 'permit_empty|numeric|min_length[7]|max_length[8]',
+            'tutor_telefono'              => 'permit_empty|numeric|min_length[6]|max_length[15]'
         ];
 
         $mensajes = [
             'dni' => [
                 'numeric'   => 'El DNI solo deben ser números.',
-                'is_unique' => 'Este DNI ya se encuentra registrado en otro paciente.'
+                'is_unique' => 'Este DNI ya se encuentra registrado en otro paciente.',
+                'min_length' => 'El DNI debe tener al menos 7 dígitos.',
+                'max_length' => 'El DNI no puede tener más de 8 dígitos.',
+            ],
+            'tutor_dni' => [
+                'numeric' => 'El DNI solo deben ser números.',
+                'min_length' => 'El DNI del tutor debe tener al menos 7 dígitos.',
+                'max_length' => 'El DNI del tutor no puede tener más de 8 dígitos.'
+            ],
+            'tutor_telefono' => [
+                'numeric' => 'El teléfono deben ser números.',
+                'min_length' => 'El teléfono debe tener al menos 6 dígitos.',
+                'max_length' => 'El teléfono no puede tener más de 15 dígitos.'
             ],
             'nombre' => [
                 'required'   => 'El nombre del paciente es obligatorio.',

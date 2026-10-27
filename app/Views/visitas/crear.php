@@ -15,8 +15,8 @@ if (!empty($paciente['fecha_nacimiento'])) {
 <div class="container-fluid px-4 mt-4 mb-5">
 
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <div class="d-flex align-items-center gap-3">
-            <h2 class="h3 mb-0 text-primary"><i class="bi bi-journal-medical"></i> Registrar Nueva Visita</h2>
+        <div class="d-flex align-items-center gap-3 ">
+            <h2 class="h3 mb-0 text-bl"><i class="bi bi-journal-medical "></i> Registrar Nueva Visita</h2>
             <span class="badge bg-secondary">Paso 2 de 2</span>
         </div>
         <a href="<?= base_url('visitas') ?>" class="btn btn-outline-secondary">Volver al listado</a>
@@ -392,7 +392,7 @@ if (!empty($paciente['fecha_nacimiento'])) {
             <div class="col-12 text-end">
                 <hr>
                 <button type="button" class="btn btn-secondary btn-lg me-2" onclick="window.location.href='<?= base_url('visitas') ?>'">Cancelar</button>
-                <button type="submit" class="btn btn-primary btn-lg px-5">Guardar Visita Completa</button>
+                <button type="submit" class="btn btn-success btn-lg px-5">Guardar Visita Completa</button>
             </div>
         </div>
 

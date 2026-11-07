@@ -9,6 +9,7 @@ class TutorModel extends BaseModel
     protected $allowedFields = [
         'dni',
         'nombre',
+        'apellido',
         'telefono',
         'fecha_borrado'
     ];

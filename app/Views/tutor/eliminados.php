@@ -5,7 +5,7 @@
     <thead>
         <tr>
             <th class="text-center align-middle">DNI</th>
-            <th class="text-center align-middle">Nombre Completo</th>
+            <th class="text-center align-middle">Nombre y Apellido</th>
             <th class="text-center align-middle">Fecha de Borrado</th>
             <th class="text-center align-middle">Acciones</th>
         </tr>
@@ -14,7 +14,7 @@
         <?php foreach ($tutores as $tutor): ?>
             <tr>
                 <td class="text-center align-middle"><?= $tutor['dni'] ?></td>
-                <td class="text-center align-middle"><?= $tutor['nombre'] ?></td>
+                <td class="text-center align-middle"><?= esc(nombre_completo($tutor)) ?></td>
                 <td class="text-center align-middle"><?= $tutor['fecha_borrado'] ?></td>
                 <td class="text-center align-middle">
                     <a href="<?= base_url('tutor/recuperar/'.$tutor['id']) ?>" class="btn btn-success btn-sm">Recuperar</a>

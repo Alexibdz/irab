@@ -86,11 +86,22 @@ class Visita extends BaseController
         }
 
         $q = trim((string) $this->request->getGet('q'));
+        $pacientes = $q === '' ? [] : $this->buscarPacientes($q);
+        $digitosBusqueda = preg_replace('/\D/', '', $q);
+        $dniBusqueda = preg_match('/^[0-9.\s]+$/', $q) && strlen($digitosBusqueda) === 8
+            ? $digitosBusqueda
+            : '';
+        $dniPaciente = old('dni');
+        if ($dniPaciente === null) {
+            $dniPaciente = $dniBusqueda !== '' && empty($pacientes) ? $dniBusqueda : '';
+        }
 
         $datos = [
             'titulo' => 'Nueva visita',
             'q' => $q,
-            'pacientes' => $q === '' ? [] : $this->buscarPacientes($q),
+            'pacientes' => $pacientes,
+            'panelAbierto' => !empty(old('nombre')) || ($dniBusqueda !== '' && empty($pacientes)),
+            'dniPaciente' => $dniPaciente,
             'establecimientos' => $this->establecimientoModel->findAll()
         ];
 
@@ -130,11 +141,12 @@ class Visita extends BaseController
 
         // Soft delete a mano: builder() no lo aplica
         $builder = $this->pacienteModel->builder()
-            ->select('pacientes.*, tutores.nombre AS tutor_nombre, tutores.telefono AS tutor_telefono')
+            ->select('pacientes.*, tutores.nombre AS tutor_nombre, tutores.apellido AS tutor_apellido, tutores.telefono AS tutor_telefono')
             ->join('tutores', 'tutores.id = pacientes.id_tutor', 'left')
             ->where('pacientes.fecha_borrado IS NULL')
             ->groupStart()
                 ->like('pacientes.nombre', $q)
+                ->orLike('pacientes.apellido', $q)
                 ->orLike('pacientes.dni', $q);
 
         // DNI sin puntos
@@ -144,6 +156,7 @@ class Visita extends BaseController
 
         $pacientes = $builder->groupEnd()
             ->orderBy('pacientes.nombre')
+            ->orderBy('pacientes.apellido')
             ->limit(15)
             ->get()
             ->getResultArray();
@@ -170,6 +183,18 @@ class Visita extends BaseController
         return $pacientes;
     }
 
+    // Busqueda de pacientes (JSON): por GET, no rota el token CSRF
+    public function buscarPaciente()
+    {
+        $q = trim((string) $this->request->getGet('q'));
+
+        if (mb_strlen($q) < 2) {
+            return $this->response->setJSON([]);
+        }
+
+        return $this->response->setJSON($this->buscarPacientes($q));
+    }
+
     // Busqueda de tutores (JSON): por GET, no rota el token CSRF
     public function buscarTutor()
     {
@@ -182,10 +207,11 @@ class Visita extends BaseController
         $digitos = preg_replace('/\D/', '', $q);
 
         $builder = $this->tutorModel->builder()
-            ->select('id, nombre, dni, telefono')
+            ->select('id, nombre, apellido, dni, telefono')
             ->where('fecha_borrado IS NULL')
             ->groupStart()
                 ->like('nombre', $q)
+                ->orLike('apellido', $q)
                 ->orLike('dni', $q);
 
         if ($digitos !== '') {
@@ -195,6 +221,7 @@ class Visita extends BaseController
 
         $tutores = $builder->groupEnd()
             ->orderBy('nombre')
+            ->orderBy('apellido')
             ->limit(8)
             ->get()
             ->getResultArray();
@@ -209,8 +236,11 @@ class Visita extends BaseController
         $reglas = [
             //el dni vacio por ej si el bebe todav no tiene dni, pero si lo tiene no puede repetirse
             'dni'                         => 'permit_empty|numeric|min_length[7]|max_length[8]|is_unique[pacientes.dni]',
-            'nombre'                      => 'required|min_length[3]|max_length[100]',
+            'nombre'                      => 'required|min_length[2]|max_length[100]',
+            'apellido'                    => 'required|min_length[2]|max_length[100]',
             'fecha_nacimiento'            => 'required|valid_date',
+            'tutor_nombre'                 => 'permit_empty|min_length[2]|max_length[100]',
+            'tutor_apellido'               => 'permit_empty|min_length[2]|max_length[100]',
             'id_establecimiento_habitual' => 'required',
             'tutor_dni'                   => 'permit_empty|numeric|min_length[7]|max_length[8]',
             'tutor_telefono'              => 'permit_empty|numeric|min_length[6]|max_length[15]'
@@ -235,7 +265,11 @@ class Visita extends BaseController
             ],
             'nombre' => [
                 'required'   => 'El nombre del paciente es obligatorio.',
-                'min_length' => 'El nombre debe tener al menos 3 caracteres.'
+                'min_length' => 'El nombre debe tener al menos 2 caracteres.'
+            ],
+            'apellido' => [
+                'required'   => 'El apellido del paciente es obligatorio.',
+                'min_length' => 'El apellido debe tener al menos 2 caracteres.'
             ],
             'fecha_nacimiento' => [
                 'required'   => 'La fecha de nacimiento es obligatoria.',
@@ -255,6 +289,7 @@ class Visita extends BaseController
         $dni      = trim((string) $this->request->getPost('tutor_dni'));
         $telefono = trim((string) $this->request->getPost('tutor_telefono'));
         $nombre   = trim((string) $this->request->getPost('tutor_nombre'));
+        $apellido = trim((string) $this->request->getPost('tutor_apellido'));
 
         // Tutor registrado sin elegir
         if ($this->request->getPost('modo_tutor') === 'existente' && empty($id_tutor)) {
@@ -264,9 +299,9 @@ class Visita extends BaseController
 
         // Tutor nuevo: deduplica por DNI o telefono
         if (empty($id_tutor)) {
-            if ($dni === '' || $nombre === '') {
+            if ($dni === '' || $nombre === '' || $apellido === '') {
                 return redirect()->back()->withInput()
-                    ->with('errors', ['tutor' => 'Para registrar un tutor nuevo hacen falta al menos el DNI y el Nombre.']);
+                    ->with('errors', ['tutor' => 'Para registrar un tutor nuevo hacen falta el DNI, el nombre y el apellido.']);
             }
 
             $tutor = $this->tutorModel->where('dni', $dni)->first();
@@ -284,6 +319,7 @@ class Visita extends BaseController
             $id_tutor = $this->tutorModel->insert([
                 'dni'      => $dni,
                 'nombre'   => $nombre,
+                'apellido' => $apellido,
                 'telefono' => $this->nullSiVacio($telefono)
             ]);
         }
@@ -291,6 +327,7 @@ class Visita extends BaseController
         $id_paciente = $this->pacienteModel->insert([
             'dni'                         => $this->nullSiVacio($this->request->getPost('dni')),
             'nombre'                      => trim($this->request->getPost('nombre')),
+            'apellido'                    => trim($this->request->getPost('apellido')),
             'fecha_nacimiento'            => $this->request->getPost('fecha_nacimiento'),
             'id_tutor'                    => $id_tutor,
             'domicilio'                   => $this->nullSiVacio($this->request->getPost('domicilio')),

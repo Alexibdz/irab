@@ -19,7 +19,7 @@
                     <thead class="table-light">
                         <tr>
                             <th class="text-center align-middle">DNI</th>
-                            <th class="text-center align-middle">Nombre Completo</th>
+                            <th class="text-center align-middle">Nombre y Apellido</th>
                             <th class="text-center align-middle">Fecha de Nacimiento</th>
                             <th class="text-center align-middle">Tutor / Responsable</th>
                             <th class="text-center align-middle">Teléfono</th>
@@ -34,14 +34,14 @@
                         <?php foreach ($pacientes as $paciente): ?>
                             <tr>
                                 <td class="text-center align-middle"><?= esc($paciente['dni']) ?></td>
-                                <td class="text-center align-middle"><?= esc($paciente['nombre']) ?></td>
+                                <td class="text-center align-middle"><?= esc(nombre_completo($paciente)) ?></td>
                                 <td class="text-center align-middle"><?= esc($paciente['fecha_nacimiento']) ?></td> 
                                 <td class="text-center align-middle">
                                     <?php  
                                         $nombre_tutor = 'No asignado';
                                         foreach($tutores as $tutor) {
                                             if($tutor['id'] == $paciente['id_tutor']) {
-                                                $nombre_tutor = $tutor['nombre'];
+                                                $nombre_tutor = nombre_completo($tutor);
                                                 break;
                                             }
                                         }

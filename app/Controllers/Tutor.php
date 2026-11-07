@@ -31,7 +31,8 @@ public function actualizar($id) {
         // reglas, el dni minimo 7, max 9 y numericos
         $reglas = [
             'dni'      => 'required|numeric|min_length[7]|max_length[9]|is_unique[tutores.dni,id,'.$id.']',
-            'nombre'   => 'required|min_length[3]|max_length[100]',
+            'nombre'   => 'required|min_length[2]|max_length[100]',
+            'apellido' => 'required|min_length[2]|max_length[100]',
             'telefono' => 'required|min_length[6]|max_length[20]'
         ];
 
@@ -44,8 +45,12 @@ public function actualizar($id) {
                 'is_unique'  => 'Este DNI ya está registrado para otro tutor en el sistema.'
             ],
             'nombre' => [
-                'required'   => 'El nombre completo es obligatorio.',
-                'min_length' => 'El nombre debe tener al menos 3 caracteres.'
+                'required'   => 'El nombre es obligatorio.',
+                'min_length' => 'El nombre debe tener al menos 2 caracteres.'
+            ],
+            'apellido' => [
+                'required'   => 'El apellido es obligatorio.',
+                'min_length' => 'El apellido debe tener al menos 2 caracteres.'
             ],
             'telefono' => [
                 'required'   => 'El teléfono es obligatorio.',
@@ -60,6 +65,7 @@ public function actualizar($id) {
         $this->tutorModel->update($id, [
             'dni'      => trim($this->request->getPost('dni')),
             'nombre'   => trim($this->request->getPost('nombre')),
+            'apellido' => trim($this->request->getPost('apellido')),
             'telefono' => trim($this->request->getPost('telefono'))
         ]);
         

@@ -9,6 +9,7 @@ class PacienteModel extends BaseModel
     protected $allowedFields = [
         'dni',
         'nombre',
+        'apellido',
         'fecha_nacimiento',
         'id_tutor',
         'domicilio',

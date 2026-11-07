@@ -53,7 +53,8 @@ public function actualizar()
 
         $reglas = [
             'dni'                         => 'required|numeric|min_length[7]|max_length[9]|is_unique[pacientes.dni,id,'.$id.']',
-            'nombre'                      => 'required|min_length[3]|max_length[100]',
+            'nombre'                      => 'required|min_length[2]|max_length[100]',
+            'apellido'                    => 'required|min_length[2]|max_length[100]',
             'fecha_nacimiento'            => 'required|valid_date',
             'id_tutor'                    => 'required',
             'domicilio'                   => 'required|min_length[3]',
@@ -71,8 +72,12 @@ public function actualizar()
                 'is_unique'  => 'Este DNI ya pertenece a otro paciente registrado.'
             ],
             'nombre' => [
-                'required'   => 'El nombre completo es obligatorio.',
-                'min_length' => 'El nombre debe tener al menos 3 caracteres.'
+                'required'   => 'El nombre es obligatorio.',
+                'min_length' => 'El nombre debe tener al menos 2 caracteres.'
+            ],
+            'apellido' => [
+                'required'   => 'El apellido es obligatorio.',
+                'min_length' => 'El apellido debe tener al menos 2 caracteres.'
             ],
             'fecha_nacimiento' => [
                 'required'   => 'La fecha de nacimiento es obligatoria.',
@@ -104,6 +109,7 @@ public function actualizar()
         $this->pacienteModel->update($id, [
             'dni'                         => trim($this->request->getPost('dni')),
             'nombre'                      => trim($this->request->getPost('nombre')),
+            'apellido'                    => trim($this->request->getPost('apellido')),
             'fecha_nacimiento'            => $this->request->getPost('fecha_nacimiento'),
             'id_tutor'                    => $this->request->getPost('id_tutor'),
             'domicilio'                   => trim($this->request->getPost('domicilio')),

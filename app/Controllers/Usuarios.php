@@ -27,7 +27,7 @@ class Usuarios extends BaseController
     public function index()
     {
         $usuarios = $this->usuarios
-            ->select('usuarios.id, usuarios.nombre, usuarios.username, usuarios.id_rol, usuarios.id_establecimiento_asignado,
+            ->select('usuarios.id, usuarios.nombre, usuarios.apellido, usuarios.username, usuarios.id_rol, usuarios.id_establecimiento_asignado,
                     roles.nombre AS rol_nombre, establecimientos_salud.nombre AS establecimiento_nombre')
             ->join('roles', 'roles.id = usuarios.id_rol', 'left')
             ->join('establecimientos_salud', 'establecimientos_salud.id = usuarios.id_establecimiento_asignado', 'left')
@@ -77,7 +77,8 @@ class Usuarios extends BaseController
     {
         // definimos reglas de validación
         $reglas = [
-            'nombre'                      => 'required|min_length[3]|max_length[100]',
+            'nombre'                      => 'required|min_length[2]|max_length[100]',
+            'apellido'                    => 'required|min_length[2]|max_length[100]',
             'username'                    => 'required|min_length[3]|max_length[50]',
             'password'                    => 'required|min_length[8]|regex_match[/[#!*@$%&?¿]/]',
             'id_establecimiento_asignado' => 'required'
@@ -85,8 +86,12 @@ class Usuarios extends BaseController
         //traduccion de msj porque sino los muestra en ingles
         $mensajes = [
             'nombre' => [
-                'required'   => 'El campo Nombre es obligatorio.',
-                'min_length' => 'El Nombre debe tener al menos 3 caracteres.'
+                'required'   => 'El nombre es obligatorio.',
+                'min_length' => 'El nombre debe tener al menos 2 caracteres.'
+            ],
+            'apellido' => [
+                'required'   => 'El apellido es obligatorio.',
+                'min_length' => 'El apellido debe tener al menos 2 caracteres.'
             ],
             'username' => [
                 'required'   => 'El nombre de Usuario es obligatorio.',
@@ -169,6 +174,7 @@ class Usuarios extends BaseController
         // guardamos en la bbdd
         $datos = [
             "nombre"                      => trim($this->request->getPost('nombre')),
+            "apellido"                    => trim($this->request->getPost('apellido')),
             "username"                    => $username,
             "password"                    => password_hash($this->request->getPost('password'), PASSWORD_DEFAULT),
             "id_rol"                      => $idRol,
@@ -225,7 +231,8 @@ class Usuarios extends BaseController
 
         // el permit_empty en password permite que el campo de contraseña sea opcional durante la actualización. Si el usuario no ingresa una nueva contraseña, no se actualizará.
         $reglas = [
-            'nombre'                      => 'required|min_length[3]|max_length[100]',
+            'nombre'                      => 'required|min_length[2]|max_length[100]',
+            'apellido'                    => 'required|min_length[2]|max_length[100]',
             'username'                    => 'required|min_length[3]|max_length[50]',
             'password'                    => 'permit_empty|min_length[8]|regex_match[/[#!*@$%&?¿]/]',
             'id_rol'                      => 'required',
@@ -234,8 +241,12 @@ class Usuarios extends BaseController
 
         $mensajes = [
             'nombre' => [
-                'required'   => 'El campo Nombre es obligatorio.',
-                'min_length' => 'El Nombre debe tener al menos 3 caracteres.'
+                'required'   => 'El nombre es obligatorio.',
+                'min_length' => 'El nombre debe tener al menos 2 caracteres.'
+            ],
+            'apellido' => [
+                'required'   => 'El apellido es obligatorio.',
+                'min_length' => 'El apellido debe tener al menos 2 caracteres.'
             ],
             'username' => [
                 'required'   => 'El nombre de Usuario es obligatorio.',
@@ -272,6 +283,7 @@ class Usuarios extends BaseController
         //se prepara para act
         $datos = [
             "nombre"                      => trim($this->request->getPost('nombre')),
+            "apellido"                    => trim($this->request->getPost('apellido')),
             "username"                    => $username,
             "id_rol"                      => $this->request->getPost('id_rol'),
             "id_establecimiento_asignado" => $this->request->getPost('id_establecimiento_asignado')
@@ -332,7 +344,7 @@ class Usuarios extends BaseController
                 'editar' => 'Editar',
                 'eliminar' => 'Eliminar'
             ],
-            'titulo' => 'Permisos de ' . $usuario['nombre']
+            'titulo' => 'Permisos de ' . nombre_completo($usuario)
         ];
 
         echo view('templates/header');

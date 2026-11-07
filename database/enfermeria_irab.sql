@@ -62,6 +62,7 @@ CREATE TABLE `tutores` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `dni` varchar(20) NOT NULL,
   `nombre` varchar(100) NOT NULL,
+  `apellido` varchar(100) NOT NULL DEFAULT '',
   `telefono` varchar(20) DEFAULT NULL,
   `fecha_registro` datetime NOT NULL DEFAULT current_timestamp(),
   `fecha_edicion` datetime DEFAULT NULL,
@@ -115,6 +116,7 @@ CREATE TABLE `permisos` (
 CREATE TABLE `usuarios` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `nombre` varchar(100) NOT NULL,
+  `apellido` varchar(100) NOT NULL DEFAULT '',
   `username` varchar(50) NOT NULL,
   `password` varchar(255) NOT NULL,
   `id_rol` int(11) NOT NULL,
@@ -134,6 +136,7 @@ CREATE TABLE `pacientes` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `dni` varchar(20) DEFAULT NULL,
   `nombre` varchar(100) NOT NULL,
+  `apellido` varchar(100) NOT NULL DEFAULT '',
   `fecha_nacimiento` date NOT NULL,
   `domicilio` varchar(150) DEFAULT NULL,
   `barrio` varchar(100) DEFAULT NULL,
@@ -273,8 +276,8 @@ INSERT INTO `establecimientos_salud` (`id`, `nombre`, `cuartel`, `tipo`) VALUES
 -- 3. Usuario Administrador Inicial, debe cambiarse luego de entrar por primera vez,
 -- Usuario: admin
 -- Contraseña: admin123
-INSERT INTO `usuarios` (`id`, `nombre`, `username`, `password`, `id_rol`, `id_establecimiento_asignado`) VALUES
-(1, 'Administrador General', 'admin', '$2y$10$4pnE43JANqCIfxwopFFw/.cSIKjDSMesgzyA6GxGH3VJ//iqObMyK', 1, 1);
+INSERT INTO `usuarios` (`id`, `nombre`, `apellido`, `username`, `password`, `id_rol`, `id_establecimiento_asignado`) VALUES
+(1, 'Administrador General', '', 'admin', '$2y$10$4pnE43JANqCIfxwopFFw/.cSIKjDSMesgzyA6GxGH3VJ//iqObMyK', 1, 1);
 
 -- 4. Permisos del Rol Administrador (Rol ID 1)
 INSERT INTO `permisos` (`id`, `id_rol`, `modulo`, `puede_ver`, `puede_crear`, `puede_editar`, `puede_eliminar`) VALUES

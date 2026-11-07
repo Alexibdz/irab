@@ -24,8 +24,12 @@
                 </div>
             </div>
             <div class="mb-3">
-                <label class="form-label">Nombre Completo</label>
+                <label class="form-label">Nombre</label>
                 <input type="text" class="form-control" name="nombre" value="<?= esc($tutor['nombre']) ?>" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Apellido</label>
+                <input type="text" class="form-control" name="apellido" value="<?= esc($tutor['apellido'] ?? '') ?>" required>
             </div>
             <div class="mb-3">
                 <label class="form-label">Teléfono</label>

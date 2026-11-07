@@ -51,11 +51,11 @@ if (!empty($paciente['fecha_nacimiento'])) {
                                 <div class="border border-success rounded p-3 bg-light d-flex justify-content-between align-items-start"
                                      id="paciente_fijo" data-nacimiento="<?= esc($paciente['fecha_nacimiento']) ?>">
                                     <div>
-                                        <div class="fw-bold fs-5"><?= esc($paciente['nombre']) ?></div>
+                                        <div class="fw-bold fs-5"><?= esc(nombre_completo($paciente)) ?></div>
                                         <div class="small text-muted">
                                             DNI <?= esc($paciente['dni'] ?: 's/d') ?> · <?= esc($edad) ?>
                                             <?php if ($tutor): ?>
-                                                <br>Tutor: <?= esc($tutor['nombre']) ?>
+                                                <br>Tutor: <?= esc(nombre_completo($tutor)) ?>
                                                 <?php if (!empty($tutor['telefono'])): ?>
                                                     · Tel. <?= esc($tutor['telefono']) ?>
                                                 <?php endif; ?>
@@ -77,7 +77,7 @@ if (!empty($paciente['fecha_nacimiento'])) {
                                     <option value="" disabled selected>Seleccione...</option>
                                     <?php foreach ($usuarios as $usuario): ?>
                                         <option value="<?= $usuario['id'] ?>" data-establecimiento="<?= esc($usuario['id_establecimiento_asignado'] ?? '') ?>">
-                                            <?= esc($usuario['nombre']) ?>
+                                            <?= esc(nombre_completo($usuario)) ?>
                                         </option>
                                     <?php endforeach; ?>
                                 </select>
@@ -398,4 +398,3 @@ if (!empty($paciente['fecha_nacimiento'])) {
 
     </form>
 </div>
-

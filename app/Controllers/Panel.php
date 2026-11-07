@@ -19,7 +19,7 @@ class Panel extends BaseController
         // Visitas abiertas con paciente y establecimiento
         $abiertas = $visitaModel->builder()
             ->select('visitas.id, visitas.fecha_ingreso, visitas.diagnostico,
-                      pacientes.nombre AS paciente, pacientes.fecha_nacimiento,
+                      CONCAT_WS(" ", pacientes.nombre, pacientes.apellido) AS paciente, pacientes.fecha_nacimiento,
                       establecimientos_salud.nombre AS establecimiento')
             ->join('pacientes', 'pacientes.id = visitas.id_paciente', 'left')
             ->join('establecimientos_salud', 'establecimientos_salud.id = visitas.id_establecimiento', 'left')

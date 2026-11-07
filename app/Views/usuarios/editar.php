@@ -24,8 +24,12 @@
                         
                         <div class="mb-3">
                             <label for="nombre" class="form-label">Nombre</label>
-                            <!-- Solo usamos esc() para mostrar el dato de la BD de forma directa -->
                             <input type="text" class="form-control" name="nombre" id="nombre" value="<?= esc($usuario['nombre']) ?>" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="apellido" class="form-label">Apellido</label>
+                            <input type="text" class="form-control" name="apellido" id="apellido" value="<?= esc($usuario['apellido'] ?? '') ?>" required>
                         </div>
                         
                         <div class="mb-3">

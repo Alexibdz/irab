@@ -23,7 +23,12 @@
 
                         <div class="mb-3">
                             <label for="nombre" class="form-label">Nombre</label>
-                            <input type="text" class="form-control" name="nombre" id="nombre" required>
+                            <input type="text" class="form-control" name="nombre" id="nombre" value="<?= esc(old('nombre')) ?>" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="apellido" class="form-label">Apellido</label>
+                            <input type="text" class="form-control" name="apellido" id="apellido" value="<?= esc(old('apellido')) ?>" required>
                         </div>
                         
                         <div class="mb-3">

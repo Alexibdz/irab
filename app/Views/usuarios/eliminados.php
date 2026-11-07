@@ -12,7 +12,7 @@
                 <table class="table table-striped table-hover text-center align-middle tabla-datos w-100">
                     <thead class="table-light">
                         <tr>
-                            <th class="text-center align-middle">Nombre</th>
+                            <th class="text-center align-middle">Nombre y Apellido</th>
                             <th class="text-center align-middle">Usuario</th>
                             <th class="text-center align-middle">Fecha de Borrado</th>
                             <th class="text-center align-middle" style="width: 130px;">Acciones</th>
@@ -21,7 +21,7 @@
                     <tbody>
                         <?php foreach ($usuarios as $usuario): ?>
                             <tr>
-                                <td class="text-center align-middle"><?= esc($usuario['nombre']) ?></td>
+                                <td class="text-center align-middle"><?= esc(nombre_completo($usuario)) ?></td>
                                 <td class="text-center align-middle"><?= esc($usuario['username']) ?></td>
                                 <td class="text-center align-middle"><?= esc($usuario['fecha_borrado']) ?></td>
                                 <td class="text-center align-middle">

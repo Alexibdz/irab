@@ -1,7 +1,7 @@
 <?php
 // Mapas id => nombre
-$nombrePaciente        = array_column($pacientes, 'nombre', 'id');
-$nombreUsuario         = array_column($usuarios, 'nombre', 'id');
+$nombrePaciente        = array_column(array_map(static fn ($persona) => ['id' => $persona['id'], 'nombre' => nombre_completo($persona)], $pacientes), 'nombre', 'id');
+$nombreUsuario         = array_column(array_map(static fn ($persona) => ['id' => $persona['id'], 'nombre' => nombre_completo($persona)], $usuarios), 'nombre', 'id');
 $nombreEstablecimiento = array_column($establecimientos, 'nombre', 'id');
 ?>
 <div class="container-fluid px-4">

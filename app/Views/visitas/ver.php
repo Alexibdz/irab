@@ -55,7 +55,7 @@ $edad = edad_texto($paciente['fecha_nacimiento'] ?? null, $visita['fecha_ingreso
 
                 <div class="row">
                     <div class="col-md-6 border-end">
-                        <div class="fw-bold fs-5 mb-2"><?= esc($paciente['nombre']) ?></div>
+                        <div class="fw-bold fs-5 mb-2"><?= esc(nombre_completo($paciente)) ?></div>
                         <p class="mb-1"><strong>DNI:</strong> <?= esc($paciente['dni'] ?: 's/d') ?></p>
                         <p class="mb-1">
                             <strong>Nacimiento:</strong> <?= esc($paciente['fecha_nacimiento']) ?>
@@ -76,7 +76,7 @@ $edad = edad_texto($paciente['fecha_nacimiento'] ?? null, $visita['fecha_ingreso
                     <div class="col-md-6 mt-3 mt-md-0 ps-md-4">
                         <h4 class="h6 text-muted text-uppercase mb-2">Tutor responsable</h4>
                         <?php if ($tutor): ?>
-                            <div class="fw-bold fs-5 mb-2"><?= esc($tutor['nombre']) ?></div>
+                            <div class="fw-bold fs-5 mb-2"><?= esc(nombre_completo($tutor)) ?></div>
                             <p class="mb-1"><strong>DNI:</strong> <?= esc($tutor['dni'] ?: 's/d') ?></p>
                             <p class="mb-0">
                                 <strong>Teléfono:</strong>
@@ -109,7 +109,7 @@ $edad = edad_texto($paciente['fecha_nacimiento'] ?? null, $visita['fecha_ingreso
                 </div>
                 <div class="col-md-6">
                     <p><strong>Establecimiento:</strong> <?= esc($nombreEstablecimiento[$visita['id_establecimiento']] ?? '-') ?></p>
-                    <p class="mb-0"><strong>Atendió:</strong> <?= esc($usuario['nombre'] ?? '-') ?></p>
+                    <p class="mb-0"><strong>Atendió:</strong> <?= esc($usuario ? nombre_completo($usuario) : '-') ?></p>
                 </div>
             </div>
         </div>

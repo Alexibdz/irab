@@ -38,6 +38,7 @@ class AdminSeeder extends Seeder
         if (! $usuario) {
             $this->db->table('usuarios')->insert([
                 'nombre' => 'Administrador',
+                'apellido' => '',
                 'username' => 'admin',
                 'password' => password_hash('admin123', PASSWORD_DEFAULT),
                 'id_rol' => $idRol,

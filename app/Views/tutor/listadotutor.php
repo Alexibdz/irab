@@ -19,7 +19,7 @@
                     <thead class="table-light">
                         <tr>
                             <th class="text-center align-middle">DNI</th>
-                            <th class="text-center align-middle">Nombre Completo</th>
+                            <th class="text-center align-middle">Nombre y Apellido</th>
                             <th class="text-center align-middle">Teléfono</th>
                             <th class="text-center align-middle" style="width: 130px;">Acciones</th>
                         </tr>
@@ -28,7 +28,7 @@
                         <?php foreach ($tutores as $tutor): ?>
                             <tr>
                                 <td class="text-center align-middle"><?= esc($tutor['dni']) ?></td>
-                                <td class="text-center align-middle"><?= esc($tutor['nombre']) ?></td>
+                                <td class="text-center align-middle"><?= esc(nombre_completo($tutor)) ?></td>
                                 <td class="text-center align-middle"><?= esc($tutor['telefono']) ?></td>
                                 <td class="text-center align-middle">
                                     <div class="d-inline-flex gap-1 justify-content-center">

@@ -38,7 +38,7 @@
                                     <option value="" disabled>Seleccione un paciente</option>
                                     <?php foreach ($pacientes as $paciente): ?>
                                         <option value="<?= $paciente['id'] ?>" <?= $paciente['id'] == $visita['id_paciente'] ? 'selected' : '' ?>>
-                                            <?= esc($paciente['nombre']) ?> (DNI: <?= esc($paciente['dni']) ?>)
+                                            <?= esc(nombre_completo($paciente)) ?> (DNI: <?= esc($paciente['dni']) ?>)
                                         </option>
                                     <?php endforeach; ?>
                                 </select>
@@ -51,7 +51,7 @@
                                     <option value="" disabled>Seleccione un usuario</option>
                                     <?php foreach ($usuarios as $usuario): ?>
                                         <option value="<?= $usuario['id'] ?>" data-establecimiento="<?= esc($usuario['id_establecimiento_asignado'] ?? '') ?>" <?= $usuario['id'] == $visita['id_usuario'] ? 'selected' : '' ?> >
-                                            <?= esc($usuario['nombre']) ?>
+                                            <?= esc(nombre_completo($usuario)) ?>
                                         </option>
                                     <?php endforeach; ?>
                                 </select>

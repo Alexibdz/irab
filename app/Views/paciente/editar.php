@@ -33,8 +33,13 @@
                         </div>
 
                         <div class="mb-3">
-                            <label for="nombre" class="form-label">Nombre Completo</label>
+                            <label for="nombre" class="form-label">Nombre</label>
                             <input type="text" class="form-control" id="nombre" name="nombre" value="<?= esc($paciente['nombre']) ?>" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="apellido" class="form-label">Apellido</label>
+                            <input type="text" class="form-control" id="apellido" name="apellido" value="<?= esc($paciente['apellido'] ?? '') ?>" required>
                         </div>
 
                         <div class="mb-3">
@@ -48,7 +53,7 @@
                                 <option value="" disabled>Seleccione un tutor</option>
                                 <?php foreach ($tutores as $tutor): ?>
                                     <option value="<?= esc($tutor['id']) ?>" <?= ($tutor['id'] == $paciente['id_tutor']) ? 'selected' : '' ?>>
-                                        <?= esc($tutor['nombre']) ?> (DNI: <?= esc($tutor['dni']) ?>)
+                                        <?= esc(nombre_completo($tutor)) ?> (DNI: <?= esc($tutor['dni']) ?>)
                                     </option>
                                 <?php endforeach; ?>
                             </select>
@@ -60,7 +65,7 @@
                                 <option value="" disabled>Seleccione para ver el teléfono</option>
                                 <?php foreach ($tutores as $tutor): ?>
                                     <option value="<?= esc($tutor['id']) ?>" <?= ($tutor['id'] == $paciente['id_tutor']) ? 'selected' : '' ?>>
-                                        <?= esc($tutor['nombre']) ?> (Teléfono: <?= esc($tutor['telefono'] ?: 'No registrado') ?>)
+                                        <?= esc(nombre_completo($tutor)) ?> (Teléfono: <?= esc($tutor['telefono'] ?: 'No registrado') ?>)
                                     </option>
                                 <?php endforeach; ?>
                             </select>

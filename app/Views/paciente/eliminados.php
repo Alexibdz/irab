@@ -6,7 +6,7 @@
         <thead>
             <tr>
                 <th class="text-center align-middle">DNI</th>
-                <th class="text-center align-middle">Nombre Completo</th>
+                <th class="text-center align-middle">Nombre y Apellido</th>
                 <th class="text-center align-middle">Fecha de Borrado</th>
                 <th class="text-center align-middle">Acciones</th>
             </tr>
@@ -15,7 +15,7 @@
             <?php foreach ($pacientes as $paciente): ?>
                 <tr>
                     <td class="text-center align-middle"><?= $paciente['dni'] ?></td>
-                    <td class="text-center align-middle"><?= $paciente['nombre'] ?></td>
+                    <td class="text-center align-middle"><?= esc(nombre_completo($paciente)) ?></td>
                     <td class="text-center align-middle"><?= $paciente['fecha_borrado'] ?></td>
                     <td class="text-center align-middle">
                         <a href="<?= base_url('paciente/recuperar/'.$paciente['id']) ?>" class="btn btn-success btn-sm">Recuperar</a>

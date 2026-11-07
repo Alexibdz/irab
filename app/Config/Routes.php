@@ -96,6 +96,7 @@ $routes->get('visitas/historial', 'Visita::historial');
 // Alta de visita en dos pasos
 $routes->get('visitas/crear', 'Visita::crear');
 $routes->get('visitas/crear/(:num)', 'Visita::crear/$1');
+$routes->get('visitas/buscar-paciente', 'Visita::buscarPaciente');
 $routes->get('visitas/buscar-tutor', 'Visita::buscarTutor');
 $routes->post('visitas/paciente-nuevo', 'Visita::pacienteNuevo');
 $routes->post('visitas/insertar', 'Visita::insertar');
@@ -113,4 +114,3 @@ $routes->get('control/crear/(:num)', 'Control::crear/$1');
 $routes->post('control/guardar', 'Control::guardar');
 
 });
-

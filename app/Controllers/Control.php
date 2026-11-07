@@ -139,11 +139,16 @@ class Control extends BaseController
                 ]);
             }
 
-            $gravedad = null;
             if ($form === 'WDF') {
+                // WDF: 0-3 Leve, 4-7 Moderada, 8+ Grave
                 $gravedad = 'Grave';
                 if ($score_total <= 3) $gravedad = 'Leve';
                 elseif ($score_total <= 7) $gravedad = 'Moderada';
+            } else {
+                // TAL: 0-4 Leve, 5-8 Moderada, 9-12 Grave
+                $gravedad = 'Grave';
+                if ($score_total <= 4) $gravedad = 'Leve';
+                elseif ($score_total <= 8) $gravedad = 'Moderada';
             }
 
             $this->controlModel->update($id_control_nuevo, [

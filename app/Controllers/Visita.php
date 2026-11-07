@@ -125,6 +125,7 @@ class Visita extends BaseController
             'paciente' => $paciente,
             'tutor' => $this->tutorModel->find($paciente['id_tutor']),
             'usuarios' => $this->usuarioModel->findAll(),
+            'idUsuarioActual' => session()->get('id_usuario'),
             'establecimientos' => $this->establecimientoModel->findAll(),
             'factores' => $this->factoresModel->findAll()
         ];
@@ -479,15 +480,22 @@ class Visita extends BaseController
             }
 
             // Gravedad segun la escala
-            $gravedad = null; // Para la escala TAL (menores de 2 años) no se guarda gravedad
-
             if ($form === 'WDF') {
-                // Cortes WDF (2 a 5 anios)
-                $gravedad = 'Grave'; // Valor por defecto si supera los 7 puntos
+                // Cortes WDF (2 a 5 anios): 0-3 Leve, 4-7 Moderada, 8+ Grave
+                $gravedad = 'Grave';
                 
                 if ($score_total <= 3) {
                     $gravedad = 'Leve';
                 } elseif ($score_total <= 7) {
+                    $gravedad = 'Moderada';
+                }
+            } else {
+                // Cortes TAL (menores de 2 anios): 0-4 Leve, 5-8 Moderada, 9-12 Grave
+                $gravedad = 'Grave';
+
+                if ($score_total <= 4) {
+                    $gravedad = 'Leve';
+                } elseif ($score_total <= 8) {
                     $gravedad = 'Moderada';
                 }
             }

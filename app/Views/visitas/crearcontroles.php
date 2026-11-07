@@ -263,11 +263,11 @@
                                     No (0 pts)
                                 </option>
 
-                                <option value="Final de la espiración" data-puntos="1">
+                                <option value="Final espiración" data-puntos="1">
                                     Final espiración (1 pt)
                                 </option>
 
-                                <option value="Todo la espiración" data-puntos="2">
+                                <option value="Todo espiración" data-puntos="2">
                                     Todo espiración (2 pts)
                                 </option>
 
@@ -298,15 +298,15 @@
                                     No (0 pts)
                                 </option>
 
-                                <option value="Subcostal o Intercostal." data-puntos="1">
+                                <option value="Subcostal. Intercostal." data-puntos="1">
                                     Subcostal / Intercostal (1 pt)
                                 </option>
 
-                                <option value="+ supraclavicular + aleteo nasal" data-puntos="2">
+                                <option value="+ Supraclavicular + Aleteo nasal" data-puntos="2">
                                     + Supraclavicular (2 pts)
                                 </option>
 
-                                <option value="+ Todo lo anterior + supraesternal" data-puntos="3">
+                                <option value="+ Todo lo anterior + Supraesternal" data-puntos="3">
                                     + Supraesternal (3 pts)
                                 </option>
 
@@ -329,11 +329,11 @@
                                     Seleccione...
                                 </option>
 
-                                <option value="Buena y Simétrica" data-puntos="0">
+                                <option value="Buena, Simétrica" data-puntos="0">
                                     Buena, Simétrica (0 pts)
                                 </option>
 
-                                <option value="Regular y Simétrica" data-puntos="1">
+                                <option value="Regular. Simétrica" data-puntos="1">
                                     Regular. Simétrica (1 pt)
                                 </option>
 
@@ -368,7 +368,7 @@
                                     No (0 pts)
                                 </option>
 
-                                <option value="Sí" data-puntos="1">
+                                <option value="Si" data-puntos="1">
                                     Sí (1 pt)
                                 </option>
 

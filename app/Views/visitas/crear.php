@@ -1,6 +1,7 @@
 <?php
 // Edad del paciente.
 $edad = edad_texto($paciente['fecha_nacimiento']);
+$idUsuarioSeleccionado = old('id_usuario', $idUsuarioActual);
 
 $meses_edad = null;
 $edad_numero = null;
@@ -74,9 +75,9 @@ if (!empty($paciente['fecha_nacimiento'])) {
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Usuario (Enfermera/Médico)</label>
                                 <select class="form-select" id="id_usuario" name="id_usuario" required>
-                                    <option value="" disabled selected>Seleccione...</option>
+                                    <option value="" disabled <?= empty($idUsuarioSeleccionado) ? 'selected' : '' ?>>Seleccione...</option>
                                     <?php foreach ($usuarios as $usuario): ?>
-                                        <option value="<?= $usuario['id'] ?>" data-establecimiento="<?= esc($usuario['id_establecimiento_asignado'] ?? '') ?>">
+                                        <option value="<?= $usuario['id'] ?>" data-establecimiento="<?= esc($usuario['id_establecimiento_asignado'] ?? '') ?>" <?= $usuario['id'] == $idUsuarioSeleccionado ? 'selected' : '' ?>>
                                             <?= esc(nombre_completo($usuario)) ?>
                                         </option>
                                     <?php endforeach; ?>
@@ -281,8 +282,8 @@ if (!empty($paciente['fecha_nacimiento'])) {
                                     <select class="form-select select-sintoma border-success" name="sintomas[10]" onchange="calcularScoreDinamico()" required>
                                         <option value="" data-puntos="0" selected disabled>Seleccione...</option>
                                         <option value="No" data-puntos="0">No (0 pts)</option>
-                                        <option value="Final de la espiración" data-puntos="1">Final espiración (1 pt)</option>
-                                        <option value="Todo la espiración" data-puntos="2">Todo espiración (2 pts)</option>
+                                        <option value="Final espiración" data-puntos="1">Final espiración (1 pt)</option>
+                                        <option value="Todo espiración" data-puntos="2">Todo espiración (2 pts)</option>
                                         <option value="+ Inspiración" data-puntos="3">+ Inspiración (3 pts)</option>
                                     </select>
                                 </div>
@@ -292,9 +293,9 @@ if (!empty($paciente['fecha_nacimiento'])) {
                                     <select class="form-select select-sintoma border-success" name="sintomas[11]" onchange="calcularScoreDinamico()" required>
                                         <option value="" data-puntos="0" selected disabled>Seleccione...</option>
                                         <option value="No" data-puntos="0">No (0 pts)</option>
-                                        <option value="Subcostal o Intercostal" data-puntos="1">Subcostal / Intercostal (1 pt)</option>
-                                        <option value="+ supraclavicular + aleteo nasal" data-puntos="2">+ Supraclavicular (2 pts)</option>
-                                        <option value="+ Todo lo anterior + supraesternal" data-puntos="3">+ Supraesternal (3 pts)</option>
+                                        <option value="Subcostal. Intercostal." data-puntos="1">Subcostal / Intercostal (1 pt)</option>
+                                        <option value="+ Supraclavicular + Aleteo nasal" data-puntos="2">+ Supraclavicular (2 pts)</option>
+                                        <option value="+ Todo lo anterior + Supraesternal" data-puntos="3">+ Supraesternal (3 pts)</option>
                                     </select>
                                 </div>
 
@@ -302,8 +303,8 @@ if (!empty($paciente['fecha_nacimiento'])) {
                                     <label class="form-label fw-bold small text-success">Ventilación</label>
                                     <select class="form-select select-sintoma border-success" name="sintomas[12]" onchange="calcularScoreDinamico()" required>
                                         <option value="" data-puntos="0" selected disabled>Seleccione...</option>
-                                        <option value="Buena y Simétrica" data-puntos="0">Buena, Simétrica (0 pts)</option>
-                                        <option value="Regular y Simétrica" data-puntos="1">Regular. Simétrica (1 pt)</option>
+                                        <option value="Buena, Simétrica" data-puntos="0">Buena, Simétrica (0 pts)</option>
+                                        <option value="Regular. Simétrica" data-puntos="1">Regular. Simétrica (1 pt)</option>
                                         <option value="Muy disminuida" data-puntos="2">Muy disminuida (2 pts)</option>
                                         <option value="Tórax silente" data-puntos="3">Tórax silente (3 pts)</option>
                                     </select>
@@ -314,7 +315,7 @@ if (!empty($paciente['fecha_nacimiento'])) {
                                     <select class="form-select select-sintoma border-success" name="sintomas[13]" onchange="calcularScoreDinamico()" required>
                                         <option value="" data-puntos="0" selected disabled>Seleccione...</option>
                                         <option value="No" data-puntos="0">No (0 pts)</option>
-                                        <option value="Sí" data-puntos="1">Sí (1 pt)</option>
+                                        <option value="Si" data-puntos="1">Sí (1 pt)</option>
                                     </select>
                                 </div>
 

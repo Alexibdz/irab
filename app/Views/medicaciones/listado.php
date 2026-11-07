@@ -1,0 +1,50 @@
+<div class="container-fluid py-4">
+    <div class="mb-4">
+        <h2 class="fw-normal mb-3">Catálogo de Medicaciones</h2>
+        <div class="d-flex gap-2">
+            <a href="<?= base_url('configuracion/medicaciones/nuevo') ?>" class="btn btn-primary fw-semibold">
+                <i class="bi bi-plus-lg"></i> Nueva medicación
+            </a>
+            <a href="<?= base_url('configuracion/medicaciones/eliminados') ?>" class="btn btn-danger fw-semibold">
+                Medicaciones eliminadas
+            </a>
+            <a href="<?= base_url('configuracion') ?>" class="btn btn-secondary">Volver a Configuración</a>
+        </div>
+    </div>
+
+    <div class="card shadow-sm border rounded-3">
+        <div class="card-body p-3">
+            <div class="table-responsive">
+                <table class="table table-striped table-hover text-center align-middle tabla-datos w-100">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Nombre</th>
+                            <th style="width: 180px;">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($medicaciones as $medicacion): ?>
+                            <tr>
+                                <td><?= esc($medicacion['nombre']) ?></td>
+                                <td>
+                                    <div class="d-inline-flex gap-1 justify-content-center">
+                                        <a href="<?= base_url('configuracion/medicaciones/editar/' . $medicacion['id']) ?>"
+                                           class="btn btn-warning btn-sm" title="Editar medicación">
+                                            <i class="bi bi-pencil-square"></i>
+                                        </a>
+                                        <a href="<?= base_url('configuracion/medicaciones/eliminar/' . $medicacion['id']) ?>"
+                                           class="btn btn-danger btn-sm"
+                                           onclick="return confirm('¿Seguro que deseas eliminar esta medicación?');"
+                                           title="Eliminar medicación">
+                                            <i class="bi bi-trash"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

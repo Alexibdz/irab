@@ -334,6 +334,7 @@ class Usuarios extends BaseController
                 'establecimientos' => 'Establecimientos',
                 'factores' => 'Factores',
                 'sintomas' => 'Síntomas',
+                'medicaciones' => 'Medicaciones',
                 'permisos' => 'Permisos',
                 'copia-seguridad' => 'Copia de seguridad'
             ],
@@ -380,6 +381,7 @@ class Usuarios extends BaseController
             'establecimientos',
             'factores',
             'sintomas',
+            'medicaciones',
             'permisos',
             'copia-seguridad'
         ];

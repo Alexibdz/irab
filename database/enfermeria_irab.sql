@@ -18,7 +18,9 @@ USE `enfermeria_irab`;
 SET FOREIGN_KEY_CHECKS = 0;
 
 DROP TABLE IF EXISTS `control_sintomas`;
+DROP TABLE IF EXISTS `control_medicaciones`;
 DROP TABLE IF EXISTS `controles`;
+DROP TABLE IF EXISTS `medicaciones`;
 DROP TABLE IF EXISTS `paciente_factores`;
 DROP TABLE IF EXISTS `visitas`;
 DROP TABLE IF EXISTS `valores_sintomas`;
@@ -242,6 +244,31 @@ CREATE TABLE `controles` (
   CONSTRAINT `controles_ibfk_1` FOREIGN KEY (`id_visita`) REFERENCES `visitas` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+CREATE TABLE `medicaciones` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(100) NOT NULL,
+  `fecha_registro` datetime NOT NULL DEFAULT current_timestamp(),
+  `fecha_edicion` datetime DEFAULT NULL,
+  `fecha_borrado` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_medicaciones_nombre` (`nombre`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+CREATE TABLE `control_medicaciones` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id_control` int(11) NOT NULL,
+  `id_medicacion` int(11) NOT NULL,
+  `dosis` varchar(100) NOT NULL,
+  `fecha_registro` datetime NOT NULL DEFAULT current_timestamp(),
+  `fecha_edicion` datetime DEFAULT NULL,
+  `fecha_borrado` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `id_control` (`id_control`),
+  KEY `id_medicacion` (`id_medicacion`),
+  CONSTRAINT `control_medicaciones_ibfk_1` FOREIGN KEY (`id_control`) REFERENCES `controles` (`id`),
+  CONSTRAINT `control_medicaciones_ibfk_2` FOREIGN KEY (`id_medicacion`) REFERENCES `medicaciones` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
 CREATE TABLE `control_sintomas` (
   `id_control` int(11) NOT NULL,
   `id_sintoma` int(11) NOT NULL,
@@ -289,7 +316,8 @@ INSERT INTO `permisos` (`id`, `id_rol`, `modulo`, `puede_ver`, `puede_crear`, `p
 (6, 1, 'permisos', 1, 1, 1, 1),
 (7, 1, 'factores', 1, 1, 1, 1),
 (8, 1, 'sintomas', 1, 1, 1, 1),
-(9, 1, 'copia-seguridad', 1, 1, 1, 1);
+(9, 1, 'copia-seguridad', 1, 1, 1, 1),
+(10, 1, 'medicaciones', 1, 1, 1, 1);
 
 -- 5. Factores de Riesgo y Protección
 INSERT INTO `factores` (`id`, `denominacion`, `tipo`, `tipo_formulario`) VALUES

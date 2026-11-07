@@ -30,6 +30,7 @@ if (!function_exists('modulos_disponibles')) {
             'permisos' => 'Permisos',
             'factores' => 'Factores',
             'sintomas' => 'Síntomas',
+            'medicaciones' => 'Medicaciones',
             'copia-seguridad' => 'Copia de seguridad'
         ];
     }

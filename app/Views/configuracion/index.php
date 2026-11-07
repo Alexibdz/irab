@@ -6,6 +6,8 @@ $grupos = [
          'texto' => 'Factores de riesgo y protección que se evalúan en la visita.'],
         ['url' => 'configuracion/sintomas', 'icono' => 'bi-thermometer-half', 'titulo' => 'Síntomas',
          'texto' => 'Síntomas de cada escala y los puntos de cada valor.'],
+        ['url' => 'configuracion/medicaciones', 'icono' => 'bi-capsule', 'titulo' => 'Medicaciones',
+         'texto' => 'Medicaciones disponibles para registrar en los controles clínicos.'],
     ],
     'Administración' => [
         ['url' => 'configuracion/usuarios', 'icono' => 'bi-person-gear', 'titulo' => 'Usuarios',
@@ -43,4 +45,3 @@ $grupos = [
         <?php endforeach; ?>
     </div>
 <?php endforeach; ?>
-

@@ -70,6 +70,15 @@ $routes->group('configuracion', static function ($routes) {
     $routes->post('valores-sintomas/actualizar', 'ValoresSintomas::actualizar');
     $routes->get('valores-sintomas/eliminar/(:num)', 'ValoresSintomas::eliminar/$1');
 
+    $routes->get('medicaciones', 'Medicaciones::index');
+    $routes->get('medicaciones/nuevo', 'Medicaciones::nuevo');
+    $routes->post('medicaciones/insertar', 'Medicaciones::insertar');
+    $routes->get('medicaciones/editar/(:num)', 'Medicaciones::editar/$1');
+    $routes->post('medicaciones/actualizar', 'Medicaciones::actualizar');
+    $routes->get('medicaciones/eliminar/(:num)', 'Medicaciones::eliminar/$1');
+    $routes->get('medicaciones/eliminados', 'Medicaciones::eliminados');
+    $routes->get('medicaciones/recuperar/(:num)', 'Medicaciones::recuperar/$1');
+
     // Copia de seguridad
     $routes->get('copia-seguridad/exportar', 'CopiaSeguridad::exportar');
 });

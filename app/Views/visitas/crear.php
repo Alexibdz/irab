@@ -336,11 +336,7 @@ if (!empty($paciente['fecha_nacimiento'])) {
                             <h5 class="mb-0 text-success">Score Total en Vivo: <span id="score_display" class="fw-bold fs-2 text-success">0</span></h5>
                         </div>
 
-                        <div class="mt-3">
-                            <label for="medicacion_inicial" class="form-label fw-bold text-success">Medicación administrada</label>
-                            <input type="text" class="form-control border-success" id="medicacion_inicial" name="medicacion" maxlength="255" value="<?= esc(old('medicacion', 'Ninguna (Ingreso)')) ?>"
-                                   placeholder="Ej: Salbutamol">
-                        </div>
+                        <?= view('medicaciones/medicaciones', ['medicaciones' => $medicaciones ?? []]) ?>
 
                         <div class="mt-3">
                             <label for="observaciones_iniciales" class="form-label fw-bold text-success">Observaciones clínicas</label>

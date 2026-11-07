@@ -7,6 +7,8 @@ use App\Models\ControlSintomasModel;
 use App\Models\ValoresSintomasModel;
 use App\Models\VisitaModel;
 use App\Models\PacienteModel;
+use App\Models\MedicacionModel;
+use App\Models\ControlMedicacionModel;
 
 class Control extends BaseController
 {
@@ -15,6 +17,8 @@ class Control extends BaseController
     protected $valoresSintomasModel;
     protected $visitaModel;
     protected $pacienteModel;
+    protected $medicacionModel;
+    protected $controlMedicacionModel;
 
     public function __construct()
     {
@@ -23,6 +27,8 @@ class Control extends BaseController
         $this->valoresSintomasModel = new ValoresSintomasModel();
         $this->visitaModel          = new VisitaModel();
         $this->pacienteModel        = new PacienteModel();
+        $this->medicacionModel      = new MedicacionModel();
+        $this->controlMedicacionModel = new ControlMedicacionModel();
         helper('form'); 
     }
 
@@ -45,7 +51,8 @@ class Control extends BaseController
             'visita'        => $visita,
             'paciente'      => $paciente,
             'tipo_planilla' => $tipo_planilla,
-            'meses_edad'    => $meses_edad
+            'meses_edad'    => $meses_edad,
+            'medicaciones'  => $this->medicacionModel->orderBy('nombre')->findAll()
         ];
 
         echo view('templates/header', $datos);
@@ -55,7 +62,6 @@ class Control extends BaseController
     public function guardar()
         {
             $id_visita = $this->request->getPost('id_visita');
-            $medicacion = trim($this->request->getPost('medicacion'));
             $observaciones = trim($this->request->getPost('observaciones'));
             $sintomas_enviados = $this->request->getPost('sintomas');
 
@@ -92,9 +98,30 @@ class Control extends BaseController
             $id_control_nuevo = $this->controlModel->insert([
                 'id_visita'       => $id_visita,
                 'fecha_hora'      => date('Y-m-d H:i:s'),
-                'medicacion'      => $medicacion,
                 'observaciones'   => $observaciones
             ], true);
+
+            // Medicaciones administradas (catalogo + dosis)
+            $medicaciones_enviadas = $this->request->getPost('medicaciones');
+            if (!empty($medicaciones_enviadas) && is_array($medicaciones_enviadas)) {
+                $ids_validos = array_column($this->medicacionModel->findAll(), 'id');
+
+                foreach ($medicaciones_enviadas as $fila) {
+                    $id_medicacion = (int) ($fila['id_medicacion'] ?? 0);
+                    $dosis = trim((string) ($fila['dosis'] ?? ''));
+
+                    // Se ignoran filas incompletas o con medicaciones inexistentes
+                    if ($id_medicacion === 0 || $dosis === '' || !in_array($id_medicacion, $ids_validos)) {
+                        continue;
+                    }
+
+                    $this->controlMedicacionModel->insert([
+                        'id_control'    => $id_control_nuevo,
+                        'id_medicacion' => $id_medicacion,
+                        'dosis'         => mb_substr($dosis, 0, 100),
+                    ]);
+                }
+            }
 
             $score_total = 0;
 

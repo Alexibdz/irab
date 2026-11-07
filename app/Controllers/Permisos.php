@@ -64,6 +64,7 @@ class Permisos extends BaseController
                 'establecimientos' => 'Establecimientos',
                 'factores' => 'Factores',
                 'sintomas' => 'Síntomas',
+                'medicaciones' => 'Medicaciones',
                 'permisos' => 'Permisos'
             ],
 
@@ -110,6 +111,7 @@ class Permisos extends BaseController
             'establecimientos',
             'factores',
             'sintomas',
+            'medicaciones',
             'permisos'
         ];
 

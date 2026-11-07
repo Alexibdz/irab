@@ -426,19 +426,8 @@
                     </h4>
                 </div>
 
-
                 <!-- MEDICACIÓN -->
-                <div class="mb-3">
-                    <label class="form-label text-success fw-bold">
-                        Medicación Administrada
-                    </label>
-
-                    <input type="text"
-                           class="form-control border-success"
-                           name="medicacion"
-                           placeholder="Ej: Salbutamol">
-                </div>
-
+                <?= view('medicaciones/medicaciones', ['medicaciones' => $medicaciones ?? []]) ?>
 
                 <!-- OBSERVACIONES -->
                 <div class="mb-3">

@@ -164,7 +164,7 @@ $edad = edad_texto($paciente['fecha_nacimiento'] ?? null, $visita['fecha_ingreso
                                 <td><?= esc($control['fecha_hora']) ?></td>
                                 <td><span class="badge bg-danger fs-6"><?= esc($control['score_total']) ?> pts</span></td>
                                 <td><?= esc($control['estado_gravedad']) ?></td>
-                                <td><?= esc($control['medicacion'] ?? '-') ?></td>
+                                <td><?= esc(implode(', ', $medicacionesPorControl[$control['id']] ?? [])) ?: esc($control['medicacion'] ?? '-') ?></td>
                                 <td><?= esc($control['observaciones'] ?? '-') ?></td>
                             </tr>
                         <?php endforeach; ?>

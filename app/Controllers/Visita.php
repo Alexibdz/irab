@@ -12,6 +12,8 @@ use App\Models\FactoresModel;
 use App\Models\PacienteFactoresModel;
 use App\Models\ControlSintomasModel;
 use App\Models\ValoresSintomasModel;
+use App\Models\MedicacionModel;
+use App\Models\ControlMedicacionModel;
 
 
 class Visita extends BaseController
@@ -26,6 +28,8 @@ class Visita extends BaseController
     protected $pacienteFactoresModel;
     protected $controlSintomasModel;
     protected $valoresSintomasModel;
+    protected $medicacionModel;
+    protected $controlMedicacionModel;
 
     public function __construct()
     {
@@ -39,6 +43,8 @@ class Visita extends BaseController
         $this->pacienteFactoresModel = new PacienteFactoresModel();
         $this->controlSintomasModel = new ControlSintomasModel();
         $this->valoresSintomasModel = new ValoresSintomasModel();
+        $this->medicacionModel = new MedicacionModel();
+        $this->controlMedicacionModel = new ControlMedicacionModel();
         helper('form');
     }
 
@@ -127,7 +133,8 @@ class Visita extends BaseController
             'usuarios' => $this->usuarioModel->findAll(),
             'idUsuarioActual' => session()->get('id_usuario'),
             'establecimientos' => $this->establecimientoModel->findAll(),
-            'factores' => $this->factoresModel->findAll()
+            'factores' => $this->factoresModel->findAll(),
+            'medicaciones' => $this->medicacionModel->orderBy('nombre')->findAll()
         ];
 
         echo view('templates/header', $datos);
@@ -432,9 +439,30 @@ class Visita extends BaseController
             $idControl = $this->controlModel->insert([
                 'id_visita'     => $id_visita_nueva,
                 'fecha_hora'    => date('Y-m-d H:i:s'),
-                'medicacion'    => $this->nullSiVacio($this->request->getPost('medicacion') ?? 'Ninguna (Ingreso)'),
                 'observaciones' => $this->nullSiVacio($this->request->getPost('observaciones') ?? 'Control clínico inicial al ingreso.')
             ], true);
+
+            // Medicaciones administradas (catalogo + dosis)
+            $medicaciones_enviadas = $this->request->getPost('medicaciones');
+            if (!empty($medicaciones_enviadas) && is_array($medicaciones_enviadas)) {
+                $ids_validos = array_column($this->medicacionModel->findAll(), 'id');
+
+                foreach ($medicaciones_enviadas as $fila) {
+                    $id_medicacion = (int) ($fila['id_medicacion'] ?? 0);
+                    $dosis = trim((string) ($fila['dosis'] ?? ''));
+
+                    // Se ignoran filas incompletas o con medicaciones inexistentes
+                    if ($id_medicacion === 0 || $dosis === '' || !in_array($id_medicacion, $ids_validos)) {
+                        continue;
+                    }
+
+                    $this->controlMedicacionModel->insert([
+                        'id_control'    => $idControl,
+                        'id_medicacion' => $id_medicacion,
+                        'dosis'         => mb_substr($dosis, 0, 100),
+                    ]);
+                }
+            }
 
             $score_total = 0;
 
@@ -669,6 +697,22 @@ class Visita extends BaseController
         }
 
         $controles = $this->controlModel->where('id_visita', $id_visita)->findAll();
+
+        // Medicaciones de cada control: [id_control => ['Salbutamol (4 puffs)', ...]]
+        $medicacionesPorControl = [];
+        if (!empty($controles)) {
+            $filas_medicacion = $this->controlMedicacionModel
+                ->select('control_medicaciones.id_control, control_medicaciones.dosis, medicaciones.nombre')
+                ->join('medicaciones', 'medicaciones.id = control_medicaciones.id_medicacion')
+                ->whereIn('control_medicaciones.id_control', array_column($controles, 'id'))
+                ->orderBy('control_medicaciones.id')
+                ->findAll();
+
+            foreach ($filas_medicacion as $fila) {
+                $medicacionesPorControl[$fila['id_control']][] = $fila['nombre'] . ' (' . $fila['dosis'] . ')';
+            }
+        }
+
         $factoresRegistrados = $this->pacienteFactoresModel->where('id_visita', $id_visita)->findAll();
         $todosLosFactores = $this->factoresModel->findAll();
 
@@ -681,6 +725,7 @@ class Visita extends BaseController
             'tutor' => $paciente ? $this->tutorModel->find($paciente['id_tutor']) : null,
             'usuario' => $this->usuarioModel->find($visita['id_usuario']),
             'controles' => $controles,
+            'medicacionesPorControl' => $medicacionesPorControl,
             'factoresRegistrados' => $factoresRegistrados,
             'todosLosFactores' => $todosLosFactores,
             'establecimientos' => $this->establecimientoModel->findAll()

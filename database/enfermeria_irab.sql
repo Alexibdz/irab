@@ -189,7 +189,7 @@ CREATE TABLE `visitas` (
   `id_usuario` int(11) NOT NULL,
   `id_establecimiento` int(11) NOT NULL,
   `fecha_ingreso` datetime NOT NULL,
-  `diagnostico` enum('SBO','BQL','NMN','Otros') DEFAULT NULL,
+  `diagnostico` varchar(100) DEFAULT NULL,
   `estado_derivacion` enum('Internacion','Derivacion','Domicilio') DEFAULT NULL,
   `id_turno_protegido_lugar` int(11) DEFAULT NULL,
   `turno_protegido_fecha` date DEFAULT NULL,

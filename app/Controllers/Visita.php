@@ -431,8 +431,8 @@ class Visita extends BaseController
             $idControl = $this->controlModel->insert([
                 'id_visita'     => $id_visita_nueva,
                 'fecha_hora'    => date('Y-m-d H:i:s'),
-                'medicacion'    => 'Ninguna (Ingreso)',
-                'observaciones' => 'Control clínico inicial al ingreso.'
+                'medicacion'    => $this->nullSiVacio($this->request->getPost('medicacion') ?? 'Ninguna (Ingreso)'),
+                'observaciones' => $this->nullSiVacio($this->request->getPost('observaciones') ?? 'Control clínico inicial al ingreso.')
             ], true);
 
             $score_total = 0;

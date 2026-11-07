@@ -107,7 +107,7 @@ if (!empty($paciente['fecha_nacimiento'])) {
                                 <label for="diagnostico" class="form-label text-success fw-bold">Diagnóstico Inicial</label>
                                 
                                 <!-- Input del diagnostico -->
-                                <input type="text" class="form-control border-success" id="diagnostico" name="diagnostico" list="lista_diagnosticos" placeholder="Seleccione o escriba..." required>
+                                <input type="text" class="form-control border-success" id="diagnostico" name="diagnostico" list="lista_diagnosticos" value="<?= esc(old('diagnostico')) ?>" placeholder="Seleccione o escriba..." required>
                                 
                                 <!-- Opciones -->
                                 <datalist id="lista_diagnosticos">
@@ -126,7 +126,7 @@ if (!empty($paciente['fecha_nacimiento'])) {
             <div class="col-lg-6 mb-4">
                 
                 <!-- Factores de riesgo y proteccion -->
-                <div class="card shadow-sm mb-4">
+                <div class="card shadow-sm mb-4 h-100">
                     <div class="card-header bg-success text-white">
                         <h5 class="mb-0">Factores de Riesgo y Protección</h5>
                     </div>
@@ -197,6 +197,13 @@ if (!empty($paciente['fecha_nacimiento'])) {
                     </div>
                 </div>
 
+            </div> <!-- Cierre de la columna derecha: Factores -->
+
+        </div> <!-- Cierre de la fila superior -->
+
+        <!-- Control clínico: ocupa todo el ancho -->
+        <div class="row">
+            <div class="col-12 mb-4">
                 <!-- Control clinico de ingreso -->
                 <div class="card shadow-sm border-success" id="seccion_control_inicial" style="display: none;">
                     <div class="card-header bg-success text-white">
@@ -210,51 +217,18 @@ if (!empty($paciente['fecha_nacimiento'])) {
 
                                 <div class="col-md-4 mb-3 sintoma-tal">
                                     <label class="form-label fw-bold small text-success">Frec. Cardíaca</label>
-                                    <input type="number"
-                                           class="form-control input-score border-success"
-                                           name="sintomas[1]"
-                                           min="0"
-                                           data-rangos='[
-                                               {"min":0,"max":120,"puntos":0},
-                                               {"min":121,"max":140,"puntos":1},
-                                               {"min":141,"max":160,"puntos":2},
-                                               {"min":161,"max":999,"puntos":3}
-                                           ]'
-                                           onchange="calcularScoreDinamico()"
-                                           required>
+                                    <input type="number" class="form-control input-score border-success" name="sintomas[1]" min="0" data-rangos='[ {"min":0,"max":120,"puntos":0}, {"min":121,"max":140,"puntos":1}, {"min":141,"max":160,"puntos":2}, {"min":161,"max":999,"puntos":3} ]' onchange="calcularScoreDinamico()" required>
                                 </div>
 
                                 <?php if ($meses_edad <= 6): ?>
                                     <div class="col-md-4 mb-3 sintoma-tal" id="div_fr_menor">
                                         <label class="form-label fw-bold small text-success">F.R. (<= 6m)</label>
-                                        <input type="number"
-                                               class="form-control input-score border-success"
-                                               name="sintomas[2]"
-                                               min="0"
-                                               data-rangos='[
-                                                   {"min":0,"max":40,"puntos":0},
-                                                   {"min":41,"max":55,"puntos":1},
-                                                   {"min":56,"max":70,"puntos":2},
-                                                   {"min":71,"max":999,"puntos":3}
-                                               ]'
-                                               onchange="calcularScoreDinamico()"
-                                               required>
+                                        <input type="number" class="form-control input-score border-success" name="sintomas[2]" min="0" data-rangos='[ {"min":0,"max":40,"puntos":0}, {"min":41,"max":55,"puntos":1}, {"min":56,"max":70,"puntos":2}, {"min":71,"max":999,"puntos":3} ]' onchange="calcularScoreDinamico()" required>
                                     </div>
                                 <?php else: ?>
                                     <div class="col-md-4 mb-3 sintoma-tal" id="div_fr_mayor">
                                         <label class="form-label fw-bold small text-success">F.R. (> 6m)</label>
-                                        <input type="number"
-                                               class="form-control input-score border-success"
-                                               name="sintomas[3]"
-                                               min="0"
-                                               data-rangos='[
-                                                   {"min":0,"max":30,"puntos":0},
-                                                   {"min":31,"max":45,"puntos":1},
-                                                   {"min":46,"max":60,"puntos":2},
-                                                   {"min":61,"max":999,"puntos":3}
-                                               ]'
-                                               onchange="calcularScoreDinamico()"
-                                               required>
+                                        <input type="number" class="form-control input-score border-success" name="sintomas[3]" min="0" data-rangos='[ {"min":0,"max":30,"puntos":0}, {"min":31,"max":45,"puntos":1}, {"min":46,"max":60,"puntos":2}, {"min":61,"max":999,"puntos":3} ]' onchange="calcularScoreDinamico()" required>
                                     </div>
                                 <?php endif; ?>
 
@@ -294,32 +268,12 @@ if (!empty($paciente['fecha_nacimiento'])) {
 
                                 <div class="col-md-4 mb-3 sintoma-wdf">
                                     <label class="form-label fw-bold small text-success">Frecuencia Cardíaca</label>
-                                    <input type="number"
-                                           class="form-control input-score border-success"
-                                           name="sintomas[8]"
-                                           min="0"
-                                           data-rangos='[
-                                               {"min":0,"max":120,"puntos":0},
-                                               {"min":121,"max":999,"puntos":1}
-                                           ]'
-                                           onchange="calcularScoreDinamico()"
-                                           required>
+                                    <input type="number" class="form-control input-score border-success" name="sintomas[8]" min="0" data-rangos='[ {"min":0,"max":120,"puntos":0}, {"min":121,"max":999,"puntos":1} ]' onchange="calcularScoreDinamico()" required>
                                 </div>
 
                                 <div class="col-md-4 mb-3 sintoma-wdf">
                                     <label class="form-label fw-bold small text-success">Frecuencia Respiratoria</label>
-                                    <input type="number"
-                                           class="form-control input-score border-success"
-                                           name="sintomas[9]"
-                                           min="0"
-                                           data-rangos='[
-                                               {"min":0,"max":30,"puntos":0},
-                                               {"min":31,"max":45,"puntos":1},
-                                               {"min":46,"max":60,"puntos":2},
-                                               {"min":61,"max":999,"puntos":3}
-                                           ]'
-                                           onchange="calcularScoreDinamico()"
-                                           required>
+                                    <input type="number" class="form-control input-score border-success" name="sintomas[9]" min="0" data-rangos='[ {"min":0,"max":30,"puntos":0}, {"min":31,"max":45,"puntos":1}, {"min":46,"max":60,"puntos":2}, {"min":61,"max":999,"puntos":3} ]' onchange="calcularScoreDinamico()" required>
                                 </div>
 
                                 <div class="col-md-4 mb-3 sintoma-wdf">
@@ -381,9 +335,19 @@ if (!empty($paciente['fecha_nacimiento'])) {
                             <h5 class="mb-0 text-success">Score Total en Vivo: <span id="score_display" class="fw-bold fs-2 text-success">0</span></h5>
                         </div>
 
+                        <div class="mt-3">
+                            <label for="medicacion_inicial" class="form-label fw-bold text-success">Medicación administrada</label>
+                            <input type="text" class="form-control border-success" id="medicacion_inicial" name="medicacion" maxlength="255" value="<?= esc(old('medicacion', 'Ninguna (Ingreso)')) ?>"
+                                   placeholder="Ej: Salbutamol">
+                        </div>
+
+                        <div class="mt-3">
+                            <label for="observaciones_iniciales" class="form-label fw-bold text-success">Observaciones clínicas</label>
+                            <textarea class="form-control border-success" id="observaciones_iniciales" name="observaciones" rows="3" placeholder="Detalles de la evaluación inicial..."><?= esc(old('observaciones', 'Control clínico inicial al ingreso.')) ?></textarea>
+                        </div>
+
                     </div>
                 </div>
-
             </div>
         </div>
 

@@ -46,6 +46,16 @@ class Control extends BaseController
         // TAL menores de 2 anios, WDF mayores
         $tipo_planilla = ($meses_edad < 24) ? 'TAL' : 'WDF';
 
+        // aca se verifica si ya se alcanzaron los 8 controles de la planilla
+        $totalControles = $this->controlModel->where('id_visita', $id_visita)->countAllResults();
+        
+        if ($totalControles >= 8) {
+            return redirect()->to(base_url('visitas/ver/' . $id_visita))
+                ->with('error', 'Esta visita ya cuenta con los 8 controles máximos permitidos por la planilla');
+        }
+
+        $numeroControlActual = $totalControles + 1;
+
         $datos = [
             'titulo'        => 'Registrar Control',
             'visita'        => $visita,

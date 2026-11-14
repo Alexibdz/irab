@@ -117,9 +117,12 @@ $routes->get('visitas/reabrir/(:num)', 'Visita::reabrir/$1');
 $routes->get('visitas/borrar/(:num)', 'Visita::borrar/$1');
 $routes->get('visitas/eliminados', 'Visita::eliminados');
 $routes->get('visitas/recuperar/(:num)', 'Visita::recuperar/$1');
+//para dar alta definitiva
+$routes->get('visitas/dar-alta-definitiva/(:num)', 'Visita::darAltaDefinitiva/$1');
 
 // Controles
 $routes->get('control/crear/(:num)', 'Control::crear/$1');
 $routes->post('control/guardar', 'Control::guardar');
+
 
 });

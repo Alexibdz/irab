@@ -50,10 +50,14 @@ class Panel extends BaseController
         }
         unset($visita);
 
+        $totalCerradas = (new VisitaModel())->where('fecha_alta IS NOT NULL')->where('fecha_borrado IS NULL')->countAllResults();
+        $totalAltas    = (new VisitaModel())->where('fecha_alta_definitiva IS NOT NULL')->where('fecha_borrado IS NULL')->countAllResults();
+
         $datos = [
             'titulo'    => 'Panel',
             'abiertas'  => $abiertas,
-            'cerradas'  => $visitaModel->where('fecha_alta IS NOT NULL')->countAllResults(),
+            'cerradas'  => $totalCerradas,  // usamos la consultas de arriba
+            'altas'     => $totalAltas,    
             'pacientes' => $pacienteModel->countAllResults(),
             'tutores'   => $tutorModel->countAllResults(),
             'controlesHoy' => $controlModel->where('DATE(fecha_hora)', date('Y-m-d'))->countAllResults()

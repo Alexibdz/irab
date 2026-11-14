@@ -33,7 +33,7 @@ $nombreEstablecimiento = array_column($establecimientos, 'nombre', 'id');
     <?php else: ?>
 
         <div class="card shadow-sm">
-            <div class="card-body">
+            <div class="table-responsive card-body">
 
                 <!-- DataTables desde el footer -->
                 <table class="table table-striped table-hover table-bordered align-middle tabla-datos">
@@ -42,35 +42,24 @@ $nombreEstablecimiento = array_column($establecimientos, 'nombre', 'id');
                         <tr>
                             <th>Paciente</th>
                             <th>Establecimiento</th>
-                            <th>Ingreso</th>
-                            <th>Alta</th>
-                            <th>Días</th>
+                            <th class="text-center text-nowrap">Ingreso</th>
+                            <th class="text-center text-nowrap">Cierre de visita</th>
                             <th>Diagnóstico</th>
                             <th>Derivación</th>
                             <th>Turno protegido</th>
                             <th>Medicación al egreso</th>
                             <th>Usuario</th>
-                            <th class="text-center">Acciones</th>
+                            <th class="text-center text-nowrap">Acciones</th>
                         </tr>
                     </thead>
 
                     <tbody>
                         <?php foreach ($visitas as $visita): ?>
-                            <?php
-                            // Duracion en dias
-                            $dias = '-';
-                            if (!empty($visita['fecha_ingreso'])) {
-                                $ingreso = new DateTime($visita['fecha_ingreso']);
-                                $alta    = new DateTime($visita['fecha_alta']);
-                                $dias    = $ingreso->diff($alta)->days;
-                            }
-                            ?>
                             <tr>
                                 <td><?= esc($nombrePaciente[$visita['id_paciente']] ?? '-') ?></td>
                                 <td><?= esc($nombreEstablecimiento[$visita['id_establecimiento']] ?? '-') ?></td>
-                                <td><?= esc($visita['fecha_ingreso']) ?></td>
-                                <td><?= esc($visita['fecha_alta']) ?></td>
-                                <td><?= esc($dias) ?></td>
+                                <td class="text-center text-nowrap"><?= esc($visita['fecha_ingreso']) ?></td>
+                                <td class="text-center text-nowrap"><?= esc($visita['fecha_alta']) ?></td>
                                 <td><?= esc($visita['diagnostico'] ?? '-') ?></td>
 
                                 <td>
@@ -107,7 +96,7 @@ $nombreEstablecimiento = array_column($establecimientos, 'nombre', 'id');
                                     <a href="<?= base_url('visitas/reabrir/' . $visita['id']) ?>"
                                        class="btn btn-outline-warning btn-sm"
                                        title="Reabrir visita"
-                                       onclick="return confirm('¿Reabrir la visita? Se borran los datos de egreso.');">
+                                       onclick="return confirm('¿Reabrir la visita? Se borran cierre temporal y egreso para permitir nuevos controles.');">
                                         <i class="bi bi-arrow-counterclockwise"></i>
                                     </a>
                                 </td>

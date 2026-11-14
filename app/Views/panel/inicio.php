@@ -13,9 +13,11 @@ $hoy = new DateTime('today');
 </div>
 
 <!-- KPIs -->
+
 <div class="row g-3 mb-4">
 
-    <div class="col-12 col-lg-6">
+    <!-- Visitas abiertas  -->
+    <div class="col-12 col-md-4">
         <div class="card shadow-sm h-100 border-success">
             <div class="card-body">
                 <div class="text-muted small text-uppercase fw-semibold">Visitas abiertas</div>
@@ -27,7 +29,8 @@ $hoy = new DateTime('today');
         </div>
     </div>
 
-    <div class="col-6 col-lg-2">
+    <!-- Cerradas -->
+    <div class="col-6 col-md-2">
         <div class="card shadow-sm h-100">
             <div class="card-body">
                 <div class="text-muted small text-uppercase fw-semibold">Cerradas</div>
@@ -37,7 +40,19 @@ $hoy = new DateTime('today');
         </div>
     </div>
 
-    <div class="col-6 col-lg-2">
+    <!-- Altas  -->
+    <div class="col-6 col-md-2">
+        <div class="card shadow-sm h-100">
+            <div class="card-body">
+                <div class="text-muted small text-uppercase fw-semibold ">Altas</div>
+                <div class="panel-dato"><?= $altas ?? 0 ?></div>
+                <span class="small text-muted">Casos dados de alta</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pacientes  -->
+    <div class="col-6 col-md-2">
         <div class="card shadow-sm h-100">
             <div class="card-body">
                 <div class="text-muted small text-uppercase fw-semibold">Pacientes</div>
@@ -47,7 +62,8 @@ $hoy = new DateTime('today');
         </div>
     </div>
 
-    <div class="col-6 col-lg-2">
+    <!-- Tutores  -->
+    <div class="col-6 col-md-2">
         <div class="card shadow-sm h-100">
             <div class="card-body">
                 <div class="text-muted small text-uppercase fw-semibold">Tutores</div>
@@ -95,6 +111,13 @@ $hoy = new DateTime('today');
                         <?php
                         $dias = (new DateTime($visita['fecha_ingreso']))->diff(new DateTime())->days;
                         $control = $visita['ultimo_control'];
+                        //  verifica si el paciente es menor de 2 años al ingreso (porque los menores no tienen escala de gravedad)
+                        $esMenorDeDos = false;
+                        if (!empty($visita['fecha_nacimiento']) && !empty($visita['fecha_ingreso'])) {
+                            $nacFecha = new DateTime($visita['fecha_nacimiento']);
+                            $ingFecha = new DateTime($visita['fecha_ingreso']);
+                            $esMenorDeDos = $nacFecha->diff($ingFecha)->y < 2;
+                        }
 
                         // Sin control en mas de 24hs: la visita esta sin seguimiento
                         $horas = $control
@@ -117,7 +140,8 @@ $hoy = new DateTime('today');
                                     <?php if ($control['score_total'] !== null): ?>
                                         <span class="badge text-bg-light border ms-1"><?= esc($control['score_total']) ?> pts</span>
                                     <?php endif; ?>
-                                    <?php if (!empty($control['estado_gravedad'])): ?>
+                                    <! -- muestra la gravedad solo si no es menor de 2 años -->
+                                    <?php if (!$esMenorDeDos && !empty($control['estado_gravedad'])): ?>
                                         <?php
                                         $gravedad = [
                                             'Leve'     => ['text-bg-success', 'bi-check-circle'],

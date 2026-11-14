@@ -666,7 +666,22 @@ class Visita extends BaseController
         return redirect()->to(base_url('visitas/ver/' . $id_visita))
             ->with('exito', 'Visita cerrada correctamente.');
     }
+    // Registrar el Alta Definitiva: es como un alta medico definitivo, porq sino seria cerrar una visita 
+    public function darAltaDefinitiva($id_visita)
+    {
+        $visita = $this->visitaModel->find($id_visita);
+        if (!$visita) {
+            return redirect()->to(base_url('visitas'))->with('error', 'La visita no existe.');
+        }
 
+        // se actualiza la alta definitiva con la fecha y hora 
+        $this->visitaModel->update($id_visita, [
+            'fecha_alta_definitiva' => date('Y-m-d H:i:s')
+        ]);
+
+        return redirect()->to(base_url('panel'))
+            ->with('exito', 'Alta medica del paciente (debera volver a hacerse una visita si vuelve a presentar sintomas ).');
+    }
     // Reapertura de visita: limpia el egreso
     public function reabrir($id_visita)
     {
@@ -675,17 +690,23 @@ class Visita extends BaseController
             return redirect()->to(base_url('visitas'))->with('error', 'La visita no existe.');
         }
 
+        // si ya tiene alta definitiva, no se puede reabrir
+        if (!empty($visita['fecha_alta_definitiva'])) {
+            return redirect()->to(base_url('visitas/ver/' . $id_visita))
+                ->with('error', 'No se puede reabrir una visita ya dada de alta definitiva ');
+        }
+
         $this->visitaModel->update($id_visita, [
             'estado_derivacion'        => null,
             'id_turno_protegido_lugar' => null,
             'turno_protegido_fecha'    => null,
             'medicacion_egreso'        => null,
-            'fecha_alta'               => null,
+            'fecha_alta'               => null, //esta fecha es de alta de visita, no de TODO
             'observaciones_finales'    => null
         ]);
 
         return redirect()->to(base_url('visitas/ver/' . $id_visita))
-            ->with('exito', 'Visita reabierta.');
+            ->with('exito', 'Visita reabierta para seguir controlando');
     }
 
     public function ver($id_visita)

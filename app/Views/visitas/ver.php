@@ -1,5 +1,5 @@
 <?php
-// Cerrada = tiene fecha de alta
+// Cerrada = tiene fecha de cierre de visita
 $cerrada = !empty($visita['fecha_alta']) && $visita['fecha_alta'] !== '0000-00-00';
 
 // Mapa id => nombre de establecimientos
@@ -7,29 +7,54 @@ $nombreEstablecimiento = array_column($establecimientos, 'nombre', 'id');
 
 // Edad a la fecha de ingreso, que es la que define la escala
 $edad = edad_texto($paciente['fecha_nacimiento'] ?? null, $visita['fecha_ingreso']);
+
+// si es menor de 2 años para la escala de gravedad
+$esMenorDeDos = false;
+if (!empty($paciente['fecha_nacimiento']) && !empty($visita['fecha_ingreso'])) {
+    $nacFecha  = new DateTime($paciente['fecha_nacimiento']);
+    $ingFecha  = new DateTime($visita['fecha_ingreso']);
+    $esMenorDeDos = $nacFecha->diff($ingFecha)->y < 2;
+}
 ?>
 <div class="container mt-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
+    <!-- ACCIONES DE ESTADO -->
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
         <div class="d-flex align-items-center gap-3">
             <h2 class="mb-0">Detalle de la Visita Médica</h2>
-            <?php if ($cerrada): ?>
+            <?php if (!empty($visita['fecha_alta_definitiva'])): ?>
+                <span class="badge bg-primary fs-6">Alta Definitiva</span>
+            <?php elseif ($cerrada): ?>
                 <span class="badge bg-secondary fs-6">Cerrada</span>
             <?php else: ?>
                 <span class="badge bg-success fs-6">Abierta</span>
             <?php endif; ?>
         </div>
-        <div class="d-flex gap-2">
-            <?php if ($cerrada): ?>
-                <a href="<?= base_url('visitas/reabrir/' . $visita['id']) ?>" class="btn btn-outline-warning"
-                   onclick="return confirm('¿Reabrir la visita? Se borran los datos de egreso.');">
-                    <i class="bi bi-arrow-counterclockwise"></i> Reabrir
+
+        <!-- Botones de gestión de estado arriba a la derecha -->
+        <div class="d-flex gap-2 flex-wrap">
+            <?php if (empty($visita['fecha_alta_definitiva'])): ?>
+                <?php if ($cerrada): ?>
+                    <a href="<?= base_url('visitas/reabrir/' . $visita['id']) ?>" class="btn btn-outline-warning btn-sm"
+                       onclick="return confirm('¿Reabrir la visita? Se borrarán los datos de egreso y se habilitarán los controles nuevamente.');">
+                        <i class="bi bi-arrow-counterclockwise"></i> Reabrir Visita
+                    </a>
+                <?php else: ?>
+                    <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalCerrarVisita">
+                        <i class="bi bi-box-arrow-right"></i> Cerrar Visita
+                    </button>
+                <?php endif; ?>
+
+                <a href="<?= base_url('visitas/dar-alta-definitiva/' . $visita['id']) ?>" 
+                   class="btn btn-warning btn-sm text-dark fw-semibold" 
+                   onclick="return confirm('¿Confirmas el alta definitiva? Esta acción cerrará el caso de forma permanente y no se podrá reabrir.');"
+                   title="Dar alta definitiva">
+                    <i class="bi bi-check-all"></i> Alta Definitiva
                 </a>
-            <?php else: ?>
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalCerrarVisita">
-                    <i class="bi bi-box-arrow-right"></i> Cerrar visita
-                </button>
             <?php endif; ?>
-            <a href="<?= base_url('visitas') ?>" class="btn btn-secondary">Volver al Listado</a>
+
+            <a href="<?= base_url('visitas') ?>" class="btn btn-secondary btn-sm">
+                <i class="bi bi-arrow-left"></i> Volver al Listado
+            </a>
         </div>
     </div>
 
@@ -45,14 +70,10 @@ $edad = edad_texto($paciente['fecha_nacimiento'] ?? null, $visita['fecha_ingreso
         </div>
         <div class="card-body">
             <?php if (!$paciente): ?>
-
                 <div class="alert alert-warning mb-0">
-                    <i class="bi bi-exclamation-triangle"></i>
-                    El paciente de esta visita fue eliminado.
+                    <i class="bi bi-exclamation-triangle"></i> El paciente de esta visita fue eliminado.
                 </div>
-
             <?php else: ?>
-
                 <div class="row">
                     <div class="col-md-6 border-end">
                         <div class="fw-bold fs-5 mb-2"><?= esc(nombre_completo($paciente)) ?></div>
@@ -91,7 +112,6 @@ $edad = edad_texto($paciente['fecha_nacimiento'] ?? null, $visita['fecha_ingreso
                         <?php endif; ?>
                     </div>
                 </div>
-
             <?php endif; ?>
         </div>
     </div>
@@ -119,12 +139,12 @@ $edad = edad_texto($paciente['fecha_nacimiento'] ?? null, $visita['fecha_ingreso
     <?php if ($cerrada): ?>
         <div class="card shadow-sm mb-4">
             <div class="card-header bg-secondary text-white">
-                <h3 class="h5 mb-0">Datos de Egreso</h3>
+                <h3 class="h5 mb-0">Datos de Cierre de la Visita</h3>
             </div>
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-6">
-                        <p><strong>Fecha de Alta:</strong> <?= esc($visita['fecha_alta']) ?></p>
+                        <p><strong>Fecha de cierre de Visita:</strong> <?= esc($visita['fecha_alta']) ?></p>
                         <p><strong>Estado de Derivación:</strong> <?= esc($visita['estado_derivacion'] ?? '-') ?></p>
                         <p class="mb-0"><strong>Medicación al Egreso:</strong> <?= esc($visita['medicacion_egreso'] ?? '-') ?></p>
                     </div>
@@ -141,33 +161,76 @@ $edad = edad_texto($paciente['fecha_nacimiento'] ?? null, $visita['fecha_ingreso
     <div class="card shadow-sm mb-4">
         <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
             <h3 class="h5 mb-0">Historial de Controles (Evolución)</h3>
-            <!-- Nuevo control -->
-            <a href="<?= base_url('control/crear/' . $visita['id']) ?>" class="btn btn-light btn-sm">+ Nuevo Control</a>
+            
+            <!--solo dejamos el botón de Nuevo Control si la visita está activa -->
+            <div class="d-flex gap-2">
+                <?php if (empty($visita['fecha_alta_definitiva']) && !$cerrada): ?>
+                    <a href="<?= base_url('control/crear/' . $visita['id']) ?>" class="btn btn-light btn-sm fw-semibold">
+                        + Nuevo Control
+                    </a>
+                <?php elseif (!empty($visita['fecha_alta_definitiva'])): ?>
+                    <span class="badge bg-light text-dark fs-6 px-3 py-2">
+                        <i class="bi bi-shield-check text-success"></i> Caso con Alta Definitiva
+                    </span>
+                <?php else: ?>
+                    <span class="badge bg-light text-dark fs-6 px-3 py-2">
+                        Visita Cerrada (Reabrir para agregar controles)
+                    </span>
+                <?php endif; ?>
+            </div>
         </div>
+        
         <div class="card-body">
             <?php if (empty($controles)): ?>
                 <div class="alert alert-warning mb-0">No se han registrado controles periódicos para esta visita todavía.</div>
             <?php else: ?>
-                <table class="table table-striped table-bordered">
+                <table class="table table-striped table-bordered align-middle text-center">
                     <thead>
                         <tr>
-                            <th>Fecha y Hora</th>
-                            <th>Score Total</th>
-                            <th>Gravedad</th>
-                            <th>Medicación</th>
+                            <th style="width: 18%;">Control</th>
+                            <th style="width: 20%;">Fecha y Hora</th>
+                            <th style="width: 12%;">Score Total</th>
+                            <!-- Ocultar la columna Gravedad si es menor de 2 años -->
+                            <?php if (!$esMenorDeDos): ?>
+                                <th style="width: 15%;">Gravedad</th>
+                            <?php endif; ?><th>Medicación</th>
                             <th>Observaciones</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <?php foreach ($controles as $control): ?>
-                            <tr>
-                                <td><?= esc($control['fecha_hora']) ?></td>
-                                <td><span class="badge bg-danger fs-6"><?= esc($control['score_total']) ?> pts</span></td>
-                                <td><?= esc($control['estado_gravedad']) ?></td>
-                                <td><?= esc(implode(', ', $medicacionesPorControl[$control['id']] ?? [])) ?: esc($control['medicacion'] ?? '-') ?></td>
-                                <td><?= esc($control['observaciones'] ?? '-') ?></td>
-                            </tr>
-                        <?php endforeach; ?>
+                    <?php 
+                    $etiquetasPlanilla = [
+                        0 => 'Ingreso',
+                        1 => '20 min',
+                        2 => '1º Hora',
+                        3 => '2º hora',
+                        4 => 'Control 24 hs',
+                        5 => '6º Control',
+                        6 => '7º Control',
+                        7 => '8º Control'
+                    ];
+                    $indice = 0;
+                    foreach ($controles as $control): 
+                        $nombreControl = $etiquetasPlanilla[$indice] ?? 'Control #' . ($indice + 1);
+                    ?>
+                        <tr>
+                            <td>
+                                <span class="fs-6 px-3 py-2">
+                                    <?= $nombreControl ?>
+                                </span>
+                            </td>
+                            <td><?= esc($control['fecha_hora']) ?></td>
+                            <td><span class="badge bg-danger fs-6"><?= esc($control['score_total']) ?> pts</span></td>
+                            <!-- oculta la celda si es menor de 2 años -->
+                            <?php if (!$esMenorDeDos): ?><td><?= esc($control['estado_gravedad']) ?></td>
+                            <?php endif; ?>
+                            <td><?= esc(implode(', ', $medicacionesPorControl[$control['id']] ?? [])) ?: esc($control['medicacion'] ?? '-') ?></td>
+                            <td class="text-start"><?= esc($control['observaciones'] ?? '-') ?></td>
+                        </tr>
+                    <?php 
+                        $indice++;
+                    endforeach; 
+                    ?>
                     </tbody>
                 </table>
             <?php endif; ?>
@@ -176,7 +239,7 @@ $edad = edad_texto($paciente['fecha_nacimiento'] ?? null, $visita['fecha_ingreso
 </div>
 
 <!-- Modal: cerrar visita (datos de egreso) -->
-<?php if (!$cerrada): ?>
+<?php if (!$cerrada && empty($visita['fecha_alta_definitiva'])): ?>
 <div class="modal fade" id="modalCerrarVisita" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <form action="<?= base_url('visitas/cerrar') ?>" method="POST">
@@ -189,12 +252,12 @@ $edad = edad_texto($paciente['fecha_nacimiento'] ?? null, $visita['fecha_ingreso
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                 </div>
 
-                <div class="modal-body">
+                <div class="modal-body text-start">
                     <div class="row">
 
                         <div class="col-md-6 mb-3">
-                            <label for="fecha_alta" class="form-label">Fecha de alta <span class="text-danger">*</span></label>
-                            <input type="date" class="form-control" id="fecha_alta" name="fecha_alta" required>
+                            <label for="fecha_alta" class="form-label">Fecha de cierre de visita <span class="text-danger">*</span></label>
+                            <input type="date" class="form-control" id="fecha_alta" name="fecha_alta" value="<?= date('Y-m-d') ?>" required>
                             <div class="form-text">Es lo que marca la visita como cerrada.</div>
                         </div>
 

@@ -197,6 +197,7 @@ CREATE TABLE `visitas` (
   `turno_protegido_fecha` date DEFAULT NULL,
   `medicacion_egreso` varchar(255) DEFAULT NULL,
   `fecha_alta` date DEFAULT NULL,
+  `fecha_alta_definitiva` DATETIME DEFAULT NULL
   `observaciones_finales` text DEFAULT NULL,
   `fecha_registro` datetime NOT NULL DEFAULT current_timestamp(),
   `fecha_edicion` datetime DEFAULT NULL,

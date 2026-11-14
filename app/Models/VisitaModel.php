@@ -25,6 +25,7 @@ class VisitaModel extends Model
         'medicacion_egreso',
         'fecha_alta',
         'observaciones_finales',
+        'fecha_alta_definitiva',
         'fecha_borrado'
     ];
 

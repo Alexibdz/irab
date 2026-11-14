@@ -72,6 +72,13 @@ $nombreEstablecimiento = array_column($establecimientos, 'nombre', 'id');
                                         <i class="bi bi-pencil-square"></i>
                                     </a>
 
+                                    <a href="<?= base_url('visitas/dar-alta-definitiva/' . $visita['id']) ?>" 
+                                        class="btn btn-dark btn-sm text-white fw-semibold" 
+                                        onclick="return confirm('¿Confirmas el alta definitiva ? Cierra el caso de forma permanente.');"
+                                        title="Dar alta definitiva (alta medica)">
+                                        <i class="bi bi-check-all"></i>
+                                    </a>
+
                                     <a href="<?= base_url('visitas/borrar/' . $visita['id']) ?>"
                                        class="btn btn-danger btn-sm"
                                        title="Borrar visita"

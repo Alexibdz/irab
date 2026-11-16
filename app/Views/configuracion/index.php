@@ -18,6 +18,12 @@ $grupos = [
          'texto' => 'Descarga la base de datos completa en un archivo .sql.'],
     ],
 ];
+
+// Auditoria: solo visible para el Administrador
+if (es_admin()) {
+    $grupos['Administración'][] = ['url' => 'configuracion/auditoria', 'icono' => 'bi-journal-text', 'titulo' => 'Auditoría',
+        'texto' => 'Historial de altas, cambios y cierres de visitas y controles.'];
+}
 ?>
 <div class="mb-4">
     <h2 class="h3 mb-1"><i class="bi bi-gear"></i> Configuración</h2>

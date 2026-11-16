@@ -185,59 +185,99 @@ if (!empty($paciente['fecha_nacimiento']) && !empty($visita['fecha_ingreso'])) {
             <?php if (empty($controles)): ?>
                 <div class="alert alert-warning mb-0">No se han registrado controles periódicos para esta visita todavía.</div>
             <?php else: ?>
-                <table class="table table-striped table-bordered align-middle text-center">
-                    <thead>
-                        <tr>
-                            <th style="width: 18%;">Control</th>
-                            <th style="width: 20%;">Fecha y Hora</th>
-                            <th style="width: 12%;">Score Total</th>
-                            <!-- Ocultar la columna Gravedad si es menor de 2 años -->
-                            <?php if (!$esMenorDeDos): ?>
-                                <th style="width: 15%;">Gravedad</th>
-                            <?php endif; ?><th>Medicación</th>
-                            <th>Observaciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    <?php 
-                    $etiquetasPlanilla = [
-                        0 => 'Ingreso',
-                        1 => '20 min',
-                        2 => '1º Hora',
-                        3 => '2º hora',
-                        4 => 'Control 24 hs',
-                        5 => '6º Control',
-                        6 => '7º Control',
-                        7 => '8º Control'
-                    ];
-                    $indice = 0;
-                    foreach ($controles as $control): 
-                        $nombreControl = $etiquetasPlanilla[$indice] ?? 'Control #' . ($indice + 1);
-                    ?>
-                        <tr>
-                            <td>
-                                <span class="fs-6 px-3 py-2">
-                                    <?= $nombreControl ?>
-                                </span>
-                            </td>
-                            <td><?= esc($control['fecha_hora']) ?></td>
-                            <td><span class="badge bg-danger fs-6"><?= esc($control['score_total']) ?> pts</span></td>
-                            <!-- oculta la celda si es menor de 2 años -->
-                            <?php if (!$esMenorDeDos): ?><td><?= esc($control['estado_gravedad']) ?></td>
-                            <?php endif; ?>
-                            <td><?= esc(implode(', ', $medicacionesPorControl[$control['id']] ?? [])) ?: esc($control['medicacion'] ?? '-') ?></td>
-                            <td class="text-start"><?= esc($control['observaciones'] ?? '-') ?></td>
-                        </tr>
-                    <?php 
-                        $indice++;
-                    endforeach; 
-                    ?>
-                    </tbody>
-                </table>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped align-middle text-center">
+                        <thead>
+                            <tr>
+                                <th style="min-width: 120px;">Control</th>
+                                <th style="min-width: 150px;">Fecha y Hora</th>
+                                <th style="min-width: 90px;">Puntaje</th>
+                                <?php if (!$esMenorDeDos): ?>
+                                    <th style="min-width: 100px;">Gravedad</th>
+                                <?php endif; ?>
+                                <th style="min-width: 180px;">Medicación</th>
+                                <th style="min-width: 180px;">Observaciones</th>
+                                <th style="min-width: 110px;">Detalle</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <?php
+                        $etiquetasPlanilla = [
+                            0 => 'Ingreso',
+                            1 => '20 min',
+                            2 => '1º Hora',
+                            3 => '2º hora',
+                            4 => 'Control 24 hs',
+                            5 => '6º Control',
+                            6 => '7º Control',
+                            7 => '8º Control'
+                        ];
+                        $indice = 0;
+                        foreach ($controles as $control):
+                            $nombreControl = $etiquetasPlanilla[$indice] ?? 'Control #' . ($indice + 1);
+                        ?>
+                            <tr>
+                                <td class="fw-semibold"><?= esc($nombreControl) ?></td>
+                                <td><?= esc($control['fecha_hora']) ?></td>
+                                <td><span class="badge bg-danger fs-6"><?= esc($control['score_total']) ?> pts</span></td>
+                                <?php if (!$esMenorDeDos): ?>
+                                    <td><?= esc($control['estado_gravedad'] ?? '-') ?></td>
+                                <?php endif; ?>
+                                <td><?= esc(implode(', ', $medicacionesPorControl[$control['id']] ?? [])) ?: esc($control['medicacion'] ?? '-') ?></td>
+                                <td class="text-start"><?= esc($control['observaciones'] ?? '-') ?></td>
+                                <td>
+                                    <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modalDetalleControl<?= (int) $control['id'] ?>">
+                                        Ver detalle
+                                    </button>
+                                </td>
+                            </tr>
+                        <?php
+                            $indice++;
+                        endforeach;
+                        ?>
+                        </tbody>
+                    </table>
+                </div>
             <?php endif; ?>
         </div>
     </div>
 </div>
+
+<?php foreach ($controles as $control): ?>
+<div class="modal fade" id="modalDetalleControl<?= (int) $control['id'] ?>" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title">Detalle del Control</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <?php if (!empty($sintomasPorControl[$control['id']] ?? [])): ?>
+                    <table class="table table-sm table-bordered align-middle">
+                        <thead>
+                            <tr>
+                                <th>Síntomas</th>
+                                <th>Valor</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($sintomasPorControl[$control['id']] as $sintoma): ?>
+                                <tr>
+                                    <td><?= esc($sintoma['nombre']) ?></td>
+                                    <td><?= esc($sintoma['valor'] ?? '-') ?></td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                <?php else: ?>
+                    <div class="alert alert-light mb-0">No hay datos de síntomas para este control.</div>
+                <?php endif; ?>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+<?php endforeach; ?>
 
 <!-- Modal: cerrar visita (datos de egreso) -->
 <?php if (!$cerrada && empty($visita['fecha_alta_definitiva'])): ?>

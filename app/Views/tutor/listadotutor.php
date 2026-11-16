@@ -12,6 +12,9 @@
         </div>
     </div>
 
+    <?php if (empty($tutores)): ?>
+        <?= view('templates/sin_datos', ['mensaje' => 'No hay tutores registrados.', 'acciones' => ['Registrar una nueva visita' => 'visitas/crear', 'revisar la papelera' => 'tutor/eliminados']]) ?>
+    <?php else: ?>
     <div class="card shadow-sm border rounded-3">
         <div class="card-body p-3">
             <div class="table-responsive">
@@ -52,4 +55,5 @@
             </div>
         </div>
     </div>
+    <?php endif; ?>
 </div>

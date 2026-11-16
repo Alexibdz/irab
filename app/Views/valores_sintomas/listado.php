@@ -5,6 +5,9 @@
     <a href="<?= base_url('configuracion/sintomas/valores/nuevo/'.$sintoma['id']) ?>" class="btn btn-primary mb-3">+ Nuevo Valor</a>
     <a href="<?= base_url('configuracion/sintomas') ?>" class="btn btn-secondary mb-3">Volver a Sintomas</a>
 
+    <?php if (empty($valores)): ?>
+        <?= view('templates/sin_datos', ['mensaje' => 'Este síntoma todavía no tiene valores cargados.']) ?>
+    <?php else: ?>
     <div class="card shadow-sm">
         <div class="card-body">
             <table class="table table-striped table-hover text-center tabla-datos">
@@ -34,4 +37,5 @@
             </table>
         </div>
     </div>
+    <?php endif; ?>
 </div>

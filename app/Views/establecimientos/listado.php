@@ -12,6 +12,9 @@
         </div>
     </div>
 
+    <?php if (empty($establecimientos)): ?>
+        <?= view('templates/sin_datos', ['mensaje' => 'No hay establecimientos cargados.', 'acciones' => ['Agregar un establecimiento' => 'configuracion/establecimientos/nuevo', 'revisar la papelera' => 'configuracion/establecimientos/eliminados']]) ?>
+    <?php else: ?>
     <div class="card shadow-sm border rounded-3">
         <div class="card-body p-3">
             <div class="table-responsive">
@@ -54,4 +57,5 @@
             </div>
         </div>
     </div>
+    <?php endif; ?>
 </div>

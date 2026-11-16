@@ -2,6 +2,9 @@
     <h2 class="mb-4 text-danger">Sintomas Eliminados (Inactivos)</h2>
     <a href="<?= base_url('configuracion/sintomas') ?>" class="btn btn-secondary mb-3">Volver a Sintomas Activos</a>
 
+    <?php if (empty($sintomas)): ?>
+        <?= view('templates/sin_datos', ['mensaje' => 'No hay síntomas eliminados.', 'acciones' => ['Volver al listado' => 'configuracion/sintomas']]) ?>
+    <?php else: ?>
     <table class="table table-bordered bg-white shadow-sm text-center tabla-datos">
         <thead>
             <tr>
@@ -24,4 +27,5 @@
             <?php endforeach; ?>
         </tbody>
     </table>
+    <?php endif; ?>
 </div>

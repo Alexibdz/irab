@@ -2,6 +2,9 @@
     <h2 class="mb-4 text-danger">Pacientes Eliminados (Inactivos)</h2>
     <a href="<?= base_url('paciente') ?>" class="btn btn-secondary mb-3">Volver a Pacientes Activos</a>
     
+    <?php if (empty($pacientes)): ?>
+        <?= view('templates/sin_datos', ['mensaje' => 'No hay pacientes eliminados.', 'acciones' => ['Volver al listado' => 'paciente']]) ?>
+    <?php else: ?>
     <table class="table table-bordered bg-white shadow-sm text-center tabla-datos">
         <thead>
             <tr>
@@ -24,4 +27,5 @@
             <?php endforeach; ?>
         </tbody>
     </table>
+    <?php endif; ?>
 </div>

@@ -12,6 +12,9 @@
         </div>
     </div>
 
+    <?php if (empty($pacientes)): ?>
+        <?= view('templates/sin_datos', ['mensaje' => 'No hay pacientes registrados.', 'acciones' => ['Registrar una nueva visita' => 'visitas/crear', 'revisar la papelera' => 'paciente/eliminados']]) ?>
+    <?php else: ?>
     <div class="card shadow-sm border rounded-3">
         <div class="card-body p-3">
             <div class="table-responsive">
@@ -108,4 +111,5 @@
             </div>
         </div>
     </div>
+    <?php endif; ?>
 </div>

@@ -5,6 +5,9 @@
     <a href="<?= base_url('configuracion/factores/valores/nuevo/'.$factor['id']) ?>" class="btn btn-primary mb-3">+ Nuevo Valor</a>
     <a href="<?= base_url('configuracion/factores') ?>" class="btn btn-secondary mb-3">Volver a Factores</a>
 
+    <?php if (empty($valores)): ?>
+        <?= view('templates/sin_datos', ['mensaje' => 'Este factor todavía no tiene valores cargados.']) ?>
+    <?php else: ?>
     <div class="card shadow-sm">
         <div class="card-body">
             <table class="table table-striped table-hover text-center tabla-datos">
@@ -28,4 +31,5 @@
             </table>
         </div>
     </div>
+    <?php endif; ?>
 </div>

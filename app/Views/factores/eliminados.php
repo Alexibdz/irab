@@ -2,6 +2,9 @@
     <h2 class="mb-4 text-danger">Factores Eliminados (Inactivos)</h2>
     <a href="<?= base_url('configuracion/factores') ?>" class="btn btn-secondary mb-3">Volver a Factores Activos</a>
 
+    <?php if (empty($factores)): ?>
+        <?= view('templates/sin_datos', ['mensaje' => 'No hay factores eliminados.', 'acciones' => ['Volver al listado' => 'configuracion/factores']]) ?>
+    <?php else: ?>
     <table class="table table-bordered bg-white shadow-sm text-center tabla-datos">
         <thead>
             <tr>
@@ -24,4 +27,5 @@
             <?php endforeach; ?>
         </tbody>
     </table>
+    <?php endif; ?>
 </div>

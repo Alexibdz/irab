@@ -11,6 +11,9 @@
         </div>
     </div>
 
+    <?php if (empty($factores)): ?>
+        <?= view('templates/sin_datos', ['mensaje' => 'No hay factores cargados.', 'acciones' => ['Agregar un factor' => 'configuracion/factores/nuevo', 'revisar la papelera' => 'configuracion/factores/eliminados']]) ?>
+    <?php else: ?>
     <div class="card shadow-sm border rounded-3">
         <div class="card-body p-3">
             <div class="table-responsive">
@@ -64,4 +67,5 @@
             </div>
         </div>
     </div>
+    <?php endif; ?>
 </div>

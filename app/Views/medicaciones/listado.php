@@ -12,6 +12,9 @@
         </div>
     </div>
 
+    <?php if (empty($medicaciones)): ?>
+        <?= view('templates/sin_datos', ['mensaje' => 'No hay medicaciones cargadas.', 'acciones' => ['Agregar una medicación' => 'configuracion/medicaciones/nuevo', 'revisar la papelera' => 'configuracion/medicaciones/eliminados']]) ?>
+    <?php else: ?>
     <div class="card shadow-sm border rounded-3">
         <div class="card-body p-3">
             <div class="table-responsive">
@@ -47,4 +50,5 @@
             </div>
         </div>
     </div>
+    <?php endif; ?>
 </div>

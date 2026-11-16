@@ -16,6 +16,9 @@ $colores = [
         <p class="text-muted mb-0">Movimientos registrados sobre visitas y controles.</p>
     </div>
 
+    <?php if (empty($registros)): ?>
+        <?= view('templates/sin_datos', ['mensaje' => 'No hay movimientos registrados en la auditoría.', 'acciones' => []]) ?>
+    <?php else: ?>
     <div class="card shadow-sm border rounded-3">
         <div class="card-body p-3">
             <div class="table-responsive">
@@ -58,4 +61,5 @@ $colores = [
             </div>
         </div>
     </div>
+    <?php endif; ?>
 </div>

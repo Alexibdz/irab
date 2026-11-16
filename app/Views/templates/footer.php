@@ -51,6 +51,11 @@
     // DataTables en .tabla-datos
 // DataTables en .tabla-datos y #tabla-dato
 // Inicialización estructurada de DataTables
+    // Exporta todo menos la ultima columna (acciones), salvo en tablas .sin-acciones
+    function columnasExportar(idx, data, node) {
+        return $(node).closest('table').hasClass('sin-acciones') || !$(node).is(':last-child');
+    }
+
     $(function () {
     $('.tabla-datos, #tabla-dato').DataTable({
         // Disposición estructural (dom): Botones a la izquierda, buscador a la derecha
@@ -65,7 +70,7 @@
                 text: '<i class="bi bi-filetype-csv"></i> CSV',
                 className: 'btn-blanco-dt',
                 exportOptions: {
-                    columns: ':not(:last-child)' // Excluye la columna de acciones
+                    columns: columnasExportar // Excluye la columna de acciones
                 }
             },
             {
@@ -75,7 +80,7 @@
                 orientation: 'portrait',
                 pageSize: 'A4',
                 exportOptions: {
-                    columns: ':not(:last-child)'
+                    columns: columnasExportar
                 }
             },
             {
@@ -83,7 +88,7 @@
                 text: '<i class="bi bi-printer"></i> Imprimir',
                 className: 'btn-blanco-dt',
                 exportOptions: {
-                    columns: ':not(:last-child)'
+                    columns: columnasExportar
                 }
             }
         ],

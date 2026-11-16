@@ -568,6 +568,12 @@ class Visita extends BaseController
                 ->with('error', 'La visita no existe.');
         }
 
+        // Con alta definitiva el caso queda cerrado para siempre
+        if (!empty($visita['fecha_alta_definitiva'])) {
+            return redirect()->to(base_url('visitas/ver/' . $id))
+                ->with('error', 'No se puede editar una visita con alta definitiva.');
+        }
+
         $datos = [
             'titulo' => 'Editar visita',
             'visita' => $visita,
@@ -584,6 +590,15 @@ class Visita extends BaseController
     public function actualizar()
     {
         $id = $this->request->getPost('id');
+
+        $actual = $this->visitaModel->find($id);
+        if (!$actual) {
+            return redirect()->to(base_url('visitas'))->with('error', 'La visita no existe.');
+        }
+        if (!empty($actual['fecha_alta_definitiva'])) {
+            return redirect()->to(base_url('visitas/ver/' . $id))
+                ->with('error', 'No se puede editar una visita con alta definitiva.');
+        }
 
         $reglas = [
             'id_paciente'        => 'required',
@@ -661,7 +676,7 @@ public function recuperar($id)
 
         if ($visita) {
             //lo registra en auditoria tmb
-            $this->registrarAuditoria('visitas',$id,$visita['id_paciente'],'RECUPERACION','Restauración de visita elim');
+            $this->registrarAuditoria('visitas',$id,$visita['id_paciente'],'RECUPERACION','Restauración de visita eliminada.');
         }
         return redirect()->to(base_url('visitas/eliminados'));
     }
@@ -711,9 +726,16 @@ public function recuperar($id)
             return redirect()->to(base_url('visitas'))->with('error', 'La visita no existe.');
         }
 
-        // se actualiza la alta definitiva con la fecha y hora 
+        if (!empty($visita['fecha_alta_definitiva'])) {
+            return redirect()->to(base_url('visitas/ver/' . $id_visita))
+                ->with('error', 'La visita ya tiene alta definitiva.');
+        }
+
+        // se actualiza la alta definitiva con la fecha y hora.
+        // Si la visita seguia abierta, tambien se cierra (fecha_alta es lo que la marca cerrada)
         $this->visitaModel->update($id_visita, [
-            'fecha_alta_definitiva' => date('Y-m-d H:i:s')
+            'fecha_alta_definitiva' => date('Y-m-d H:i:s'),
+            'fecha_alta'            => $visita['fecha_alta'] ?: date('Y-m-d')
         ]);
         $this->registrarAuditoria('visitas', $id_visita, $visita['id_paciente'], 'ALTA_DEFINITIVA', 'Alta médica otorgada.');
         return redirect()->to(base_url('panel'))

@@ -86,10 +86,7 @@ $hoy = new DateTime('today');
 
         <div class="card-body text-center py-5">
             <i class="bi bi-clipboard2-check fs-1 text-muted"></i>
-            <p class="text-muted mt-2 mb-3">No hay visitas abiertas.</p>
-            <a href="<?= base_url('visitas/crear') ?>" class="btn btn-irab">
-                <i class="bi bi-plus-lg"></i> Nueva visita
-            </a>
+            <p class="text-muted mt-2 mb-0">No hay visitas abiertas.</p>
         </div>
 
     <?php else: ?>

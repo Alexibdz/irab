@@ -93,3 +93,16 @@ if (!function_exists('puede')) {
         return false;
     }
 }
+
+/*
+ * Indica si el usuario logueado es Administrador (rol 1).
+ * Se usa para módulos exclusivos que no se asignan por permisos,
+ * como la auditoría.
+ */
+if (!function_exists('es_admin')) {
+
+    function es_admin(): bool
+    {
+        return (int) session()->get('id_rol') === 1;
+    }
+}

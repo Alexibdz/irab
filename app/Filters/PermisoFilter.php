@@ -30,6 +30,19 @@ class PermisoFilter implements FilterInterface
         }
 
         /*
+         * La auditoría no se asigna por permisos: es exclusiva del
+         * Administrador y el controlador lo verifica con es_admin().
+         */
+        if ($primero == 'configuracion' && ($segmentos[1] ?? '') == 'auditoria') {
+            if (!es_admin()) {
+                return redirect()
+                    ->to(base_url('panel'))
+                    ->with('error', 'La auditoría es exclusiva del administrador.');
+            }
+            return;
+        }
+
+        /*
          * Obtenemos el módulo.
          *
          * Ejemplo:

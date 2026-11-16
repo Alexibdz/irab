@@ -37,6 +37,10 @@ class Control extends BaseController
         $visita = $this->visitaModel->find($id_visita);
         if (!$visita) return redirect()->to(base_url('visitas'))->with('error', 'La visita no existe.');
 
+        if ($error = $this->visitaNoAdmiteControles($visita)) {
+            return redirect()->to(base_url('visitas/ver/' . $id_visita))->with('error', $error);
+        }
+
         $paciente = $this->pacienteModel->find($visita['id_paciente']);
 
         // Edad exacta para la vista
@@ -69,9 +73,26 @@ class Control extends BaseController
         echo view('visitas/crearcontroles', $datos);
         echo view('templates/footer');
     }
+    // Devuelve el motivo por el que no se pueden cargar controles, o null si se puede
+    private function visitaNoAdmiteControles(array $visita): ?string
+    {
+        if (!empty($visita['fecha_alta_definitiva'])) {
+            return 'La visita tiene alta definitiva: no se pueden agregar controles.';
+        }
+        if (!empty($visita['fecha_alta'])) {
+            return 'La visita está cerrada. Reabrila para agregar controles.';
+        }
+        return null;
+    }
+
     public function guardar()
         {
             $id_visita = $this->request->getPost('id_visita');
+
+            $visitaActual = $this->visitaModel->find($id_visita);
+            if ($visitaActual && ($error = $this->visitaNoAdmiteControles($visitaActual))) {
+                return redirect()->to(base_url('visitas/ver/' . $id_visita))->with('error', $error);
+            }
             $observaciones = trim($this->request->getPost('observaciones'));
             $sintomas_enviados = $this->request->getPost('sintomas');
 

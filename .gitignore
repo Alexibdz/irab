@@ -124,3 +124,10 @@ _modules/*
 
 /results/
 /phpunit.xml
+
+# Datos de prueba locales (auditoria)
+auditoria_demo.sql
+auditoria_demo_borrar.sql
+
+# Manual de usuario: por ahora no se sube
+/Manual de usuario - IRAB.pdf

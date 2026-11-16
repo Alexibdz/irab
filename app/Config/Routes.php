@@ -81,6 +81,9 @@ $routes->group('configuracion', static function ($routes) {
 
     // Copia de seguridad
     $routes->get('copia-seguridad/exportar', 'CopiaSeguridad::exportar');
+
+    // Auditoria (exclusivo Administrador, se valida en el controlador)
+    $routes->get('auditoria', 'Auditoria::index');
 });
 
 // Pacientes

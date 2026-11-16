@@ -1,6 +1,7 @@
 <?php
 // Cerrada = tiene fecha de cierre de visita
-$cerrada = !empty($visita['fecha_alta']) && $visita['fecha_alta'] !== '0000-00-00';
+$cerrada = (!empty($visita['fecha_alta']) && $visita['fecha_alta'] !== '0000-00-00')
+    || !empty($visita['fecha_alta_definitiva']);
 
 // Mapa id => nombre de establecimientos
 $nombreEstablecimiento = array_column($establecimientos, 'nombre', 'id');

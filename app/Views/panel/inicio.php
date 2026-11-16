@@ -29,13 +29,13 @@ $hoy = new DateTime('today');
         </div>
     </div>
 
-    <!-- Cerradas -->
+    <!-- En curso (cierre temporal) -->
     <div class="col-6 col-md-2">
         <div class="card shadow-sm h-100">
             <div class="card-body">
-                <div class="text-muted small text-uppercase fw-semibold">Cerradas</div>
+                <div class="text-muted small text-uppercase fw-semibold">En curso</div>
                 <div class="panel-dato"><?= $cerradas ?></div>
-                <a href="<?= base_url('visitas/historial') ?>" class="small text-decoration-none">Ver historial</a>
+                <a href="<?= base_url('visitas/historial?tipo=cerradas') ?>" class="small text-decoration-none">Ver en curso</a>
             </div>
         </div>
     </div>
@@ -46,7 +46,7 @@ $hoy = new DateTime('today');
             <div class="card-body">
                 <div class="text-muted small text-uppercase fw-semibold ">Altas</div>
                 <div class="panel-dato"><?= $altas ?? 0 ?></div>
-                <span class="small text-muted">Casos dados de alta</span>
+                <a href="<?= base_url('visitas/historial?tipo=altas') ?>" class="small text-decoration-none">Ver altas</a>
             </div>
         </div>
     </div>

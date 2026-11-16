@@ -25,6 +25,7 @@ class Panel extends BaseController
             ->join('establecimientos_salud', 'establecimientos_salud.id = visitas.id_establecimiento', 'left')
             ->where('visitas.fecha_borrado IS NULL')
             ->where('visitas.fecha_alta IS NULL')
+            ->where('visitas.fecha_alta_definitiva IS NULL')
             ->orderBy('visitas.fecha_ingreso', 'ASC')
             ->get()
             ->getResultArray();
@@ -50,7 +51,7 @@ class Panel extends BaseController
         }
         unset($visita);
 
-        $totalCerradas = (new VisitaModel())->where('fecha_alta IS NOT NULL')->where('fecha_borrado IS NULL')->countAllResults();
+        $totalCerradas = (new VisitaModel())->where('fecha_alta IS NOT NULL AND fecha_alta_definitiva IS NULL')->where('fecha_borrado IS NULL')->countAllResults();
         $totalAltas    = (new VisitaModel())->where('fecha_alta_definitiva IS NOT NULL')->where('fecha_borrado IS NULL')->countAllResults();
 
         $datos = [

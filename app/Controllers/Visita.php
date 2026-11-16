@@ -53,8 +53,9 @@ class Visita extends BaseController
     {
         $datos = [
             'titulo' => 'Visitas abiertas',
-            'visitas' => $this->visitaModel->where('fecha_alta IS NULL')->findAll(),
-            'cerradas' => $this->visitaModel->where('fecha_alta IS NOT NULL')->countAllResults(),
+            // Abierta = sin cierre y sin alta definitiva (visitas viejas pueden tener solo el alta definitiva)
+            'visitas' => $this->visitaModel->where('fecha_alta IS NULL AND fecha_alta_definitiva IS NULL')->findAll(),
+            'cerradas' => $this->visitaModel->where('(fecha_alta IS NOT NULL OR fecha_alta_definitiva IS NOT NULL)')->countAllResults(),
             'pacientes' => $this->pacienteModel->findAll(),
             'usuarios' => $this->usuarioModel->findAll(),
             'establecimientos' => $this->establecimientoModel->findAll()
@@ -66,14 +67,31 @@ class Visita extends BaseController
     }
 
     // Listado de visitas cerradas
+    // ?tipo=todas (default) | cerradas (en curso: cierre temporal, se pueden reabrir) | altas (alta definitiva)
     public function historial()
     {
+        $tipo = $this->request->getGet('tipo');
+        if (!in_array($tipo, ['todas', 'cerradas', 'altas'], true)) {
+            $tipo = 'todas';
+        }
+
+        $soloCerradas = 'fecha_alta IS NOT NULL AND fecha_alta_definitiva IS NULL';
+        $soloAltas    = 'fecha_alta_definitiva IS NOT NULL';
+        $todas        = '(fecha_alta IS NOT NULL OR fecha_alta_definitiva IS NOT NULL)';
+
+        $filtros = ['todas' => $todas, 'cerradas' => $soloCerradas, 'altas' => $soloAltas];
+
+        $visitas = $this->visitaModel->where($filtros[$tipo])
+            ->orderBy('COALESCE(fecha_alta_definitiva, fecha_alta)', 'DESC', false)
+            ->findAll();
+
         $datos = [
             'titulo' => 'Historial de visitas',
-            'visitas' => $this->visitaModel->where('fecha_alta IS NOT NULL')
-                                           ->orderBy('fecha_alta', 'DESC')
-                                           ->findAll(),
-            'abiertas' => $this->visitaModel->where('fecha_alta IS NULL')->countAllResults(),
+            'tipo' => $tipo,
+            'visitas' => $visitas,
+            'totalCerradas' => $this->visitaModel->where($soloCerradas)->countAllResults(),
+            'totalAltas' => $this->visitaModel->where($soloAltas)->countAllResults(),
+            'abiertas' => $this->visitaModel->where('fecha_alta IS NULL AND fecha_alta_definitiva IS NULL')->countAllResults(),
             'pacientes' => $this->pacienteModel->findAll(),
             'usuarios' => $this->usuarioModel->findAll(),
             'establecimientos' => $this->establecimientoModel->findAll()

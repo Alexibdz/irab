@@ -797,6 +797,61 @@ public function recuperar($id)
 
         $controles = $this->controlModel->where('id_visita', $id_visita)->findAll();
 
+        // Síntomas registrados en cada control, junto con su puntaje correspondiente.
+        $sintomasPorControl = [];
+        if (!empty($controles)) {
+            $filas_sintomas = $this->controlSintomasModel
+                ->select('control_sintomas.id_control, control_sintomas.id_sintoma, control_sintomas.valor_registrado, sintomas.nombre_sintoma')
+                ->join('sintomas', 'sintomas.id = control_sintomas.id_sintoma')
+                ->whereIn('control_sintomas.id_control', array_column($controles, 'id'))
+                ->where('sintomas.fecha_borrado', null)
+                ->orderBy('control_sintomas.id_control', 'ASC')
+                ->orderBy('control_sintomas.id_sintoma', 'ASC')
+                ->findAll();
+
+            foreach ($filas_sintomas as $fila) {
+                $idControl = (int) $fila['id_control'];
+                $idSintoma = (int) $fila['id_sintoma'];
+                $valor = $fila['valor_registrado'];
+                $puntos = 0;
+
+                if (!in_array($idSintoma, [6, 7, 14, 15], true)) {
+                    if (is_numeric($valor)) {
+                        $valorSintoma = $this->valoresSintomasModel
+                            ->where('id_sintoma', $idSintoma)
+                            ->where('valor_min IS NOT NULL')
+                            ->where('valor_min <=', $valor)
+                            ->where('valor_max >=', $valor)
+                            ->first();
+
+                        if (!$valorSintoma) {
+                            $valorSintoma = $this->valoresSintomasModel
+                                ->where('id_sintoma', $idSintoma)
+                                ->where('valor_min IS NOT NULL')
+                                ->where('valor_min <=', $valor)
+                                ->orderBy('valor_min', 'DESC')
+                                ->first();
+                        }
+                    } else {
+                        $valorSintoma = $this->valoresSintomasModel
+                            ->where('id_sintoma', $idSintoma)
+                            ->where('valor_texto', $valor)
+                            ->first();
+                    }
+
+                    if ($valorSintoma) {
+                        $puntos = (int) $valorSintoma['puntos'];
+                    }
+                }
+
+                $sintomasPorControl[$idControl][] = [
+                    'nombre' => $fila['nombre_sintoma'],
+                    'valor' => $valor,
+                    'puntos' => $puntos,
+                ];
+            }
+        }
+
         // Medicaciones de cada control: [id_control => ['Salbutamol (4 puffs)', ...]]
         $medicacionesPorControl = [];
         if (!empty($controles)) {
@@ -825,6 +880,7 @@ public function recuperar($id)
             'usuario' => $this->usuarioModel->find($visita['id_usuario']),
             'controles' => $controles,
             'medicacionesPorControl' => $medicacionesPorControl,
+            'sintomasPorControl' => $sintomasPorControl,
             'factoresRegistrados' => $factoresRegistrados,
             'todosLosFactores' => $todosLosFactores,
             'establecimientos' => $this->establecimientoModel->findAll()

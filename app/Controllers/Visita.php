@@ -448,12 +448,29 @@ class Visita extends BaseController
                 $ids_validos = array_column($this->medicacionModel->findAll(), 'id');
 
                 foreach ($medicaciones_enviadas as $fila) {
-                    $id_medicacion = (int) ($fila['id_medicacion'] ?? 0);
+                    $seleccion_medicacion = (string) ($fila['id_medicacion'] ?? '');
                     $dosis = trim((string) ($fila['dosis'] ?? ''));
 
-                    // Se ignoran filas incompletas o con medicaciones inexistentes
-                    if ($id_medicacion === 0 || $dosis === '' || !in_array($id_medicacion, $ids_validos)) {
+                    if ($dosis === '') {
                         continue;
+                    }
+
+                    if ($seleccion_medicacion === 'nueva') {
+                        $id_medicacion = $this->medicacionModel->obtenerOCrearPorNombre(
+                            (string) ($fila['nueva_medicacion'] ?? '')
+                        );
+
+                        if ($id_medicacion === false) {
+                            $this->controlModel->transComplete();
+                            return redirect()->back()->with('errors', [
+                                'medicaciones' => 'El nombre de la nueva medicación debe tener entre 2 y 100 caracteres y no estar eliminado del catálogo.'
+                            ]);
+                        }
+                    } else {
+                        $id_medicacion = (int) $seleccion_medicacion;
+                        if ($id_medicacion === 0 || !in_array($id_medicacion, $ids_validos)) {
+                            continue;
+                        }
                     }
 
                     $this->controlMedicacionModel->insert([

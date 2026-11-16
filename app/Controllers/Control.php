@@ -194,6 +194,8 @@ class Control extends BaseController
             ]);
 
             $this->controlModel->transComplete();
+            // va a auditoria
+            $this->registrarAuditoria('controles',$id_control_nuevo,$visita['id_paciente'] ?? null,'ALTA','Score: ' . $score_total);
         }
 
         return redirect()->to(base_url('visitas/ver/' . $id_visita))->with('exito', 'Control evolutivo registrado correctamente.');

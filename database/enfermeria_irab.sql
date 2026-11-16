@@ -17,6 +17,7 @@ USE `enfermeria_irab`;
 -- Desactivar llaves foráneas para reinicialización limpia
 SET FOREIGN_KEY_CHECKS = 0;
 
+DROP TABLE IF EXISTS `auditoria`;
 DROP TABLE IF EXISTS `control_sintomas`;
 DROP TABLE IF EXISTS `control_medicaciones`;
 DROP TABLE IF EXISTS `controles`;
@@ -197,7 +198,7 @@ CREATE TABLE `visitas` (
   `turno_protegido_fecha` date DEFAULT NULL,
   `medicacion_egreso` varchar(255) DEFAULT NULL,
   `fecha_alta` date DEFAULT NULL,
-  `fecha_alta_definitiva` DATETIME DEFAULT NULL
+  `fecha_alta_definitiva` DATETIME DEFAULT NULL,
   `observaciones_finales` text DEFAULT NULL,
   `fecha_registro` datetime NOT NULL DEFAULT current_timestamp(),
   `fecha_edicion` datetime DEFAULT NULL,
@@ -281,6 +282,20 @@ CREATE TABLE `control_sintomas` (
   KEY `id_sintoma` (`id_sintoma`),
   CONSTRAINT `control_sintomas_ibfk_1` FOREIGN KEY (`id_control`) REFERENCES `controles` (`id`),
   CONSTRAINT `control_sintomas_ibfk_2` FOREIGN KEY (`id_sintoma`) REFERENCES `sintomas` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+CREATE TABLE `auditoria` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `tabla_auditada` VARCHAR(50) NOT NULL ,
+  `id_registro` INT(11) NOT NULL COMMENT 'ID de la visita o del control afectado',
+  `id_paciente` INT(11) DEFAULT NULL,
+  `id_usuario` INT(11) NOT NULL,
+  `accion` VARCHAR(30) NOT NULL,
+  `detalle` TEXT DEFAULT NULL,
+  `fecha` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `id_paciente` (`id_paciente`),
+  KEY `id_usuario` (`id_usuario`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------

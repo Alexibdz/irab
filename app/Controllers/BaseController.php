@@ -42,4 +42,22 @@ abstract class BaseController extends Controller
         // Preload any models, libraries, etc, here.
         // $this->session = service('session');
     }
+
+    //hacemos esta funcion que luego puede usarse en controlador visita y control
+    //asi no repetimos insert , solo llamamos la funcion y le mandamos los parametros 
+    //que necesitamos auditar
+    protected function registrarAuditoria(string $tablaAuditada, int $idRegistro, ?int $idPaciente, string $accion, string $detalle = '')
+    {
+        $db = \Config\Database::connect();
+        
+        $db->table('auditoria')->insert([
+            'tabla_auditada' => $tablaAuditada,
+            'id_registro'    => $idRegistro, //si es de visita o control
+            'id_paciente'    => $idPaciente,
+            'id_usuario'     => session()->get('id_usuario') ?? 1, //toma el id del usuario logeado si no hay usuario logeado toma 1 (admin)
+            'accion'         => $accion,
+            'detalle'        => $detalle, //un mini texto 
+            'fecha'          => date('Y-m-d H:i:s')
+        ]);
+    }
 }

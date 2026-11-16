@@ -536,6 +536,8 @@ class Visita extends BaseController
 
             // cierra la transaccion
             $this->controlModel->transComplete();
+            // en tabla auditoria lo registramos:
+            $this->registrarAuditoria('visitas', $id_visita_nueva, $id_paciente, 'ALTA', 'Ingreso de visita');
         }
 
         return redirect()->to(base_url('visitas'))->with('exito', 'Visita clínica registrada correctamente.');
@@ -599,22 +601,32 @@ class Visita extends BaseController
         ];
 
         $this->visitaModel->update($id, $datos);
+        //aca registramos en auditoria la modificacion
+        $this->registrarAuditoria('visitas', $id, $this->request->getPost('id_paciente'), 'MODIFICACION', 'Modificación de datos de ingreso de la visita.');
 
         return redirect()->to(base_url('visitas/ver/' . $id))->with('exito', 'Visita actualizada correctamente.');
     }
 
     public function borrar($id)
     {
+        $visita = $this->visitaModel->find($id);
+        // el soft
         $this->visitaModel->delete($id);
-
+        // Si la visita existía, registramos la baja en la tabla de auditoría
+        if ($visita) {
+            $this->registrarAuditoria('visitas',$id, $visita['id_paciente'],'BAJA','Softdelete de la visita');
+        }
         return redirect()->to(base_url('visitas'));
     }
 
     public function eliminados()
     {
         $datos = [
-            'titulo' => 'Visitas eliminadas',
-            'visitas' => $this->visitaModel->onlyDeleted()->findAll()
+            'titulo'           => 'Visitas eliminadas',
+            'visitas'          => $this->visitaModel->onlyDeleted()->findAll(),
+            'pacientes'        => $this->pacienteModel->withDeleted()->findAll(),
+            'usuarios'         => $this->usuarioModel->withDeleted()->findAll(),
+            'establecimientos' => $this->establecimientoModel->findAll()
         ];
 
         echo view('templates/header', $datos);
@@ -622,12 +634,18 @@ class Visita extends BaseController
         echo view('templates/footer');
     }
 
-    public function recuperar($id)
+public function recuperar($id)
     {
+        // withDeleted() porque la visita actualmente tiene fecha_borrado cargada
+        $visita = $this->visitaModel->withDeleted()->find($id);
         $this->visitaModel->update($id, [
             'fecha_borrado' => null
         ]);
 
+        if ($visita) {
+            //lo registra en auditoria tmb
+            $this->registrarAuditoria('visitas',$id,$visita['id_paciente'],'RECUPERACION','Restauración de visita elim');
+        }
         return redirect()->to(base_url('visitas/eliminados'));
     }
 
@@ -637,7 +655,7 @@ class Visita extends BaseController
         return ($valor === null || trim((string) $valor) === '') ? null : $valor;
     }
 
-    // Cierre de visita: carga el egreso, fecha_alta la marca cerrada
+    // Cierre de visita: carga el egreso, fecha_alta la marca cerrada (se cierra visita NO ALTA MEDICA)
     public function cerrar()
     {
         $id_visita = $this->request->getPost('id_visita');
@@ -663,6 +681,8 @@ class Visita extends BaseController
             'observaciones_finales'    => $this->nullSiVacio($this->request->getPost('observaciones_finales'))
         ]);
 
+        $this->registrarAuditoria('visitas', $id_visita, $visita['id_paciente'], 'CIERRE', 'Cierre temporal de visita.');
+
         return redirect()->to(base_url('visitas/ver/' . $id_visita))
             ->with('exito', 'Visita cerrada correctamente.');
     }
@@ -678,7 +698,7 @@ class Visita extends BaseController
         $this->visitaModel->update($id_visita, [
             'fecha_alta_definitiva' => date('Y-m-d H:i:s')
         ]);
-
+        $this->registrarAuditoria('visitas', $id_visita, $visita['id_paciente'], 'ALTA_DEFINITIVA', 'Alta médica otorgada.');
         return redirect()->to(base_url('panel'))
             ->with('exito', 'Alta medica del paciente (debera volver a hacerse una visita si vuelve a presentar sintomas ).');
     }
@@ -704,6 +724,7 @@ class Visita extends BaseController
             'fecha_alta'               => null, //esta fecha es de alta de visita, no de TODO
             'observaciones_finales'    => null
         ]);
+        $this->registrarAuditoria('visitas', $id_visita, $visita['id_paciente'], 'REAPERTURA', 'Reapertura para continuar controles.');
 
         return redirect()->to(base_url('visitas/ver/' . $id_visita))
             ->with('exito', 'Visita reabierta para seguir controlando');

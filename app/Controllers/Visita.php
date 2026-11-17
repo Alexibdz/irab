@@ -671,12 +671,23 @@ class Visita extends BaseController
 
     public function eliminados()
     {
+        // Consulta con LEFT JOIN para incluir nombres de paciente, usuario y establecimiento en cada fila
+        $visitas = $this->visitaModel->builder()
+            ->select('visitas.*, 
+                      CONCAT(pacientes.nombre, " ", pacientes.apellido) AS paciente,
+                      CONCAT(usuarios.nombre, " ", usuarios.apellido) AS usuario,
+                      establecimientos_salud.nombre AS establecimiento')
+            ->join('pacientes', 'pacientes.id = visitas.id_paciente', 'left')
+            ->join('usuarios', 'usuarios.id = visitas.id_usuario', 'left')
+            ->join('establecimientos_salud', 'establecimientos_salud.id = visitas.id_establecimiento', 'left')
+            ->where('visitas.fecha_borrado IS NOT NULL')
+            ->orderBy('visitas.fecha_borrado', 'DESC')
+            ->get()
+            ->getResultArray();
+
         $datos = [
-            'titulo'           => 'Visitas eliminadas',
-            'visitas'          => $this->visitaModel->onlyDeleted()->findAll(),
-            'pacientes'        => $this->pacienteModel->withDeleted()->findAll(),
-            'usuarios'         => $this->usuarioModel->withDeleted()->findAll(),
-            'establecimientos' => $this->establecimientoModel->findAll()
+            'titulo'  => 'Visitas eliminadas',
+            'visitas' => $visitas
         ];
 
         echo view('templates/header', $datos);

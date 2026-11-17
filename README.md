@@ -70,3 +70,14 @@ Construido con [CodeIgniter 4](https://codeigniter.com) (PHP) + MySQL/MariaDB (X
 ## Estructura
 
 Instalación estándar de `codeigniter4/appstarter` (v4.7). Controllers, Models y Views del dominio de enfermería van en `app/Controllers`, `app/Models`, `app/Views` respectivamente.
+
+
+## Diagramas del Sistema
+
+### Diagrama Entidad-Relación (Base de Datos: `enfermeria_irab`)
+
+![Diagrama Entidad-Relación enfermeria_irab](diagramas/DERirab.png)
+
+### Diagrama de Casos de Uso
+
+![Diagrama de Casos de Uso IRAB](diagramas/DEUSOirab.png)

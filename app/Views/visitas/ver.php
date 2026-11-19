@@ -117,20 +117,82 @@ if (!empty($paciente['fecha_nacimiento']) && !empty($visita['fecha_ingreso'])) {
         </div>
     </div>
 
-    <!-- Informacion general -->
-    <div class="card shadow-sm mb-4">
-        <div class="card-header bg-success text-white">
-            <h3 class="h5 mb-0">Información de Ingreso y Diagnóstico</h3>
-        </div>
-        <div class="card-body">
-            <div class="row">
-                <div class="col-md-6">
-                    <p><strong>Fecha de Ingreso:</strong> <?= esc($visita['fecha_ingreso']) ?></p>
-                    <p class="mb-0"><strong>Diagnóstico:</strong> <?= esc($visita['diagnostico'] ?? '-') ?></p>
+    <div class="row g-3 mb-4">
+        <!-- Informacion general -->
+        <div class="col-lg-8">
+            <div class="card shadow-sm h-100">
+                <div class="card-header bg-success text-white">
+                    <h3 class="h5 mb-0">Información de Ingreso y Diagnóstico</h3>
                 </div>
-                <div class="col-md-6">
-                    <p><strong>Establecimiento:</strong> <?= esc($nombreEstablecimiento[$visita['id_establecimiento']] ?? '-') ?></p>
-                    <p class="mb-0"><strong>Atendió:</strong> <?= esc($usuario ? nombre_completo($usuario) : '-') ?></p>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-2 mb-md-0">
+                            <p><strong>Fecha de Ingreso:</strong> <?= esc($visita['fecha_ingreso']) ?></p>
+                            <p class="mb-0"><strong>Diagnóstico:</strong> <?= esc($visita['diagnostico'] ?? '-') ?></p>
+                        </div>
+                        <div class="col-md-6 mb-2 mb-md-0">
+                            <p><strong>Establecimiento:</strong> <?= esc($nombreEstablecimiento[$visita['id_establecimiento']] ?? '-') ?></p>
+                            <p class="mb-0"><strong>Atendió:</strong> <?= esc($usuario ? nombre_completo($usuario) : '-') ?></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Factores de riesgo y protección del paciente -->
+        <?php
+        // Solo los factores de la escala que corresponde (TAL < 2 años, WDF >= 2)
+        $formFactores = $esMenorDeDos ? 'TAL' : 'WDF';
+        $factoresPorTipo = ['Riesgo' => [], 'Proteccion' => []];
+        foreach ($todosLosFactores as $f) {
+            if (in_array($f['tipo_formulario'], [$formFactores, 'Ambos'], true)) {
+                $factoresPorTipo[$f['tipo']][] = $f;
+            }
+        }
+        ?>
+        <div class="col-lg-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-header bg-success text-white py-2">
+                    <h3 class="h6 mb-0">Factores de Riesgo y Protección</h3>
+                </div>
+                <div class="card-body p-2 small">
+                    <?php if ($idVisitaFactores === null): ?>
+                        <div class="text-muted">Sin factores registrados.</div>
+                    <?php else: ?>
+                        <?php if ($idVisitaFactores !== (int) $visita['id']): ?>
+                            <div class="text-muted mb-1">
+                                Tomados de la <a href="<?= base_url('visitas/ver/' . $idVisitaFactores) ?>">visita #<?= $idVisitaFactores ?></a>.
+                            </div>
+                        <?php endif; ?>
+
+                        <table class="table table-bordered table-sm align-middle mb-0" style="font-size: .78rem;">
+                            <?php foreach (['Riesgo' => 'Riesgo', 'Proteccion' => 'Protección'] as $tipo => $tituloTipo): ?>
+                                <?php if (empty($factoresPorTipo[$tipo])) continue; ?>
+                                <thead class="table-light">
+                                    <tr>
+                                        <th class="<?= $tipo === 'Riesgo' ? 'text-danger' : 'text-success' ?>"><?= $tituloTipo ?></th>
+                                        <th class="text-center" style="width: 38px;">SI</th>
+                                        <th class="text-center" style="width: 38px;">NO</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php foreach ($factoresPorTipo[$tipo] as $f): ?>
+                                        <?php $valor = $factoresRegistrados[(int) $f['id']] ?? null; ?>
+                                        <tr>
+                                            <td class="py-1"><?= esc($f['denominacion']) ?></td>
+                                            <?php if ((int) $f['id'] === 8): ?>
+                                                <td colspan="2" class="text-center fw-bold py-1"><?= esc($valor ?? '-') ?></td>
+                                            <?php else: ?>
+                                                <?php $si = $valor === 'Sí'; ?>
+                                                <td class="text-center fw-bold py-1 <?= $si ? ($tipo === 'Riesgo' ? 'text-danger' : 'text-success') : '' ?>"><?= $si ? 'X' : '' ?></td>
+                                                <td class="text-center fw-bold py-1"><?= $si ? '' : 'X' ?></td>
+                                            <?php endif; ?>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                </tbody>
+                            <?php endforeach; ?>
+                        </table>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
@@ -227,7 +289,7 @@ if (!empty($paciente['fecha_nacimiento']) && !empty($visita['fecha_ingreso'])) {
                                 <td class="text-start"><?= esc($control['observaciones'] ?? '-') ?></td>
                                 <td>
                                     <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modalDetalleControl<?= (int) $control['id'] ?>">
-                                        Ver detalle
+                                        Ver Valores
                                     </button>
                                 </td>
                             </tr>
@@ -328,8 +390,11 @@ if (!empty($paciente['fecha_nacimiento']) && !empty($visita['fecha_ingreso'])) {
                         </div>
 
                         <div class="col-md-12 mb-3">
-                            <label for="medicacion_egreso" class="form-label">Medicación al egreso</label>
-                            <input type="text" class="form-control" id="medicacion_egreso" name="medicacion_egreso">
+                            <?= view('medicaciones/medicaciones', [
+                                'medicaciones' => $medicaciones ?? [],
+                                'titulo'       => 'Medicación al egreso',
+                                'ayuda'        => 'Si no se indica medicación al egreso, dejá la lista vacía.',
+                            ]) ?>
                         </div>
 
                         <div class="col-md-12 mb-3">

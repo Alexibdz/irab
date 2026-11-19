@@ -733,11 +733,22 @@ public function recuperar($id)
                 ->with('error', 'Para cerrar la visita hace falta la fecha de alta.');
         }
 
+        // Medicación al egreso: filas catálogo + dosis -> texto "Nombre (dosis), ..."
+        $medicacion_egreso = $this->armarMedicacionEgreso($this->request->getPost('medicaciones'));
+        if ($medicacion_egreso === false) {
+            return redirect()->to(base_url('visitas/ver/' . $id_visita))
+                ->with('error', 'El nombre de la nueva medicación debe tener entre 2 y 100 caracteres y no estar eliminado del catálogo.');
+        }
+        if ($medicacion_egreso !== null && mb_strlen($medicacion_egreso) > 255) {
+            return redirect()->to(base_url('visitas/ver/' . $id_visita))
+                ->with('error', 'La medicación al egreso es demasiado larga (máximo 255 caracteres en total).');
+        }
+
         $this->visitaModel->update($id_visita, [
             'estado_derivacion'        => $this->nullSiVacio($this->request->getPost('estado_derivacion')),
             'id_turno_protegido_lugar' => $this->nullSiVacio($this->request->getPost('id_turno_protegido_lugar')),
             'turno_protegido_fecha'    => $this->nullSiVacio($this->request->getPost('turno_protegido_fecha')),
-            'medicacion_egreso'        => $this->nullSiVacio($this->request->getPost('medicacion_egreso')),
+            'medicacion_egreso'        => $medicacion_egreso,
             'fecha_alta'               => $fecha_alta,
             'observaciones_finales'    => $this->nullSiVacio($this->request->getPost('observaciones_finales'))
         ]);
@@ -747,6 +758,44 @@ public function recuperar($id)
         return redirect()->to(base_url('visitas/ver/' . $id_visita))
             ->with('exito', 'Visita cerrada correctamente.');
     }
+    // Convierte las filas del componente de medicaciones en texto.
+    // Devuelve null si no hay filas, false si una medicación nueva es inválida.
+    private function armarMedicacionEgreso($filas): string|null|false
+    {
+        if (empty($filas) || !is_array($filas)) {
+            return null;
+        }
+
+        $nombres = array_column($this->medicacionModel->findAll(), 'nombre', 'id');
+        $partes = [];
+
+        foreach ($filas as $fila) {
+            $seleccion = (string) ($fila['id_medicacion'] ?? '');
+            $dosis = trim((string) ($fila['dosis'] ?? ''));
+
+            if ($dosis === '') {
+                continue;
+            }
+
+            if ($seleccion === 'nueva') {
+                $id_medicacion = $this->medicacionModel->obtenerOCrearPorNombre((string) ($fila['nueva_medicacion'] ?? ''));
+                if ($id_medicacion === false) {
+                    return false;
+                }
+                $nombre = $this->medicacionModel->find($id_medicacion)['nombre'];
+            } else {
+                $nombre = $nombres[(int) $seleccion] ?? null;
+                if ($nombre === null) {
+                    continue;
+                }
+            }
+
+            $partes[] = $nombre . ' (' . mb_substr($dosis, 0, 100) . ')';
+        }
+
+        return $partes ? implode(', ', $partes) : null;
+    }
+
     // Registrar el Alta Definitiva: es como un alta medico definitivo, porq sino seria cerrar una visita 
     public function darAltaDefinitiva($id_visita)
     {
@@ -878,7 +927,24 @@ public function recuperar($id)
             }
         }
 
-        $factoresRegistrados = $this->pacienteFactoresModel->where('id_visita', $id_visita)->findAll();
+        // Factores del paciente (por id_paciente). Solo se guardan los marcados, asi que se toma
+        // el juego completo de UNA visita: la actual si tiene, si no la ultima del paciente que tenga.
+        $filasFactores = $this->pacienteFactoresModel
+            ->where('id_paciente', $visita['id_paciente'])
+            ->orderBy('id_visita', 'DESC')
+            ->findAll();
+
+        $visitasConFactores = array_unique(array_map('intval', array_column($filasFactores, 'id_visita')));
+        $idVisitaFactores = in_array((int) $id_visita, $visitasConFactores, true)
+            ? (int) $id_visita
+            : ($visitasConFactores[0] ?? null);
+
+        $factoresRegistrados = [];
+        foreach ($filasFactores as $fila) {
+            if ((int) $fila['id_visita'] === $idVisitaFactores) {
+                $factoresRegistrados[(int) $fila['id_factor']] = $fila['valor_registrado'];
+            }
+        }
         $todosLosFactores = $this->factoresModel->findAll();
 
         $paciente = $this->pacienteModel->find($visita['id_paciente']);
@@ -893,8 +959,10 @@ public function recuperar($id)
             'medicacionesPorControl' => $medicacionesPorControl,
             'sintomasPorControl' => $sintomasPorControl,
             'factoresRegistrados' => $factoresRegistrados,
+            'idVisitaFactores' => $idVisitaFactores,
             'todosLosFactores' => $todosLosFactores,
-            'establecimientos' => $this->establecimientoModel->findAll()
+            'establecimientos' => $this->establecimientoModel->findAll(),
+            'medicaciones' => $this->medicacionModel->orderBy('nombre')->findAll()
         ];
 
         echo view('templates/header', $datos);

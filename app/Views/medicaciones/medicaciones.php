@@ -1,12 +1,12 @@
     <div class="mt-3" id="bloque-medicaciones">
-        <label class="form-label fw-bold text-success">Medicación administrada</label>
+        <label class="form-label fw-bold text-success"><?= esc($titulo ?? 'Medicación administrada') ?></label>
 
         <div id="lista-medicaciones"></div>
 
         <button type="button" class="btn btn-outline-success btn-sm" id="btn-agregar-medicacion">
             + Agregar medicación
         </button>
-        <div class="form-text">Si no se administró ninguna medicación, dejá la lista vacía.</div>
+        <div class="form-text"><?= esc($ayuda ?? 'Si no se administró ninguna medicación, dejá la lista vacía.') ?></div>
     </div>
 
     <template id="tpl-medicacion">

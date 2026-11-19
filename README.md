@@ -13,6 +13,7 @@ Construido con [CodeIgniter 4](https://codeigniter.com) (PHP) + MySQL/MariaDB (X
 ## Instalación (primera vez)
 
 1. Clonar el repo dentro de `htdocs`:
+
    ```
    cd C:\xampp\htdocs
    git clone <url-del-repo> irab
@@ -20,14 +21,17 @@ Construido con [CodeIgniter 4](https://codeigniter.com) (PHP) + MySQL/MariaDB (X
    ```
 
 2. Instalar las dependencias de PHP (esto genera la carpeta `vendor/`, que **no** se sube al repo):
+
    ```
    composer install
    ```
 
 3. Crear el archivo de entorno local a partir de la plantilla:
+
    ```
    copy env .env
    ```
+
    Editar `.env` y completar:
    - `CI_ENVIRONMENT = development`
    - `app.baseURL = 'http://localhost/irab/public/'`
@@ -38,6 +42,7 @@ Construido con [CodeIgniter 4](https://codeigniter.com) (PHP) + MySQL/MariaDB (X
    - `database.default.DBDriver = MySQLi`
 
 4. Generar la clave de encriptación de la app (solo una vez, cada dev tiene la suya):
+
    ```
    php spark key:generate
    ```
@@ -48,7 +53,7 @@ Construido con [CodeIgniter 4](https://codeigniter.com) (PHP) + MySQL/MariaDB (X
      ```
      C:\xampp\mysql\bin\mysql -u root -e "source C:/xampp/htdocs/irab/database/enfermeria_irab.sql"
      ```
-   El script crea la base `enfermeria_irab` y todas sus tablas si no existen.
+     El script crea la base `enfermeria_irab` y todas sus tablas si no existen.
 
 6. Levantar Apache (XAMPP) y entrar a:
    ```
@@ -71,7 +76,6 @@ Construido con [CodeIgniter 4](https://codeigniter.com) (PHP) + MySQL/MariaDB (X
 
 Instalación estándar de `codeigniter4/appstarter` (v4.7). Controllers, Models y Views del dominio de enfermería van en `app/Controllers`, `app/Models`, `app/Views` respectivamente.
 
-
 ## Diagramas del Sistema
 
 ### Diagrama Entidad-Relación (Base de Datos: `enfermeria_irab`)
@@ -81,3 +85,16 @@ Instalación estándar de `codeigniter4/appstarter` (v4.7). Controllers, Models 
 ### Diagrama de Casos de Uso
 
 ![Diagrama de Casos de Uso IRAB](diagramas/DEUSOirab.png)
+
+## Equipo de Desarrollo
+
+Proyecto académico realizado por alumnos de 3er año de la **Tecnicatura en Análisis y Desarrollo de Software**:
+
+- **Lara Vidoni**
+- **Alexis Artaza**
+- **Gabriela Bernachea**
+- **Agustín Solís**
+
+## Licencia
+
+Este proyecto se distribuye bajo la licencia MIT. Consulta el archivo [LICENSE](LICENSE) para más detalles.
